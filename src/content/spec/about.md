@@ -13,13 +13,9 @@
 > ### 关于本站
 >
 > 使用框架 [Astro](https://github.com/withastro/astro)，主题 [Fuwari](https://github.com/saicaca/fuwari)
->
 > 托管于 [Github Pages](https://github.com/f1shQAQ/f1shQAQ.github.io)
->
 > 域名注册于 [WordPress.com](https://wordpress.com/)
->
 > [Cloudflare](https://cloudflare.com/) 提供 CDN 服务
->
 > [去不图床](https://7bu.top/) 提供图床服务
 
 
