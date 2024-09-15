@@ -1,9 +1,17 @@
-# About
-This is the demo site for [Fuwari](https://github.com/saicaca/fuwari).
+> ### 关于博主
+> 博主是一条每天都做着不切实际白日梦的咸鱼，赛博算命结果是INFP-T，坐标广东。
+> 
+> 博主有的时候很懒，但有的时候又很勤快。所以这个博客的更新频率极为不固定，长时间不更新和短时间多次更新都是常有的事情，理解万岁🙌
+>
 
-::github{repo="saicaca/fuwari"}
+> ### 为什么要开这个博客？
+> 也许是为了在这个互联网上留下一点属于自己的印记罢（
 
-> ### Sources of images used in this site
-> - [Unsplash](https://unsplash.com/)
-> - [星と少女](https://www.pixiv.net/artworks/108916539) by [Stella](https://www.pixiv.net/users/93273965)
-> - [Rabbit - v1.4 Showcase](https://civitai.com/posts/586908) by [Rabbit_YourMajesty](https://civitai.com/user/Rabbit_YourMajesty)
+> ### 本站纪事
+> - 2024.9.15  从WordPress迁移至Fuwari
+> - 2024.3.14  从NotionNext迁移至WordPress，主题换用Argon
+> - 2023.12.04  更换域名为qqquq.com，从Typecho迁移至NotionNext
+> - 2023.5.7  成功申请ICP备案（现已注销）
+> - 2023.5.4  主题换用MyDiary
+> - 2023.3.7  梦开始的地方，使用Typecho，主题为Handsome
+
