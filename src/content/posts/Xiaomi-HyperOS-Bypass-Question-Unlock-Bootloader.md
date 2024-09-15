@@ -3,7 +3,7 @@ title: 小米澎湃OS绕过社区答题限制解锁BootLoader
 published: 2024-05-16
 description: '小米设备绕过答题解锁 BootLoader'
 image: 'https://bu.dusays.com/2024/05/16/6645a329ac7e5.jpg'
-tags: [小米, 解锁BL]
+tags: [玩机]
 category: '折腾'
 draft: false
 ---

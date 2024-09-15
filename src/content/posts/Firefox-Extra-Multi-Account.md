@@ -3,7 +3,7 @@ title: Firefox 扩展推荐 —— Multi-Account Containers
 published: 2023-12-17
 description: '推荐一个 Firefox 多用户扩展'
 image: 'https://bu.dusays.com/2023/12/17/657df126c9c72.webp'
-tags: [Firefox, 工具, 扩展]
+tags: [工具]
 category: '分享'
 draft: false 
 ---

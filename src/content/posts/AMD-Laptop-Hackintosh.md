@@ -3,7 +3,7 @@ title: AMD 笔记本黑苹果个人使用体验
 published: 2024-01-25
 description: '小新Pro 14 安装黑苹果个人主观体验'
 image: 'https://bu.dusays.com/2024/01/25/65b13b0213400.png'
-tags: [AMD, 黑苹果, 使用体验]
+tags: [黑苹果, 使用体验]
 category: '折腾'
 draft: false 
 ---

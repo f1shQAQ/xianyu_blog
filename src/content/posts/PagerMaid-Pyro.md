@@ -3,7 +3,7 @@ title: PagerMaid-Pyro 人形机器人使用指北
 published: 2024-03-15
 description: 'Telegram 人形机器人 PagerMaid-Pyro 使用指北'
 image: 'https://bu.dusays.com/2024/03/15/65f3d02c7c2a2.png'
-tags: [Telegram]
+tags: [Bot]
 category: '折腾'
 draft: false 
 ---

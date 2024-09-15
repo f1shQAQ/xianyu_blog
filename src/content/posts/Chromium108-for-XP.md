@@ -3,7 +3,7 @@ title: 浅浅试玩一个支持 WindowsXP 的 Chromium108
 published: 2023-06-08
 description: '炫技大于实用性'
 image: 'https://bu.dusays.com/2023/12/05/656ea55daa9e7.webp'
-tags: [Chromium, WindowsXP]
+tags: [Chromium]
 category: '分享'
 draft: false 
 ---

@@ -3,7 +3,7 @@ title: final E500 初体验
 published: 2023-12-17
 description: 'final E500 个人主观使用感受'
 image: 'https://bu.dusays.com/2023/12/17/657ddac3de932.webp'
-tags: [水文, ASMR, 耳机, 闲聊]
+tags: [耳机, 闲聊]
 category: '日常'
 draft: false 
 ---
