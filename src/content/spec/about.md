@@ -13,13 +13,14 @@
 > ### 关于本站
 > - 使用框架 [Astro](https://github.com/withastro/astro)，主题 [Fuwari](https://github.com/saicaca/fuwari)
 > - 托管于 [Github Pages](https://github.com/f1shQAQ/f1shQAQ.github.io)
-> - 域名注册于 [WordPress.com](https://wordpress.com/)
+> - 域名注册于 [Spaceship](https://www.spaceship.com/)
 > - [Cloudflare](https://cloudflare.com/) 提供 CDN 服务
 > - [去不图床](https://7bu.top/) 提供图床服务
 
 
 
 > ### 本站纪事
+> - 2024.9.23  由于 WordPress.com 域名续费价格上涨，已将域名转移至 Spaceship
 > - 2024.9.15  从 WordPress 迁移至 Astro，主题换用 Fuwari
 > -  2024.3.14  从 NotionNext 迁移至 WordPress，主题换用 Argon
 > - 2023.12.04  更换域名为 qqquq.com，从 Typecho 迁移至 NotionNext
