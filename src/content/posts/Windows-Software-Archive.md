@@ -62,18 +62,23 @@ draft: false
 - [FinalShell](https://www.hostbuf.com/)
 - [Termius](https://termius.com/)
 
-## 文字处理 (有条件请支持正版)
+## 文字处理
 
 - [Microsoft Office](https://otp.landian.vip/zh-cn/)
 - [Typora](https://github.com/markyin0707/typora-activation)
 
 ## 图像处理
 
-- Adobe Photoshop
+- [Adobe Photoshop](https://weibo.com/u/1112829033)
+
+## 音频处理
+
+- [Adobe Audition](https://weibo.com/u/1112829033)
+- [Ultimate Vocal Remover 5](https://ultimatevocalremover.com/)
 
 ## 视频剪辑
 
-- Adobe Premiere Pro
+- [Adobe Premiere Pro](https://weibo.com/u/1112829033)
 - [剪映专业版](https://www.capcut.cn/)
 
 ## 科学上网
@@ -134,3 +139,13 @@ draft: false
 
 - [AnLink](https://anl.ink/)
 - [爱思助手](https://www.i4.cn/)
+
+## 虚拟机
+
+- [VMware Workstation Pro](https://www.bilibili.com/video/BV1c44ZeREwz)
+
+## Git 相关
+
+- [Git](https://git-scm.com/)
+
+- [GitHub Desktop](https://desktop.github.com/download/)
