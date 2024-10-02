@@ -6,6 +6,7 @@ import { getEntry } from 'astro:content'
 import { i18n } from '../i18n/translation'
 import I18nKey from '../i18n/i18nKey'
 import Markdown from '@components/misc/Markdown.astro'
+import Comment from "@components/comment/index.astro"
 
 const friendsPost = await getEntry('spec', 'friends')
 
@@ -81,5 +82,7 @@ const items = [
             </Markdown>
         </div>
     </div>
+
+<Comment post={entry}></Comment>
 
 </MainGridLayout>

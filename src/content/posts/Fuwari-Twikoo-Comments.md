@@ -90,7 +90,28 @@ export const commentConfig: CommentConfig = {
 
 ![就像这样](https://bu.dusays.com/2024/10/02/66fd33cc8a048.webp)
 
-打开 `/src/pages/posts/[...slug].astro` ，在 112 行处添加
+打开 `/src/pages/posts/[...slug].astro` ，在16行处添加 `import Comment from "@components/comment/index.astro"`
+
+```
+---
+import path from 'node:path'
+import { getCollection } from 'astro:content'
+import License from '@components/misc/License.astro'
+import Markdown from '@components/misc/Markdown.astro'
+import I18nKey from '@i18n/i18nKey'
+import { i18n } from '@i18n/translation'
+import MainGridLayout from '@layouts/MainGridLayout.astro'
+import { getDir, getPostUrlBySlug } from '@utils/url-utils'
+import { Icon } from 'astro-icon/components'
+import { licenseConfig } from 'src/config'
+import PostMetadata from '../../components/PostMeta.astro'
+import ImageWrapper from '../../components/misc/ImageWrapper.astro'
+import { profileConfig, siteConfig } from '../../config'
+import { formatDateToYYYYMMDD } from '../../utils/date-utils'
++ import Comment from "@components/comment/index.astro"
+```
+
+在 112 行处添加
 
 ```
 <Comment post={entry}></Comment>
