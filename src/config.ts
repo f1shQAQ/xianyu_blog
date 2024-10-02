@@ -86,6 +86,6 @@ export const licenseConfig: LicenseConfig = {
 
 export const commentConfig: CommentConfig = {
   twikoo: {
-    envId: 'https://wananqaq-twikoo.hf.space',
+    envId: 'https://comments.qqquq.com',
   },
 }
