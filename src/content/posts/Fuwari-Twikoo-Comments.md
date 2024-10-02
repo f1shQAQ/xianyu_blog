@@ -2,7 +2,7 @@
 title: 给你的 Fuwari 接入 Twikoo 评论
 published: 2024-10-02
 description: 'Fuwari 博客接入 Twikoo 评论'
-image: 'https://bu.dusays.com/2024/10/02/66fd343ee0a7e.webp'
+image: 'https://bu.dusays.com/2024/10/02/66fd356fc1592.webp'
 tags: [Twikoo]
 category: '折腾'
 draft: false 
