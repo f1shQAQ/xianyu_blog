@@ -5,7 +5,7 @@ import swup from '@swup/astro';
 import Compress from "astro-compress"
 import icon from "astro-icon"
 import { defineConfig } from "astro/config"
-import vercel from '@astrojs/vercel/serverless';
+// import vercel from '@astrojs/vercel/serverless';
 import Color from "colorjs.io"
 import rehypeAutolinkHeadings from "rehype-autolink-headings"
 import rehypeComponents from "rehype-components";/* Render the custom directive content */
@@ -134,6 +134,6 @@ export default defineConfig({
     },
   },
 
-  output: "server",
+  output: "static",
   adapter: vercel()
 })
