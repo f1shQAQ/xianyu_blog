@@ -14,9 +14,12 @@
 
 ### 如何申请
 
-发邮件到lfk#live.com，或发送至<a href="https://empty-navy-952.notion.site/10223da0d568805f8898d2f655531d57?pvs=4" target="_blank">微信公众号</a> / Telegram机器人 <a href="https://t.me/apply_friend_link_bot" target="_blank">友链申请姬</a>
+在下方按照如下格式评论
 
-- 名称:
-- 描述:
-- 链接:
-- 头像:
+```
+名称:
+描述:
+链接:
+头像:
+```
+
