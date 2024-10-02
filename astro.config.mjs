@@ -5,6 +5,7 @@ import swup from '@swup/astro';
 import Compress from "astro-compress"
 import icon from "astro-icon"
 import { defineConfig } from "astro/config"
+import vercel from '@astrojs/vercel/serverless';
 import Color from "colorjs.io"
 import rehypeAutolinkHeadings from "rehype-autolink-headings"
 import rehypeComponents from "rehype-components";/* Render the custom directive content */
@@ -18,10 +19,6 @@ import { GithubCardComponent } from "./src/plugins/rehype-component-github-card.
 import {parseDirectiveNode} from "./src/plugins/remark-directive-rehype.js";
 import { remarkReadingTime } from "./src/plugins/remark-reading-time.mjs"
 import {remarkExcerpt} from "./src/plugins/remark-excerpt.js";
-
-
-import { vercel } from "@astrojs/vercel";
-
 
 const oklchToHex = (str) => {
   const DEFAULT_HUE = 250
@@ -138,7 +135,7 @@ export default defineConfig({
   },
 
   // adapter: vercel()
-  output: "static",
+  output: "server",
 
   adapter: vercel()
 })
