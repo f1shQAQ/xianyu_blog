@@ -20,6 +20,9 @@ import { remarkReadingTime } from "./src/plugins/remark-reading-time.mjs"
 import {remarkExcerpt} from "./src/plugins/remark-excerpt.js";
 
 
+import { vercel } from "@astrojs/vercel";
+
+
 const oklchToHex = (str) => {
   const DEFAULT_HUE = 250
   const regex = /-?\d+(\.\d+)?/g
@@ -134,6 +137,8 @@ export default defineConfig({
     },
   },
 
-  output: "static",
   // adapter: vercel()
+  output: "static",
+
+  adapter: vercel()
 })
