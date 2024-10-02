@@ -13,6 +13,7 @@ import PostMetadata from '../../components/PostMeta.astro'
 import ImageWrapper from '../../components/misc/ImageWrapper.astro'
 import { profileConfig, siteConfig } from '../../config'
 import { formatDateToYYYYMMDD } from '../../utils/date-utils'
+import Comment from "@components/comment/index.astro"
 
 export async function getStaticPaths() {
   const blogEntries = await getCollection('posts', ({ data }) => {
@@ -108,6 +109,8 @@ const jsonLd = {
         </div>
     </div>
 
+    <Comment post={entry}></Comment>
+
     <div class="flex flex-col md:flex-row justify-between mb-4 gap-4 overflow-hidden w-full">
         <a href={entry.data.nextSlug ? getPostUrlBySlug(entry.data.nextSlug) : "#"}
            class:list={["w-full font-bold overflow-hidden active:scale-95", {"pointer-events-none": !entry.data.nextSlug}]}>
@@ -129,38 +132,6 @@ const jsonLd = {
             </div>}
         </a>
     </div>
-
-<script src="https://giscus.app/client.js"
-        data-repo="f1shQAQ/f1shQAQ.github.io"
-        data-repo-id="R_kgDOMx4vnA"
-        data-category="Announcements"
-        data-category-id="DIC_kwDOMx4vnM4CifDx"
-        data-mapping="pathname"
-        data-strict="0"
-        data-reactions-enabled="1"
-        data-emit-metadata="0"
-        data-input-position="top"
-        data-theme="preferred_color_scheme"
-        data-lang="zh-CN"
-        crossorigin="anonymous"
-        async>
-</script>
-
-<script src="https://giscus.app/client.js"
-        data-repo="f1shQAQ/f1shQAQ.github.io"
-        data-repo-id="R_kgDOMx4vnA"
-        data-category="Announcements"
-        data-category-id="DIC_kwDOMx4vnM4CifDx"
-        data-mapping="pathname"
-        data-strict="0"
-        data-reactions-enabled="1"
-        data-emit-metadata="0"
-        data-input-position="top"
-        data-theme="preferred_color_scheme"
-        data-lang="zh-CN"
-        crossorigin="anonymous"
-        async>
-</script>
 
 </MainGridLayout>
 
