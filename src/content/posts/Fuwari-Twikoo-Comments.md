@@ -2,7 +2,7 @@
 title: 给你的 Fuwari 接入 Twikoo 评论
 published: 2024-10-02
 description: 'Fuwari 博客接入 Twikoo 评论'
-image: ''
+image: 'https://bu.dusays.com/2024/10/02/66fd343ee0a7e.webp'
 tags: [Twikoo]
 category: '折腾'
 draft: false 
@@ -88,7 +88,7 @@ export const commentConfig: CommentConfig = {
 }
 ```
 
-![就像这样](https://bu.dusays.com/2024/10/02/66fd31861222a.webp)
+![就像这样](https://bu.dusays.com/2024/10/02/66fd33cc8a048.webp)
 
 打开 `/src/pages/posts/[...slug].astro` ，在 112 行处添加
 
