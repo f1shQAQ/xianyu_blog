@@ -54,6 +54,11 @@ export const profileConfig: ProfileConfig = {
   bio: '我们终将会在没有黑暗的地方相遇',
   links: [
     {
+      name: 'Home',
+      icon: 'fa6-brands:safari',
+      url: 'https://qqquq.com',
+    },
+    {
       name: 'WeChat',
       icon: 'fa6-brands:weixin',
       url: 'https://empty-navy-952.notion.site/10223da0d568805f8898d2f655531d57?pvs=4',
@@ -67,7 +72,7 @@ export const profileConfig: ProfileConfig = {
       name: 'Email',
       icon: 'material-symbols:mail',
       url: 'mailto:lfk@live.com',
-    },
+    }
   ],
 }
 
