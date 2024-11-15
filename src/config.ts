@@ -55,20 +55,13 @@ export const profileConfig: ProfileConfig = {
   links: [
     {
       name: 'WeChat',
-      icon: 'fa6-brands:weixin',       // Visit https://icones.js.org/ for icon codes
-                                        // You will need to install the corresponding icon set if it's not already included
-                                        // `pnpm add @iconify-json/<icon-set-name>`
+      icon: 'fa6-brands:weixin',
       url: 'https://empty-navy-952.notion.site/10223da0d568805f8898d2f655531d57?pvs=4',
     },
     {
       name: 'Steam',
       icon: 'fa6-brands:steam',
       url: 'https://steamcommunity.com/profiles/76561199187994629/',
-    },
-    {
-      name: 'Weibo',
-      icon: 'fa6-brands:weibo',
-      url: 'https://weibo.com/u/6995301021',
     },
     {
       name: 'Email',
