@@ -1,5 +1,5 @@
 ---
-title: 下载 Apple Music 的 ALAC 格式音乐
+title: 论如何下载 Apple Music 的 ALAC 格式音乐
 published: 2024-11-15
 description: '如标题所示，感觉写的有点烂'
 image: 'https://bu.dusays.com/2024/11/15/673760bf8a544.jpg'
