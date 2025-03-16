@@ -9,7 +9,7 @@
 - 名称: 咸鱼小窝
 - 描述: 我们终将会在没有黑暗的地方相遇
 - 链接: [https://qqquq.com/](https://qqquq.com/)
-- 头像: [https://bu.dusays.com/2023/12/04/656d6235635ef.webp](https://bu.dusays.com/2023/12/04/656d6235635ef.webp)
+- 头像: https://bu.dusays.com/2023/12/04/656d6235635ef.webp
 - RSS: [https://blog.qqquq.com/feed](https://blog.qqquq.com/feed)
 
 ### 如何申请
