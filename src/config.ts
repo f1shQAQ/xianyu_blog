@@ -71,7 +71,7 @@ export const profileConfig: ProfileConfig = {
     {
       name: 'Email',
       icon: 'material-symbols:mail',
-      url: 'mailto:lfk@live.com',
+      url: 'mailto:npm@vip.qq.com',
     }
   ],
 }
