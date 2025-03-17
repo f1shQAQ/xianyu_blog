@@ -49,7 +49,7 @@ export const navBarConfig: NavBarConfig = {
 }
 
 export const profileConfig: ProfileConfig = {
-  avatar: 'https://bu.dusays.com/2023/12/04/656d6235635ef.webp',  // Relative to the /src directory. Relative to the /public directory if it starts with '/'
+  avatar: 'https://bu.dusays.com/2025/03/16/67d6eec385fbe.jpg',  // Relative to the /src directory. Relative to the /public directory if it starts with '/'
   name: '没有梦想的咸鱼',
   bio: '我们终将会在没有黑暗的地方相遇',
   links: [
