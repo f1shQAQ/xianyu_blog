@@ -54,9 +54,9 @@ export const profileConfig: ProfileConfig = {
   bio: '我们终将会在没有黑暗的地方相遇',
   links: [
     {
-      name: 'Home',
-      icon: 'fa6-brands:safari',
-      url: 'https://qqquq.com',
+      name: 'REDnote',
+      icon: 'simple-icons:xiaohongshu',
+      url: 'https://www.xiaohongshu.com/user/profile/65eda52f000000000500e7b9',
     },
     {
       name: 'WeChat',
