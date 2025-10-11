@@ -92,6 +92,7 @@ const bannerOffset = bannerOffsetByPosition[siteConfig.banner.position || 'cente
 
 		<meta name="viewport" content="width=device-width" />
 		<meta name="generator" content={Astro.generator} />
+		<meta name="google-adsense-account" content="ca-pub-1416703587395957">
 		{favicons.map(favicon => (
 			<link rel="icon"
 				  href={favicon.src.startsWith('/') ? url(favicon.src) : favicon.src}
