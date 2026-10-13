@@ -250,7 +250,7 @@ export const id: Translation = {
 		"Pemutaran otomatis diblokir. Tekan putar untuk memulai.",
 	[Key.musicErrorInvalidTrack]: "Lagu ini tidak valid.",
 
-	[Key.themeColor]: "Theme Color",
+	[Key.themeColor]: "Warna Tema",
 	[Key.colorStyle]: "Gaya Warna",
 	[Key.colorSpec]: "Spesifikasi Warna",
 
