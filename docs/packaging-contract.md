@@ -99,6 +99,33 @@ CSS file, so it resolves to the theme's own `src/` in both modes.
   dynamic `import()` outside the bundle) must be a **peer** dependency, because
   pnpm's strict layout hides the theme's own copy from the project root.
 
+## The peer dependency list
+
+The shortest possible one, and each entry has a verified reason in
+`src/integration/verify-peers.ts`. Four distinct mechanisms force a package
+onto the user's project:
+
+| Mechanism | Packages | Why bundling fails |
+| --- | --- | --- |
+| Imported by the user's own config | `astro` | the project *is* an Astro project |
+| Registered in `optimizeDeps.include` | `svelte`, `@astrojs/svelte` | Vite resolves that list from the project root, so a nested copy is invisible and islands silently stay server-side |
+| Imported by Astro itself, dynamically | `sharp` | Astro's image service resolves it from its own location; the `@img/*` bindings must also be version-matched |
+| Discovered by reading the user's `package.json` | the four `@iconify-json/*` sets | astro-icon finds them by name lookup, not by resolving files — the files resolve fine from inside the theme, which is what makes this one a trap |
+
+`src/integration/verify-peers.ts` is the single source of truth for that list,
+and `astro:config:setup` enforces it before anything expensive runs. Adding a
+package there means adding it to `PEER_REQUIREMENTS`, choosing its tier, and
+writing down the mechanism — the reason string is user-visible, so it is the
+contract's documentation as much as the code is. Its tests
+(`tests/verify-peers.test.mjs`) cover absent, stale, unparseable and
+tooling-only cases.
+
+Note the difference between *resolving* and *discovering*: pnpm's strict
+layout hides a theme dependency from the project root, but a theme dependency
+of the theme resolves from inside the theme. Whether a package can be bundled
+depends on whether the consumer looks it up in the manifest or walks the
+filesystem — and you have to read the consumer to know which it does.
+
 ## Adding things
 
 | You add | What to do |
