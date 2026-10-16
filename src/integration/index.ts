@@ -32,6 +32,10 @@ import {
 } from "./resolve/registry.ts";
 import { collectRoutes, filterRoutes } from "./routes.ts";
 import type { ResolvedShironesPaths, ShironesOptions } from "./types.ts";
+import {
+	reportPeerViolations,
+	verifyPeerRequirements,
+} from "./verify-peers.ts";
 import { shironesFallbackResolver } from "./vite/fallback-resolver.ts";
 import { shironesIconRegeneration } from "./vite/icon/regeneration.ts";
 import { shironesOverlay } from "./vite/overlay.ts";
@@ -171,6 +175,23 @@ export function shirones(options: ShironesOptions = {}): AstroIntegration {
 				logger,
 			}) => {
 				paths = resolvePaths(options, config.root, import.meta.url);
+
+				// Before anything else: a missing peer dependency fails later as a
+				// resolution error inside a bundled plugin, which names neither the
+				// dependency nor the fix. The theme repo is self-sufficient, so only
+				// package mode is checked.
+				const peerViolations = verifyPeerRequirements({
+					packageRoot: paths.packageRoot,
+					projectRoot: paths.projectRoot,
+					skip: paths.isThemeRepo,
+					bundledIntegrations: options.bundledIntegrations !== false,
+				});
+				if (reportPeerViolations(peerViolations, logger)) {
+					throw new Error(
+						"[shirones] the project is missing dependencies the theme requires — " +
+							"see the error above for the list and the install command.",
+					);
+				}
 
 				logger.info(
 					`${paths.isThemeRepo ? "theme repository" : "installed package"} mode | content: ${paths.contentDir}`,
