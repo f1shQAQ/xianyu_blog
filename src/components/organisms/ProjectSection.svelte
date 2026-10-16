@@ -312,7 +312,8 @@ $effect(() => {
 		gap: 0.75rem
 		margin-top: 1.25rem
 
-		/* 瀑布流：仅 ≥md（单列下 packMasonry 自动清空定位，保持普通行距）。
+		/* 瀑布流：仅 ≥md（本断点内即使只排得下 1 列，packMasonry 也会写
+		   grid-row-end span，否则卡片只占 1 行 8px 会重叠）。
 		   约定与 PostPage/masonry.ts 同步：auto-rows 8px、row-gap 0、
 		   行距 16px 烘焙进 span（column-gap 与 ROW_GAP 同值） */
 		@media (min-width: bp-md)
