@@ -308,7 +308,7 @@ export function reportPeerViolations(
 			? `declares ${violation.declared}, the theme needs ${violation.required}`
 			: "not declared";
 		logger.warn(
-			`[shirones] ${violation.name} ${detail} — ${violation.reason}. ` +
+			`${violation.name} ${detail} — ${violation.reason}. ` +
 				"This only affects `astro check` and editor tooling; the build is unaffected.",
 		);
 	}
@@ -326,17 +326,17 @@ export function reportPeerViolations(
 				violation.required ?? "latest",
 			]),
 		);
+		const command = installCommand(
+			runtime.map((violation) => violation.name),
+			ranges,
+		);
 		logger.error(
-			`[shirones] ${runtime.length} required dependency ${
-				runtime.length === 1 ? "is" : "are"
+			`${runtime.length} required ${
+				runtime.length === 1 ? "dependency is" : "dependencies are"
 			} missing from this project:\n${lines.join("\n")}\n` +
-				"  pnpm reports an unmet peer warning for these, but it does not say that the\n" +
-				"  build will fail. Install them, or run `npx shirones init --update` to add\n" +
-				"  them to package.json:\n" +
-				`    ${installCommand(
-					runtime.map((violation) => violation.name),
-					ranges,
-				)}`,
+				"  pnpm prints an unmet peer warning for these, but it does not say that the\n" +
+				"  build will fail. Install them, or run `npx shirones init --update`:\n" +
+				`    ${command}`,
 		);
 		return true;
 	}

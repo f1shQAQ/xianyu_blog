@@ -213,6 +213,44 @@ test("the reason text is shown with every error", () => {
 	assert.match(errors[0], /@iconify-json\/material-symbols@\^1\.2\.93/);
 });
 
+test("the error names the package manager and avoids a doubled prefix", () => {
+	writeThemeManifest({
+		astro: "^7.3.5",
+		svelte: "^5.57.1",
+	});
+	writeProjectPackage({}, {});
+	const { logger, errors } = makeLogger();
+	const violations = verifyPeerRequirements({ packageRoot, projectRoot });
+	reportPeerViolations(violations, logger);
+	assert.equal(errors.length, 1);
+	// Astro prefixes every message with the integration name, so the message
+	// itself must not repeat it.
+	assert.doesNotMatch(errors[0], /^\[shirones\]/);
+	assert.doesNotMatch(errors[0], /\[shirones\].*\[shirones\]/);
+	// Two missing packages is plural, and the sentence has to agree.
+	assert.match(errors[0], /2 required dependencies are missing/);
+	assert.match(errors[0], /pnpm add -D|npm install -D/);
+});
+
+test("a single missing dependency keeps the singular verb", () => {
+	writeThemeManifest({ astro: "^7.3.5" });
+	writeProjectPackage({}, {});
+	const { logger, errors } = makeLogger();
+	const violations = verifyPeerRequirements({ packageRoot, projectRoot });
+	reportPeerViolations(violations, logger);
+	assert.match(errors[0], /1 required dependency is missing/);
+});
+
+test("a stale runtime peer reports both versions", () => {
+	writeThemeManifest({ sharp: "^0.35.5" });
+	writeProjectPackage({ sharp: "^0.34.5" });
+	const { logger, errors } = makeLogger();
+	const violations = verifyPeerRequirements({ packageRoot, projectRoot });
+	assert.equal(reportPeerViolations(violations, logger), true);
+	assert.match(errors[0], /declares \^0\.34\.5, needs \^0\.35\.5/);
+	assert.match(errors[0], /sharp@\^0\.35\.5/);
+});
+
 test("every requirement carries a reason the user can act on", () => {
 	for (const requirement of PEER_REQUIREMENTS) {
 		assert.ok(requirement.reason.length > 10, `${requirement.name} needs a reason`);
