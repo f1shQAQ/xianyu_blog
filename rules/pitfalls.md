@@ -557,3 +557,32 @@ snapshotPathTemplate: "{snapshotDir}/{testFileDir}/{testFileName}-snapshots/{arg
 
 **防回归**：`tests/site/layout-stability.spec.ts`（覆盖槽位预留、长短页宽度一致、长/短页双向导航、壁纸模式切换、页面滚动锁、无槽位时的补偿）。注意 Playwright 默认带 `--hide-scrollbars`，滚动条宽度为 0 时该契约完全不可观测，spec 必须显式关掉该默认参数。
 
+---
+
+## 11. npm 包模式的依赖归属
+
+### 11.1 「能不能解析」和「会不会被发现」是两件事
+
+**现象**：想把 `@iconify-json/*` 从 peer 依赖下沉成 `shirones` 自己的依赖，这样用户 `package.json` 里就不用列图标集。把包从 `devDependencies` 挪进 `dependencies`、删掉 `package.manifest.json` 的 `extraDependencies` 条目，一切静态检查全绿，但真按包模式装出来，每个图标都抛 `Unable to locate the "material-symbols" icon set!`。
+
+**根因**：`astro-icon` 有两个独立环节，容易被「依赖解析」的直觉混为一谈：
+
+1. **文件解析** —— `loadCollectionFromFS` 用 `import-meta-resolve` 从 `process.cwd()` 往上找 `<set>/icons.json`。pnpm 严格布局下**这条是通的**：主题自己的依赖装在
+   `.pnpm/<pkg>@<ver>/node_modules/`，与主题源码同级，Node 向上走一级就命中。实测（真实 tarball 安装后调用 astro-icon 的 loader）确认解析成功。
+2. **集合发现** —— `detectInstalledCollections(root)` 读的是**用户项目的 `package.json`**，只收集其中声明过的 `@iconify-json/*`；`include` 只能往这个列表里补 `["*"]`，**不能把列表外的集合加进来**。下沉依赖后用户 `package.json` 里没有这些条目，发现列表为空，虚拟模块导出 `{}` —— 文件明明在盘上，图标却一个都不渲染。
+
+**解法**：`@iconify-json/*` 必须留在**用户项目的 peer 依赖**里，`shirones init` 继续自动安装；`package.manifest.json` 的 `extraDependencies` 也不要因「主题自己 import 了」就删。真正判断某个包该放哪，按「谁需要发现它」而不是「谁能 import 它」。
+
+**逃生通道**：主题自己的 `localIconCollections` 链路（`src/integration/vite/icon/collections.ts` 用 `createRequire(import.meta.url)` 在**包内部**解析，`Icon.svelte` + `@shirone/iconify-offline` 消费）没有发现环节，天生可以随主题走。若将来要彻底甩掉 astro-icon，把 28 处 `astro-icon/components` 的消费者迁到这条链路是前置条件——那是比挪依赖大得多的改动。
+
+**验证方式**：不要用「`astro check` 过了 + `check:package-manifest` 过了」当下沉的证据。必须真装一次：流水线 `pnpm templates && pnpm build` 产出 tarball → 临时目录 `pnpm add file:…` → `shirones init` → `pnpm build` → 数 `dist/` 里 `data-icon="<prefix>:` 的条数是否等于预期。本仓库 `icons.spec.ts` 的 5 条用例中 4 条在干净 `work` 分支上也会因 `networkidle` 点击超时而失败，**不能**用它单独证明回归；要和未改动提交跑同一 spec 对比。
+
+### 11.2 并发跑多个重型构建会把验证阶段打成假失败
+
+**现象**：流水线 `validate` 的 dev-server 冒烟阶段报 `[ERROR] transport invoke timed out after 60000ms` 并 `dev server returned 500 for /`，同一批日志里 `astro build` 却刚成功。
+
+**根因**：`validate`、`override-test` 和 Playwright 各自要起 Astro dev/build，各自峰值 3–6 GB。2 核 8 GB 上并行跑，cgroup 先 OOM kill 掉其中一两个，剩下的看起来像是代码坏掉。
+
+**解法**：这几个步骤**串行**跑，每步单独占满内存；同时跑两个必假阳性。判断「是不是我的改动引起的」—— 同一条命令在未改动提交上再跑一遍，结果一致即为环境问题。
+
+
