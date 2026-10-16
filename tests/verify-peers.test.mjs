@@ -189,28 +189,30 @@ test("a devDependency satisfies the requirement as well as a dependency", () => 
 	assert.deepEqual(verifyPeerRequirements({ packageRoot, projectRoot }), []);
 });
 
-test("disabling bundled integrations waives the icon sets", () => {
-	reset();
-	writeThemeManifest({ "@iconify-json/fa7-brands": "^1.2.4" });
-	writeProjectPackage({});
-	const violations = verifyPeerRequirements({
-		packageRoot,
-		projectRoot,
-		bundledIntegrations: false,
-	});
-	assert.deepEqual(violations, []);
-});
-
 test("the reason text is shown with every error", () => {
 	reset();
-	writeThemeManifest({ "@iconify-json/material-symbols": "^1.2.93" });
+	writeThemeManifest({ svelte: "^5.57.1" });
 	writeProjectPackage({});
 	const { logger, errors } = makeLogger();
 	const violations = verifyPeerRequirements({ packageRoot, projectRoot });
 	reportPeerViolations(violations, logger);
 	assert.equal(errors.length, 1);
-	assert.match(errors[0], /astro-icon locates icon sets/);
-	assert.match(errors[0], /@iconify-json\/material-symbols@\^1\.2\.93/);
+	assert.match(errors[0], /optimizeDeps\.include/);
+	assert.match(errors[0], /svelte@\^5\.57\.1/);
+});
+
+test("no iconify package is required of the project", () => {
+	reset();
+	writeThemeManifest({
+		"@iconify-json/material-symbols": "^1.2.93",
+		"@iconify-json/fa7-brands": "^1.2.4",
+	});
+	writeProjectPackage({});
+	// The sets ship as the theme's own dependencies now: they are resolved from
+	// inside the installed package, so a project that declares none of them has
+	// nothing to fix.
+	const violations = verifyPeerRequirements({ packageRoot, projectRoot });
+	assert.deepEqual(violations, []);
 });
 
 test("the error names the package manager and avoids a doubled prefix", () => {

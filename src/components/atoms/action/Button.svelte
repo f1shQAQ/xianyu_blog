@@ -8,7 +8,7 @@ import Icon from "@iconify/svelte";
  * - 尺寸对齐 latest：xsmall 32/图标20、small 40/20（默认）、medium 56/24、large 96/32、xlarge 136/40；
  * - 可选 leading 图标（Iconify，18px 基础，随尺寸缩放）；label-large 文本；
  * - 圆角默认 12px（站点形状契约 --shape-corner-m），`radius` prop 可覆盖（胶囊等官方形态）；
- * - `children` snippet 插槽（优先于 label 渲染；SSR 静态场景用此方式传 astro-icon 等已渲染图标）；
+ * - `children` snippet 插槽（优先于 label 渲染；SSR 静态场景用此方式传 Icon 原子等已渲染图标）；
  * - `href` 提供时渲染 <a>（原生语义，带 target/rel）；`full` 占满宽度；`align` 控制内容对齐（center/start/between）；
  * - 交互：原生 button + m3-state-layer（hover/focus/pressed）；filled/elevated/tonal hover 阴影提升（level0→1 / 1→2）；
  * - disabled 对齐官方：filled/elevated/tonal 容器 12% + 文字/图标 38%（分开控制，避免全局状态层双重透明）；
@@ -34,7 +34,7 @@ let {
 	style = "",
 	radius = "",
 }: {
-	/** 内容插槽（优先于 label；SSR 静态场景请用此方式传入 astro-icon 等已渲染图标） */
+	/** 内容插槽（优先于 label；SSR 静态场景请用此方式传入 Icon 原子等已渲染图标） */
 	children?: import("svelte").Snippet;
 	/** 按钮文本（label-large） */
 	label?: string;

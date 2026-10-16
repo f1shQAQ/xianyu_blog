@@ -86,7 +86,6 @@
 		"@tailwindcss/vite": "4",
 		"astro": "7.3.5",
 		"astro-expressive-code": "^0.44.2",
-		"astro-icon": "^1.2.0",
 		"hast-util-from-html": "2.0.3",
 		"hastscript": "^9.0.1",
 		"katex": "^0.16.47",

@@ -2,7 +2,7 @@
 import FAB from "@components/atoms/action/FAB.svelte";
 import I18nKey from "@i18n/i18nKey";
 import { i18n } from "@i18n/translation";
-import { Icon } from "astro-icon/components";
+import Icon from "@iconify/svelte";
 ---
 
 <div
@@ -11,7 +11,7 @@ import { Icon } from "astro-icon/components";
 	onclick="window.__shironeFab?.scrollToTop() ?? window.scrollTo({ top: 0, behavior: 'smooth' })"
 >
 	<FAB client:load variant="primary" ariaLabel={i18n(I18nKey.backToTop)}>
-		<Icon name="material-symbols:keyboard-arrow-up-rounded" class="text-2xl" />
+		<Icon icon="material-symbols:keyboard-arrow-up-rounded" class="text-2xl" />
 	</FAB>
 </div>
 

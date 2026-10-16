@@ -1,8 +1,8 @@
 ---
 import I18nKey from "@i18n/i18nKey";
 import { i18n } from "@i18n/translation";
+import Icon from "@iconify/svelte";
 import { formatDateToYYYYMMDD } from "@utils/date-utils";
-import { Icon } from "astro-icon/components";
 import { licenseConfig, profileConfig } from "@/config";
 
 interface Props {
@@ -47,7 +47,7 @@ const postUrl = decodeURIComponent(
 			<a href={licenseConf.url} target="_blank" rel="noopener noreferrer" class="m3-license-card__meta-link">{licenseConf.name}</a>
 		</div>
 	</div>
-	<Icon name="fa7-brands:creative-commons" class="m3-license-card__watermark" aria-hidden="true" />
+	<Icon icon="fa7-brands:creative-commons" class="m3-license-card__watermark" aria-hidden="true" />
 </div>
 
 <style lang="stylus">

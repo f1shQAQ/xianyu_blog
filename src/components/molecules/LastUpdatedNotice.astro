@@ -1,12 +1,12 @@
 ---
 import I18nKey from "@i18n/i18nKey";
 import { i18n } from "@i18n/translation";
+import Icon from "@iconify/svelte";
 import {
 	formatDateToYYYYMMDD,
 	normalizeMinimumAgeDays,
 	resolveLastUpdatedNoticeState,
 } from "@utils/date-utils";
-import { Icon } from "astro-icon/components";
 
 interface Props {
 	date: Date;
@@ -32,7 +32,7 @@ const messageParts = i18n(I18nKey.lastUpdatedNotice).split(
 	hidden={!state.visible}
 >
 	<span class="last-updated-notice__icon" aria-hidden="true">
-		<Icon name="material-symbols:history-rounded" />
+		<Icon icon="material-symbols:history-rounded" />
 	</span>
 	<div class="last-updated-notice__content">
 		<p class="last-updated-notice__text">

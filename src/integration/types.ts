@@ -78,7 +78,7 @@ export interface ShironesOptions {
 
 	/**
 	 * Register the bundled Astro integrations (svelte, mdx, sitemap, swup,
-	 * astro-icon, expressive-code). Disable only if you register them yourself.
+	 * expressive-code). Disable only if you register them yourself.
 	 * @default true
 	 */
 	bundledIntegrations?: boolean;

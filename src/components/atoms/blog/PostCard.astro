@@ -8,7 +8,7 @@ import { i18n } from "@i18n/translation";
  * 视觉对齐 display/Card 令牌：surface-container-high 基、corner-large、
  * hover 抬升阴影 + 标题 primary + 箭头滑出；有封面时桌面端右侧 28% 图。
  */
-import { Icon } from "astro-icon/components";
+import Icon from "@iconify/svelte";
 import type { BlogMetaLink } from "./PostMeta.astro";
 import PostMeta from "./PostMeta.astro";
 import TagBadge from "./TagBadge.astro";
@@ -91,17 +91,17 @@ const titleLabel =
 					aria-hidden="true"
 					title={encrypted ? `${pinnedLabel}, ${encryptedLabel}` : pinnedLabel}
 				>
-					<Icon name="material-symbols:keep-rounded" />
+					<Icon icon="material-symbols:keep-rounded" />
 					{encrypted && (
 						<span class="m3-blog-postcard__pin-lock">
-							<Icon name="material-symbols:lock-rounded" />
+							<Icon icon="material-symbols:lock-rounded" />
 						</span>
 					)}
 				</span>
 			)}
 			{encrypted && !pinned && (
 				<span class="m3-blog-postcard__encrypted" aria-hidden="true" title={encryptedLabel}>
-					<Icon name="material-symbols:lock-rounded" />
+					<Icon icon="material-symbols:lock-rounded" />
 				</span>
 			)}
 			{title}
@@ -148,12 +148,12 @@ const titleLabel =
 			</picture>
 			<span class="m3-blog-postcard__cover-mask" aria-hidden="true"></span>
 			<span class="m3-blog-postcard__cover-arrow" aria-hidden="true">
-				<Icon name="material-symbols:chevron-right-rounded" />
+				<Icon icon="material-symbols:chevron-right-rounded" />
 			</span>
 		</a>
 	) : (
 		<a class="m3-blog-postcard__enter" href={href} aria-label={title}>
-			<Icon name="material-symbols:chevron-right-rounded" />
+			<Icon icon="material-symbols:chevron-right-rounded" />
 		</a>
 	)}
 </article>

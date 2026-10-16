@@ -42,9 +42,25 @@ absent in source mode). Together those cover both modes without a mode check:
 in source mode the theme *is* the project, so `packageSrc` already contains
 `src/content`.
 
-`ICON_PREFIXES` in `collections.ts` is the allow-list of usable sets, and it
-duplicates `iconInclude` in `src/config/integrationsConfig.ts`. Both need a new
-set; keep them in step.
+`ICON_PREFIXES` in `collections.ts` is the allow-list of usable sets. A new set
+needs adding there, and a `@iconify-json/<set>` entry in the theme's
+`dependencies` — that is the whole configuration. Nothing else needs editing:
+this module no longer shares the list with `astro-icon`, so there is no second
+copy to keep in step.
+
+## The `local` collection
+
+A project's own `src/icons/*.svg` is emitted under the `local` prefix, which is
+what replaced astro-icon's icon directory. It used to require four
+`@iconify-json/*` packages on every user's `package.json` because astro-icon
+located sets by reading that file; this module resolves them from inside the
+installed package instead, so those sets ship as the theme's dependencies and
+the user declares none of them.
+
+`Icon.svelte` maps a bare `<icon>` (no `prefix:`) onto `local:`, which keeps
+astro-icon's call-site syntax working. Parsing is regex-based and lenient — a
+file with no `viewBox`/`width`/`height`, or an empty `<svg>`, is dropped rather
+than thrown on, matching what astro-icon did.
 
 ## Gotcha: Vite resolves aliases before plugins
 

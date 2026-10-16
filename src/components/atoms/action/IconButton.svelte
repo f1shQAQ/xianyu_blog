@@ -10,7 +10,7 @@ import Icon from "@iconify/svelte";
  * - toggle 模式：checked（$bindable）+ checkedIcon，点击切换并触发 onchange，aria-pressed 同步；
  * - 交互：原生 button + m3-state-layer（hover/focus/pressed）；disabled 对齐官方（图标 38%、filled/tonal 容器 12%）；
  * - **图标两种方式**：`icon` prop（Iconify 名，仅客户端水合场景可用——@iconify/svelte 靠运行时加载数据，
- *   SSR 无 hydration 时渲染空白）；`children` snippet（静态 SSR 场景必须用此方式传 astro-icon 等已渲染图标，
+ *   SSR 无 hydration 时渲染空白）；`children` snippet（静态 SSR 场景必须用此方式传 Icon 原子等已渲染图标，
  *   尺寸由调用方 class 控制，如 `text-[1.25rem]`）；
  * - href 提供时渲染 <a>（原生语义，带 target/rel）；
  * - 通用场景：工具条操作、收藏/开关图标、AppBar 动作等。
@@ -37,7 +37,7 @@ let {
 	class: className = "",
 	style = "",
 }: {
-	/** 图标内容插槽（优先于 icon prop；SSR 静态场景请用此方式传入 astro-icon 等已渲染图标） */
+	/** 图标内容插槽（优先于 icon prop；SSR 静态场景请用此方式传入 Icon 原子等已渲染图标） */
 	children?: import("svelte").Snippet;
 	/** 图标（Iconify 名；仅客户端水合场景可用，SSR 无水合时图标不会加载） */
 	icon?: string;

@@ -6,7 +6,6 @@ import type { AstroIntegration } from "astro";
 import {
 	expressiveCodeShared,
 	IMAGE_ENDPOINT_ROUTE,
-	iconInclude,
 	isMusicBundleFile,
 	MUSIC_SIDEBAR_VIRTUAL_ID,
 	mdxOptions,
@@ -184,7 +183,6 @@ export function shirones(options: ShironesOptions = {}): AstroIntegration {
 					packageRoot: paths.packageRoot,
 					projectRoot: paths.projectRoot,
 					skip: paths.isThemeRepo,
-					bundledIntegrations: options.bundledIntegrations !== false,
 				});
 				if (reportPeerViolations(peerViolations, logger)) {
 					throw new Error(
@@ -526,7 +524,6 @@ async function createBundledIntegrations(
 ) {
 	const [
 		{ default: swup },
-		{ default: icon },
 		{ default: expressiveCode },
 		{ default: svelte, vitePreprocess },
 		{ default: sitemap },
@@ -535,7 +532,6 @@ async function createBundledIntegrations(
 		{ pluginLineNumbers },
 	] = await Promise.all([
 		import("@swup/astro"),
-		import("astro-icon"),
 		import("astro-expressive-code"),
 		import("@astrojs/svelte"),
 		import("@astrojs/sitemap"),
@@ -590,7 +586,6 @@ async function createBundledIntegrations(
 	return [
 		...(oddmiscIntegration ? [oddmiscIntegration] : []),
 		swup({ ...swupOptions, ...swupForwardOptions }),
-		icon({ include: iconInclude }),
 		expressiveCode({
 			// `themes` is built here rather than shared: it reads
 			// expressiveCodeConfig, which this mode loads through

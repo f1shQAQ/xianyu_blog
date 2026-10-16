@@ -2,10 +2,10 @@
 import ArticleDiscoveryItem from "@components/molecules/ArticleDiscoveryItem.astro";
 import I18nKey from "@i18n/i18nKey";
 import { i18n } from "@i18n/translation";
+import Icon from "@iconify/svelte";
 import type { PostForList } from "@utils/content-utils";
 import { formatDateToYYYYMMDD } from "@utils/date-utils";
 import { getPostUrlBySlug } from "@utils/url-utils";
-import { Icon } from "astro-icon/components";
 
 interface Props {
 	related: PostForList[];
@@ -33,7 +33,7 @@ const hasRandom = random.length > 0;
 				<section class="article-discovery__lane article-discovery__lane--related" data-discovery-related>
 					<div class="article-discovery__lane-heading">
 						<div class="article-discovery__lane-title">
-							<Icon name="material-symbols:hub-outline-rounded" />
+							<Icon icon="material-symbols:hub-outline-rounded" />
 							<h3>{i18n(I18nKey.relatedReading)}</h3>
 						</div>
 						<p>{i18n(I18nKey.relatedReadingSubtitle)}</p>
@@ -56,7 +56,7 @@ const hasRandom = random.length > 0;
 				<section class="article-discovery__lane article-discovery__lane--random" data-discovery-random>
 					<div class="article-discovery__lane-heading">
 						<div class="article-discovery__lane-title">
-							<Icon name="material-symbols:explore-outline-rounded" />
+							<Icon icon="material-symbols:explore-outline-rounded" />
 							<h3>{i18n(I18nKey.randomReading)}</h3>
 						</div>
 						<p>{i18n(I18nKey.randomReadingSubtitle)}</p>

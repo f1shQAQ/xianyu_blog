@@ -2,13 +2,13 @@
 import TocList from "@components/atoms/blog/TocList.astro";
 import I18nKey from "@i18n/i18nKey";
 import { i18n } from "@i18n/translation";
-import type { MarkdownHeading } from "astro";
 /**
  * FloatingTOCPanel.astro
  * 专为移动端/平板设计的悬浮大纲目录面板卡片。
  * M3 Surface Container High 风格，支持平滑滚动跳转、当前大纲高亮与键盘无障碍退出。
  */
-import { Icon } from "astro-icon/components";
+import Icon from "@iconify/svelte";
+import type { MarkdownHeading } from "astro";
 import { siteConfig } from "@/config";
 
 interface Props {
@@ -52,7 +52,7 @@ const tocHeadings = headings.map((h) => ({
 	<!-- 头部栏 -->
 	<div class="m3-floating-toc-panel__header">
 		<div class="flex items-center gap-2">
-			<Icon name="material-symbols:format-list-bulleted-rounded" class="text-xl text-[var(--primary)]" />
+			<Icon icon="material-symbols:format-list-bulleted-rounded" class="text-xl text-[var(--primary)]" />
 			<h3 class="m3-floating-toc-panel__title">
 				{i18n(I18nKey.tableOfContents)}
 			</h3>
@@ -63,7 +63,7 @@ const tocHeadings = headings.map((h) => ({
 			class="m3-floating-toc-close m3-state-layer"
 			aria-label={i18n(I18nKey.close)}
 		>
-			<Icon name="material-symbols:close-rounded" class="text-lg" />
+			<Icon icon="material-symbols:close-rounded" class="text-lg" />
 		</button>
 	</div>
 

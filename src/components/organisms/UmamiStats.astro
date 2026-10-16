@@ -2,7 +2,7 @@
 import MetaIcon from "@components/atoms/display/MetaIcon.astro";
 import I18nKey from "@i18n/i18nKey";
 import { i18n } from "@i18n/translation";
-import { Icon } from "astro-icon/components";
+import Icon from "@iconify/svelte";
 import { resolveUmamiOptions, umamiConfig } from "@/config";
 
 interface Props {
@@ -36,8 +36,7 @@ const rootClass = [
 			<>
 				<hr aria-hidden="true" />
 				<div>
-					<Icon
-						name="material-symbols:visibility-outline-rounded"
+					<Icon icon="material-symbols:visibility-outline-rounded"
 						aria-hidden="true"
 						is:inline
 					/>

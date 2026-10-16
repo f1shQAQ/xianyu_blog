@@ -275,7 +275,7 @@
 			"tier": "A",
 			"source": "原创",
 			"landed": true,
-			"note": "SSR 静态页页内大标题（astro-icon 内联，区别于 molecules 版）"
+			"note": "SSR 静态页页内大标题（Icon 内联，区别于 molecules 版）"
 		},
 		{
 			"name": "PanelStack",

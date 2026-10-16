@@ -182,9 +182,12 @@ async function countFiles(dir) {
  * dependencies directly. Some tooling resolves from the project root rather
  * than from the importing file, and pnpm's strict layout hides the theme's own
  * dependencies there: `@astrojs/svelte` registers `svelte/*` subpaths in
- * `optimizeDeps.include`, and astro-icon loads `@iconify-json/*` sets through
- * `require.resolve` in Node. Installing them at the root is the only thing that
- * satisfies both, so `init` writes them all into package.json and installs.
+ * `optimizeDeps.include`. Installing them at the root is the only thing that
+ * satisfies both, so `init` writes them into package.json and installs.
+ *
+ * This is the short list, and each entry has a reason recorded in
+ * `src/integration/verify-peers.ts`, which also reports a missing one with
+ * the exact install command instead of pnpm's generic peer warning.
  */
 
 /** Dependencies whose install scripts must be allowed to run. */
@@ -1306,8 +1309,9 @@ async function init(args) {
 	// 3b. Starter files from `pnpm create astro` shadow the theme.
 	await clearStarterFiles();
 
-	// 4. `astro-icon` scans this directory for local SVGs; creating it up front
-	//    avoids a confusing ENOENT warning on the first build.
+	// 4. Holds the project's own SVGs, which `vite/icon/collections.ts` turns into
+	//    the `local` icon collection. Created up front so the first build has a
+	//    directory to read rather than a confusing ENOENT.
 	await mkdir(join(CWD, "src/icons"), { recursive: true });
 
 	// 5. Project metadata.
