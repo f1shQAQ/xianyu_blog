@@ -1,14 +1,51 @@
 import assert from "node:assert/strict";
-import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
+import {
+	mkdirSync,
+	mkdtempSync,
+	readFileSync,
+	rmSync,
+	writeFileSync,
+} from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import test, { after } from "node:test";
-import { collectLocalIcons } from "../src/integration/vite/icon/collections.ts";
+import {
+	collectLocalIcons,
+	ICON_PREFIXES,
+} from "../src/integration/vite/icon/collections.ts";
+
+const ROOT = new URL("..", import.meta.url).pathname;
+const pkg = JSON.parse(readFileSync(join(ROOT, "package.json"), "utf8"));
 
 const dir = mkdtempSync(join(tmpdir(), "shirones-local-icons-"));
 
 after(() => {
 	rmSync(dir, { recursive: true, force: true });
+});
+
+test("every allowed icon set is a dependency of the theme", () => {
+	// The contract that replaced astro-icon's `iconInclude`: astro-icon located
+	// sets by reading the *user's* manifest, which is why four @iconify-json
+	// packages used to land in every project's package.json. This module
+	// resolves from inside the installed package instead, so a set only has to
+	// be declared here — and if it is missing, package mode silently drops the
+	// icons while source mode still finds them.
+	const declared = new Set(Object.keys(pkg.dependencies ?? {}));
+	for (const prefix of ICON_PREFIXES) {
+		assert.ok(
+			declared.has(`@iconify-json/${prefix}`),
+			`@iconify-json/${prefix} is allowed but not a dependency of the theme`,
+		);
+	}
+});
+
+test("the allow-list is exactly the four sets the theme references", () => {
+	assert.deepEqual([...ICON_PREFIXES].sort(), [
+		"fa7-brands",
+		"fa7-solid",
+		"material-symbols",
+		"simple-icons",
+	]);
 });
 
 test("a missing directory yields no collection", () => {
@@ -72,7 +109,10 @@ test("width and height attributes are used when there is no viewBox", () => {
 test("a file with no geometry is dropped, not fatal", () => {
 	const target = join(dir, "partial");
 	mkdirSync(target, { recursive: true });
-	writeFileSync(join(target, "good.svg"), '<svg viewBox="0 0 8 8"><path d="M0 0h8v8H0z"/></svg>');
+	writeFileSync(
+		join(target, "good.svg"),
+		'<svg viewBox="0 0 8 8"><path d="M0 0h8v8H0z"/></svg>',
+	);
 	// No width, height or viewBox: nothing to size it by.
 	writeFileSync(join(target, "bad.svg"), '<svg><path d="M0 0h8v8H0z"/></svg>');
 	// An empty svg carries no artwork.
@@ -97,7 +137,10 @@ test("a single-quoted, oddly spaced svg still parses", () => {
 test("the extension is stripped from the name, case-insensitively", () => {
 	const target = join(dir, "ext");
 	mkdirSync(target, { recursive: true });
-	writeFileSync(join(target, "Bell.SVG"), '<svg viewBox="0 0 8 8"><path d="M0 0h8z"/></svg>');
+	writeFileSync(
+		join(target, "Bell.SVG"),
+		'<svg viewBox="0 0 8 8"><path d="M0 0h8z"/></svg>',
+	);
 	const collection = collectLocalIcons(target);
 	assert.deepEqual(Object.keys(collection.icons), ["Bell"]);
 });
