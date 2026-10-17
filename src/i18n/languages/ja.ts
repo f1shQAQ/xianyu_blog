@@ -245,7 +245,7 @@ export const ja: Translation = {
 		"自動再生がブロックされました。再生ボタンを押してください。",
 	[Key.musicErrorInvalidTrack]: "曲の情報が無効です。",
 
-	[Key.themeColor]: "Theme Color",
+	[Key.themeColor]: "テーマカラー",
 	[Key.colorStyle]: "配色スタイル",
 	[Key.colorSpec]: "配色仕様",
 

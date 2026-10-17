@@ -248,7 +248,7 @@ export const vi: Translation = {
 		"Tự động phát đã bị chặn. Nhấn nút phát để bắt đầu.",
 	[Key.musicErrorInvalidTrack]: "Bài hát này không hợp lệ.",
 
-	[Key.themeColor]: "Theme Color",
+	[Key.themeColor]: "Màu chủ đề",
 	[Key.colorStyle]: "Phong cách màu",
 	[Key.colorSpec]: "Đặc tả màu",
 

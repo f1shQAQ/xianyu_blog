@@ -237,7 +237,7 @@ export const zh_TW: Translation = {
 	[Key.musicErrorAutoplayBlocked]: "自動播放受到限制，請點擊播放按鈕開始",
 	[Key.musicErrorInvalidTrack]: "歌曲資訊無效",
 
-	[Key.themeColor]: "Theme Color",
+	[Key.themeColor]: "主題色",
 	[Key.colorStyle]: "配色風格",
 	[Key.colorSpec]: "配色規範",
 

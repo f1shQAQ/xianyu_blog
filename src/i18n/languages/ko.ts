@@ -245,7 +245,7 @@ export const ko: Translation = {
 		"자동 재생이 차단되었습니다. 재생 버튼을 눌러 시작하세요.",
 	[Key.musicErrorInvalidTrack]: "곡 정보가 올바르지 않습니다.",
 
-	[Key.themeColor]: "Theme Color",
+	[Key.themeColor]: "테마 색상",
 	[Key.colorStyle]: "색상 스타일",
 	[Key.colorSpec]: "색상 규격",
 
