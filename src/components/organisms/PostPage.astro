@@ -58,12 +58,13 @@ const { mode, cover, cardWidth } = postListConfig.layout;
 
 	/* 网格（瀑布流）模式：仅在内容容器至少能容纳两张所选宽度的卡片时生效。
 	   这让单/双侧栏压窄内容列时自动回退 list，而不是留下单列 GridUI。
-	   手机端同样回退到上方基础 flex 单列。窄容器下最短列打包的
-	   colCount ≤ 1，自动清空 span，无需 JS 分支。
+	   手机端同样回退到上方基础 flex 单列。
 	   卡片高度天然混合（有/无封面），由 utils/masonry.ts 做最短列打包：
 	   JS 给每张卡片设置 grid-column-start + grid-row-end: span N。
 	   行轨道 8px、row-gap 0（16px 行距烘焙进 span）——与 masonry.ts 的
-	   ROW_UNIT / ROW_GAP 常量约定，两处需同步改。 */
+	   ROW_UNIT / ROW_GAP 常量约定，两处需同步改。
+	   本块的容器查询阈值按「≥2 列」选取；masonry.ts 另有兜底：一旦此处
+	   生效而实际只排下 1 列，它会照写 span，不会留下重叠。 */
 
 activate-post-grid()
 	display: grid

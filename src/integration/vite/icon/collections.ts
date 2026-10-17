@@ -8,6 +8,14 @@
  * network request on every first paint, and one chunk per icon would mean one
  * request per glyph.
  *
+ * It also produces the `local` collection from a project's own
+ * `src/icons/*.svg`, which used to come from astro-icon. That package is gone:
+ * it decided which sets to load by reading the *user's* `package.json`, which
+ * forced four `@iconify-json/*` packages onto every user's dependency list.
+ * This module resolves from inside the installed package instead, so those
+ * sets ship as ordinary dependencies of the theme and the user declares none
+ * of them.
+ *
  * The logic lives here rather than in the old standalone script so the Vite
  * plugin in `regeneration.ts` can call it directly, and so the integration
  * stays bundled into the published package: package-mode projects get the
@@ -72,6 +80,101 @@ const ICON_PREFIXES: ReadonlySet<string> = new Set<string>([
 	"simple-icons",
 ]);
 
+/**
+ * Numbers in an SVG length attribute, ignoring units and percentages.
+ *
+ * `24` and `24px` both mean 24; `50%` has no absolute meaning without a
+ * viewport, so it is treated as absent and the viewBox wins.
+ */
+function svgLength(value: string | undefined): number | null {
+	if (typeof value !== "string") return null;
+	const match = /^(\d+(?:\.\d+)?)/.exec(value.trim());
+	if (!match) return null;
+	const parsed = Number(match[1]);
+	return Number.isFinite(parsed) && parsed > 0 ? parsed : null;
+}
+
+/** Read an attribute from the opening `<svg …>` tag, single or double quoted. */
+function svgAttribute(source: string, name: string): string | undefined {
+	const pattern = new RegExp(`\\s${name}\\s*=\\s*("([^"]*)"|'([^']*)')`);
+	const match = pattern.exec(source);
+	if (!match) return undefined;
+	return match[2] ?? match[3];
+}
+
+/**
+ * Turn one `src/icons/<name>.svg` file into an Iconify icon.
+ *
+ * Deliberately lenient and regex-based: pulling in an SVG parser (or SVGO, or
+ * `@iconify/tools`) for icons the user wrote by hand would add a dependency to
+ * the theme for a feature an empty directory currently exercises zero times.
+ * Anything that cannot be read is dropped rather than thrown on, matching what
+ * astro-icon did — one malformed file should not fail the build.
+ */
+function parseLocalIcon(
+	source: string,
+): Record<string, number | string> | null {
+	const open = /<svg\b[^>]*>/i.exec(source);
+	if (!open) return null;
+	const tag = open[0];
+
+	// An `<svg>` with no content at all is still valid, but an icon with no
+	// geometry is not; drop it rather than emit an empty symbol.
+	const body = source
+		.slice(open.index + open[0].length, source.lastIndexOf("</svg>"))
+		.trim();
+	if (!body) return null;
+
+	const viewBox = svgAttribute(tag, "viewBox");
+	const parts = viewBox
+		? viewBox
+				.trim()
+				.split(/[\s,]+/)
+				.map(Number)
+		: [];
+	const width =
+		parts.length === 4 && Number.isFinite(parts[2]) && parts[2] > 0
+			? parts[2]
+			: (svgLength(svgAttribute(tag, "width")) ?? 0);
+	const height =
+		parts.length === 4 && Number.isFinite(parts[3]) && parts[3] > 0
+			? parts[3]
+			: (svgLength(svgAttribute(tag, "height")) ?? 0);
+	if (!width || !height) return null;
+
+	return { body, width, height };
+}
+
+/**
+ * Build the `local` collection from a project's own SVGs.
+ *
+ * Returns `null` when the directory is missing or holds no icon, so the
+ * generated module stays byte-identical for a project that never adds one.
+ */
+export function collectLocalIcons(
+	directory: string,
+): Record<string, unknown> | null {
+	if (!existsSync(directory)) return null;
+	let entries: string[];
+	try {
+		entries = readdirSync(directory);
+	} catch {
+		return null;
+	}
+	const icons: Record<string, Record<string, number | string>> = {};
+	for (const entry of entries) {
+		if (!entry.toLowerCase().endsWith(".svg")) continue;
+		const name = entry.slice(0, -4);
+		// astro-icon kept sub-directories as prefixes (`sub/name`); the theme's
+		// own usage has never had any, so a nested file is skipped rather than
+		// silently flattened into a colliding name.
+		const parsed = parseLocalIcon(readFileSync(join(directory, entry), "utf8"));
+		if (parsed) icons[name] = parsed;
+	}
+	if (Object.keys(icons).length === 0) return null;
+	return { prefix: "local", icons };
+}
+
 /** The specifier `Icon.svelte` imports; see `regeneration.ts` for how it resolves. */
 export const ICON_COLLECTIONS_SPECIFIER = "@/generated/local-icon-collections";
 
@@ -109,6 +212,11 @@ export interface GenerateIconCollectionsOptions {
 	roots: string[];
 	/** Where to write the generated module. */
 	outputPath: string;
+	/**
+	 * Directory holding a project's own `*.svg` icons, emitted as the `local`
+	 * collection. Absent, empty or unreadable means no `local` entry at all.
+	 */
+	localIconDir?: string;
 }
 
 /**
@@ -121,6 +229,7 @@ export interface GenerateIconCollectionsOptions {
 export function generateIconCollections({
 	roots,
 	outputPath,
+	localIconDir,
 }: GenerateIconCollectionsOptions): number {
 	const requested = new Map<string, Set<string>>();
 	for (const root of roots) {
@@ -185,6 +294,12 @@ export function generateIconCollections({
 			...(Object.keys(aliases).length ? { aliases } : {}),
 		});
 	}
+
+	// The user's own `src/icons/*.svg`, under the `local` prefix. Appended last
+	// so a project icon can shadow nothing and nothing can shadow it — the set
+	// lists do not overlap, because `local` is not an `@iconify-json` prefix.
+	const local = localIconDir ? collectLocalIcons(localIconDir) : null;
+	if (local) collections.push(local);
 
 	const output = [
 		"// Generated by src/integration/vite/icon/collections.ts. Do not edit.",

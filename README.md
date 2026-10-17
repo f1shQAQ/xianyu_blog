@@ -81,7 +81,7 @@ repository and updates the theme with `pnpm add shirones@latest`.
 ### Requirements
 
 - [Node.js](https://nodejs.org/) 22.12 or newer
-- [pnpm](https://pnpm.io/) 9.x (the repository pins `pnpm@9.14.4`)
+- [pnpm](https://pnpm.io/) 11.x (the repository pins `pnpm@11.28.2`)
 
 ### Run locally
 

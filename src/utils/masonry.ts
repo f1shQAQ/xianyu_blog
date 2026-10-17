@@ -5,15 +5,22 @@
  * 列数仍由 CSS `repeat(auto-fill, minmax(--post-card-min, 1fr))` 决定，
  * 本模块只做分配——容器换列数（resize）后重新 pack 即可。
  *
- * 配套约定（PostPage 样式，两处需同步改）：
+ * 配套约定（PostPage / Project / Device 样式，需同步改）：
  * - grid 模式 `grid-auto-rows: 8px`、`row-gap: 0`（行距烘焙进 span）；
  * - 行距 = ROW_GAP px（与 column-gap 同值，均对应 --m3e-space-4）。
+ *
+ * 单列时分两种：低于该断言行距是真实 `gap`、行高 `auto`，清空定位即可；
+ * 达到断点而容器仍只放得下一列时，必须照样写 span，否则卡片只占一行
+ * 8px、内容溢出并与下一张重叠。
  */
 
 const ROW_UNIT = 8; // px，对应 PostPage grid-auto-rows
 const ROW_GAP = 16; // px，烘焙进 span 的视觉行距（--m3e-space-4）
 
-/** 最短列打包：给每张卡片设置列定位与行跨度；单列时清空内联定位 */
+/**
+ * 最短列打包：给每张卡片设置列定位与行跨度。
+ * 单列时是否写 span 取决于 CSS 是否把行距烘焙进了 span（见下）。
+ */
 export function packMasonry(container: HTMLElement): void {
 	const cards = Array.from(container.children) as HTMLElement[];
 	if (cards.length === 0) return;
@@ -24,11 +31,41 @@ export function packMasonry(container: HTMLElement): void {
 		card.style.gridRowEnd = "";
 	}
 
-	const colCount = getComputedStyle(container)
-		.gridTemplateColumns.split(" ")
-		.filter(Boolean).length;
+	const computed = getComputedStyle(container);
+	const template = computed.gridTemplateColumns;
+	// `none` means the grid has no used tracks — the container or an ancestor is
+	// `display: none`. Children then measure 0px, so any span derived from that
+	// would be wrong; the ResizeObserver repacks once it becomes visible.
+	if (!template || template === "none") return;
 
-	if (colCount <= 1) return;
+	const colCount = template.split(" ").filter(Boolean).length;
+	if (colCount === 0) return;
+
+	// The ≥md media query bakes the row gap into each card's span:
+	// `grid-auto-rows: 8px` makes every implicit row 8px tall and `row-gap: 0`
+	// removes the gap, so a card's real footprint is
+	// `ceil((height + ROW_GAP) / ROW_UNIT)` rows. Below that breakpoint neither
+	// declaration applies, the rows are `auto` and the gap is a real `gap`, so a
+	// card left at its default one-row span already occupies its natural height.
+	//
+	// That is why a single-column early return used to be safe on mobile and
+	// broken on a narrow desktop: at ≥md with one column, clearing the spans
+	// leaves every card spanning one 8px row while its content is hundreds of
+	// pixels tall, so the next card is placed immediately after and the two
+	// overlap. Reading the mode from the computed style rather than assuming it
+	// from the column count is what keeps both cases correct.
+	const bakesRowGapIntoSpans =
+		computed.gridAutoRows !== "auto" && computed.gridAutoRows !== "normal";
+
+	if (colCount === 1) {
+		if (!bakesRowGapIntoSpans) return;
+		for (const card of cards) {
+			card.style.gridRowEnd = `span ${Math.ceil(
+				(card.offsetHeight + ROW_GAP) / ROW_UNIT,
+			)}`;
+		}
+		return;
+	}
 
 	const measurements = cards.map((card) => {
 		const height = card.offsetHeight;

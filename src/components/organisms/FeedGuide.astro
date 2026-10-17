@@ -7,10 +7,10 @@ import AccentBar from "@components/atoms/display/AccentBar.svelte";
 import Card from "@components/atoms/display/Card.svelte";
 import I18nKey from "@i18n/i18nKey";
 import { i18n } from "@i18n/translation";
+import Icon from "@iconify/svelte";
 import { getSortedPosts } from "@utils/content-utils";
 import { formatDateToYYYYMMDD } from "@utils/date-utils";
 import { getPostUrl, url } from "@utils/url-utils";
-import { Icon } from "astro-icon/components";
 import { siteConfig } from "@/config";
 
 interface Props {
@@ -35,7 +35,7 @@ const posts = allPosts.slice(0, 6);
 	<Card color="var(--card-bg)" radius="l" class="p-6 md:p-8 mb-4 onload-animation">
 		<div class="flex flex-col sm:flex-row items-start sm:items-center gap-4">
 			<div class="flex items-center justify-center w-14 h-14 rounded-[var(--shape-corner-m)] bg-[var(--primary)] text-[var(--on-primary)] shrink-0 shadow-[var(--m3e-elevation-1)]">
-				<Icon name={isRss ? "material-symbols:rss-feed-rounded" : "material-symbols:cell-tower-rounded"} class="text-3xl" />
+				<Icon icon={isRss ? "material-symbols:rss-feed-rounded" : "material-symbols:cell-tower-rounded"} class="text-3xl" />
 			</div>
 			<div class="flex-1 min-w-0">
 				<div class="flex items-center gap-2 mb-1">
@@ -50,7 +50,7 @@ const posts = allPosts.slice(0, 6);
 	<!-- Feed URL & Action Card -->
 	<Card color="var(--card-bg)" radius="l" class="p-6 mb-4 onload-animation">
 		<div class="flex items-center gap-2 mb-2">
-			<Icon name="material-symbols:link-rounded" class="text-xl text-[var(--primary)]" />
+			<Icon icon="material-symbols:link-rounded" class="text-xl text-[var(--primary)]" />
 			<h2 class="text-lg font-bold text-[var(--on-surface)]">{i18n(I18nKey.feedLink)}</h2>
 		</div>
 		<p class="text-sm text-[var(--on-surface-variant)] mb-4">{i18n(I18nKey.feedHowToUseDesc)}</p>
@@ -70,7 +70,7 @@ const posts = allPosts.slice(0, 6);
 					data-feed-relative-url={feedUrl}
 					class="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-[var(--shape-corner-m)] bg-[var(--primary)] text-[var(--on-primary)] font-medium text-sm transition-all hover:opacity-90 active:scale-95 shadow-[var(--m3e-elevation-1)] cursor-pointer"
 				>
-					<Icon name="material-symbols:content-copy-rounded" class="text-lg" />
+					<Icon icon="material-symbols:content-copy-rounded" class="text-lg" />
 					<span>{i18n(I18nKey.copyLink)}</span>
 				</button>
 				<a
@@ -81,7 +81,7 @@ const posts = allPosts.slice(0, 6);
 					rel="noopener noreferrer"
 					class="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-[var(--shape-corner-m)] bg-[var(--surface-container-high)] text-[var(--on-surface)] border border-[var(--outline-variant)] font-medium text-sm transition-all hover:bg-[var(--surface-container-highest)] cursor-pointer"
 				>
-					<Icon name="material-symbols:open-in-new-rounded" class="text-lg" />
+					<Icon icon="material-symbols:open-in-new-rounded" class="text-lg" />
 					<span>{i18n(I18nKey.feedOpenXml)}</span>
 				</a>
 			</div>
@@ -91,13 +91,13 @@ const posts = allPosts.slice(0, 6);
 	<!-- Recommendations Card -->
 	<Card color="var(--card-bg)" radius="l" class="p-6 mb-4 onload-animation">
 		<div class="flex items-center gap-2 mb-3">
-			<Icon name="material-symbols:help-outline-rounded" class="text-xl text-[var(--primary)]" />
+			<Icon icon="material-symbols:help-outline-rounded" class="text-xl text-[var(--primary)]" />
 			<h2 class="text-lg font-bold text-[var(--on-surface)]">{i18n(I18nKey.feedHowToUse)}</h2>
 		</div>
 		<div class="grid grid-cols-1 md:grid-cols-2 gap-3 mt-2">
 			<div class="p-4 rounded-[var(--shape-corner-m)] bg-[var(--surface-container-low)] border border-[var(--outline-variant)]">
 				<div class="flex items-center gap-2 mb-1.5 font-semibold text-[var(--on-surface)] text-sm">
-					<Icon name="material-symbols:devices-rounded" class="text-[var(--primary)] text-base" />
+					<Icon icon="material-symbols:devices-rounded" class="text-[var(--primary)] text-base" />
 					<span>Cross-Platform / Web</span>
 				</div>
 				<p class="text-xs text-[var(--on-surface-variant)] leading-relaxed">
@@ -106,7 +106,7 @@ const posts = allPosts.slice(0, 6);
 			</div>
 			<div class="p-4 rounded-[var(--shape-corner-m)] bg-[var(--surface-container-low)] border border-[var(--outline-variant)]">
 				<div class="flex items-center gap-2 mb-1.5 font-semibold text-[var(--on-surface)] text-sm">
-					<Icon name="material-symbols:desktop-mac-rounded" class="text-[var(--primary)] text-base" />
+					<Icon icon="material-symbols:desktop-mac-rounded" class="text-[var(--primary)] text-base" />
 					<span>Desktop / Mobile Apps</span>
 				</div>
 				<p class="text-xs text-[var(--on-surface-variant)] leading-relaxed">
@@ -119,7 +119,7 @@ const posts = allPosts.slice(0, 6);
 	<!-- Recent Posts Preview Card -->
 	<Card color="var(--card-bg)" radius="l" class="p-6 mb-4 onload-animation">
 		<div class="flex items-center gap-2 mb-4">
-			<Icon name="material-symbols:article-outline-rounded" class="text-xl text-[var(--primary)]" is:inline />
+			<Icon icon="material-symbols:article-outline-rounded" class="text-xl text-[var(--primary)]" is:inline />
 			<h2 class="text-lg font-bold text-[var(--on-surface)]">{i18n(I18nKey.feedRecentPosts)}</h2>
 		</div>
 		<div class="flex flex-col gap-3">

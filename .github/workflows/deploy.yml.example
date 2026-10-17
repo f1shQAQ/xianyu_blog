@@ -99,7 +99,10 @@ jobs:
       - name: Set up pnpm
         uses: pnpm/action-setup@a7487c7e89a18df4991f7f222e4898a00d66ddda # v4.1.0
         with:
-          version: 9.14.4
+          # No `version` on purpose: the action then reads `packageManager`
+          # from this project's package.json, which `shirones init` pins from
+          # the theme. Spelling it out here is what made the two disagree
+          # (9.14.4 vs pnpm@11.28.2) and failed the whole setup step.
           run_install: false
 
       - name: Set up Node.js

@@ -2,15 +2,15 @@
 import TagList from "@components/atoms/blog/TagList.astro";
 import I18nKey from "@i18n/i18nKey";
 import { i18n } from "@i18n/translation";
-import { getTagList } from "@utils/content-utils";
-import { getTagUrl, url } from "@utils/url-utils";
 /**
  * 标签侧栏组件（消费 blog/TagList 原子）。
  * 只负责取数转 props：标签名 + 标签 URL。
  * 超过侧栏展示上限（collapseAfter）时，只展示前 N 项，并在卡片底部提供
  * 唯一的「查看全部标签」入口，指向标签索引页（/tags/）。
  */
-import { Icon } from "astro-icon/components";
+import Icon from "@iconify/svelte";
+import { getTagList } from "@utils/content-utils";
+import { getTagUrl, url } from "@utils/url-utils";
 import type { TagsWidget } from "@/types/sidebarConfig";
 import WidgetLayout from "./WidgetLayout.astro";
 
@@ -38,7 +38,7 @@ const tagItems = tags.slice(0, DISPLAY_LIMIT).map((t) => ({
 		<div slot="footer" class="widget-index-link">
 			<a href={url("/tags/")} class="m3-state-layer">
 				{i18n(I18nKey.tagsViewAll)}
-				<Icon name="material-symbols:chevron-right-rounded" />
+				<Icon icon="material-symbols:chevron-right-rounded" />
 			</a>
 		</div>
 	)}

@@ -6,9 +6,9 @@
  * 菜单按钮点击派发 site-drawer:toggle 事件，由 SiteNavigationDrawer 监听开合。
  */
 import IconButton from "@components/atoms/action/IconButton.svelte";
+import Icon from "@iconify/svelte";
 import { resolveNavBarLinks, resolvePageKey } from "@utils/nav-utils";
 import { url } from "@utils/url-utils";
-import { Icon } from "astro-icon/components";
 import { siteConfig } from "@/config";
 import { navBarConfig } from "@/config/navBarConfig";
 import DisplaySettings from "./DisplaySettings.svelte";
@@ -40,7 +40,7 @@ function isActive(link: (typeof links)[number]): boolean {
 >
 	<div class="relative max-w-[var(--page-width)] mx-auto h-16 px-3 md:px-5 flex items-center gap-1">
 		<IconButton id="nav-drawer-switch" label="Menu" class="shrink-0 lg:!hidden">
-			<Icon name="material-symbols:menu-rounded" class="text-[1.25rem]"></Icon>
+			<Icon icon="material-symbols:menu-rounded" class="text-[1.25rem]"></Icon>
 		</IconButton>
 		<a
 			href={url("/")}
@@ -60,23 +60,23 @@ function isActive(link: (typeof links)[number]): boolean {
 								"top-app-bar__nav-link m3-state-layer relative flex h-10 items-center gap-1 px-3 text-sm font-bold text-[var(--on-surface-variant)] transition-colors hover:text-[var(--on-surface)]",
 								active && "top-app-bar__nav-link--active",
 							]} aria-expanded="false">
-								{link.icon && <Icon name={link.icon} class="text-[1.1rem]"></Icon>}
+								{link.icon && <Icon icon={link.icon} class="text-[1.1rem]"></Icon>}
 								{link.name}
-								<Icon name="material-symbols:keyboard-arrow-down-rounded" class="text-[1rem]"></Icon>
+								<Icon icon="material-symbols:keyboard-arrow-down-rounded" class="text-[1rem]"></Icon>
 							</button>
 						) : (
 							<a href={href} target={link.external ? "_blank" : undefined} rel={link.external ? "noopener noreferrer" : undefined}
 								aria-current={active ? "page" : undefined} data-nav-key={link.pageKey ?? ""}
 								class:list={["top-app-bar__nav-link m3-state-layer relative flex h-10 items-center gap-1 px-3 text-sm font-bold text-[var(--on-surface-variant)] transition-colors hover:text-[var(--on-surface)]", active && "top-app-bar__nav-link--active"]}>
-								{link.icon && <Icon name={link.icon} class="text-[1.1rem]"></Icon>}{link.name}
-								{link.external && <Icon name="material-symbols:arrow-outward-rounded" class="ml-1 text-[0.875rem]"></Icon>}
+								{link.icon && <Icon icon={link.icon} class="text-[1.1rem]"></Icon>}{link.name}
+								{link.external && <Icon icon="material-symbols:arrow-outward-rounded" class="ml-1 text-[0.875rem]"></Icon>}
 							</a>
 						)}
 						{link.children && <div class="top-app-bar__submenu" role="menu">
 							{link.children.map((child) => {
 								const childHref = child.external ? child.url : hrefFor(child.url);
 							return <a href={childHref} target={child.external ? "_blank" : undefined} rel={child.external ? "noopener noreferrer" : undefined} role="menuitem" data-nav-key={child.pageKey ?? ""} class="top-app-bar__submenu-item">
-									{child.icon && <Icon name={child.icon} class="text-[1.2rem]"></Icon>}{child.name}{child.external && <Icon name="material-symbols:arrow-outward-rounded" class="ml-auto text-[0.875rem]"></Icon>}
+									{child.icon && <Icon icon={child.icon} class="text-[1.2rem]"></Icon>}{child.name}{child.external && <Icon icon="material-symbols:arrow-outward-rounded" class="ml-auto text-[0.875rem]"></Icon>}
 								</a>;
 							})}
 						</div>}
@@ -88,7 +88,7 @@ function isActive(link: (typeof links)[number]): boolean {
 		<Search client:only="svelte"></Search>
 		{!siteConfig.themeColor.fixed && (
 			<IconButton id="display-settings-switch" label="Display Settings" class="shrink-0">
-				<Icon name="material-symbols:palette-outline" class="text-[1.25rem]"></Icon>
+				<Icon icon="material-symbols:palette-outline" class="text-[1.25rem]"></Icon>
 			</IconButton>
 		)}
 		<LightDarkSwitch client:only="svelte"></LightDarkSwitch>

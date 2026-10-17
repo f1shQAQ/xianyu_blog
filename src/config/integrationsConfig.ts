@@ -8,7 +8,6 @@ import type mdx from "@astrojs/mdx";
 import type swup from "@swup/astro";
 import type { AstroUserConfig } from "astro";
 import type expressiveCode from "astro-expressive-code";
-import type icon from "astro-icon";
 
 /**
  * 所有模式共享的集成选项。
@@ -117,23 +116,6 @@ export const swupForwardOptions = {
 	animateHistoryBrowsing: false,
 	skipPopStateHandling: (event: { state?: { url?: string } }): boolean =>
 		Boolean(event.state?.url?.includes("#")),
-};
-
-/**
- * `astro-icon` 要打包的图标集。
- *
- * 五个集合一个都不能少：`src/` 里共 340 处图标引用，其中 `material-symbols`
- * 占 308 处、`simple-icons` 占 21 处。源码模式此前漏了这两个，只靠 astro-icon
- * 在扁平 `node_modules` 下的自动发现兜住；包模式在 pnpm 严格布局下没有这个
- * 退路，必须显式声明。
- */
-export const iconInclude: NonNullable<
-	NonNullable<Parameters<typeof icon>[0]>["include"]
-> = {
-	"material-symbols": ["*"],
-	"simple-icons": ["*"],
-	"fa7-brands": ["*"],
-	"fa7-solid": ["*"],
 };
 
 /**

@@ -4,11 +4,11 @@ import AlbumGallery from "@components/organisms/AlbumGallery.svelte";
 import ProtectedAlbum from "@components/organisms/ProtectedAlbum.svelte";
 import I18nKey from "@i18n/i18nKey";
 import { i18n } from "@i18n/translation";
+import Icon from "@iconify/svelte";
 import MainGridLayout from "@layouts/MainGridLayout.astro";
 import { findAlbum, scanAllAlbums } from "@utils/album-scanner";
 import { encryptProtectedContent } from "@utils/password-protection";
 import { url } from "@utils/url-utils";
-import { Icon } from "astro-icon/components";
 import type { AlbumGroup } from "@/types/album";
 import type { ProtectedPayload } from "@/types/protectedContent";
 
@@ -55,7 +55,7 @@ if (resolvedAlbum.password) {
 				referrerpolicy="no-referrer"
 			/>
 			<a class="album-detail__back" href={url("/albums/")}>
-				<Icon name="material-symbols:arrow-back-rounded" aria-hidden="true" />
+				<Icon icon="material-symbols:arrow-back-rounded" aria-hidden="true" />
 				<span>{i18n(I18nKey.albumsBack)}</span>
 			</a>
 			<div class="album-detail__hero-content">
@@ -67,17 +67,17 @@ if (resolvedAlbum.password) {
 				/>
 					<div class="album-detail__meta">
 						<span>
-							<Icon name="material-symbols:calendar-today-rounded" aria-hidden="true" />
+							<Icon icon="material-symbols:calendar-today-rounded" aria-hidden="true" />
 							<span>{resolvedAlbum.date}</span>
 						</span>
 						{resolvedAlbum.location && (
 							<span>
-								<Icon name="material-symbols:location-on-rounded" aria-hidden="true" />
+								<Icon icon="material-symbols:location-on-rounded" aria-hidden="true" />
 								<span>{resolvedAlbum.location}</span>
 							</span>
 						)}
 						<span>
-							<Icon name="material-symbols:photo-library-outline-rounded" aria-hidden="true" />
+							<Icon icon="material-symbols:photo-library-outline-rounded" aria-hidden="true" />
 							<span>{resolvedAlbum.photos.length} {i18n(I18nKey.albumsPhotos)}</span>
 						</span>
 					</div>

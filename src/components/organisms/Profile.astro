@@ -6,9 +6,9 @@ import Avatar from "@components/atoms/display/Avatar.svelte";
 import Card from "@components/atoms/display/Card.svelte";
 import Tooltip from "@components/atoms/overlay/Tooltip.svelte";
 import UmamiStats from "@components/organisms/UmamiStats.astro";
+import Icon from "@iconify/svelte";
 import { resolveImageAsset } from "@utils/asset-utils";
 import { url } from "@utils/url-utils";
-import { Icon } from "astro-icon/components";
 import { profileConfig } from "@/config";
 import type { ProfileWidget } from "@/types/sidebarConfig";
 
@@ -60,7 +60,7 @@ if (typeof avatarAsset !== "string") {
     <a aria-label="Go to About Page" href={url('/about/')}
        class="m3-profile__avatar-link group">
         <div class="m3-profile__avatar-overlay">
-            <Icon name="fa7-solid:address-card"
+            <Icon icon="fa7-solid:address-card"
                   class="m3-profile__avatar-icon" />
         </div>
         <Avatar
@@ -85,13 +85,13 @@ if (typeof avatarAsset !== "string") {
             {config.links.length > 1 && config.links.map(item =>
                 <Tooltip label={item.name} placement="top" client:load>
                     <IconButton href={item.url} target="_blank" rel="me" label={item.name}>
-                        <Icon name={item.icon} class="text-[1.5rem]"></Icon>
+                        <Icon icon={item.icon} class="text-[1.5rem]"></Icon>
                     </IconButton>
                 </Tooltip>
             )}
             {config.links.length == 1 && <Button href={config.links[0].url} target="_blank" ariaLabel={config.links[0].name}
                                                  variant="text" size="small" class="!px-3 !font-bold !text-[var(--on-surface)]">
-                <Icon name={config.links[0].icon} class="text-[1.5rem]"></Icon>
+                <Icon icon={config.links[0].icon} class="text-[1.5rem]"></Icon>
                 {config.links[0].name}
             </Button>}
         </div>

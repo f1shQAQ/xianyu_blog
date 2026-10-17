@@ -74,7 +74,7 @@ Shirone 是一个使用 Astro 7、Svelte 5、Tailwind CSS 4 和 Stylus 构建的
 ### 环境要求
 
 - [Node.js](https://nodejs.org/) 22.12 或更高版本
-- [pnpm](https://pnpm.io/) 9.x（仓库锁定为 `pnpm@9.14.4`）
+- [pnpm](https://pnpm.io/) 11.x（仓库锁定为 `pnpm@11.28.2`）
 
 ### 本地运行
 

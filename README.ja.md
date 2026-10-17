@@ -74,7 +74,7 @@ Shirone は Astro 7、Svelte 5、Tailwind CSS 4、Stylus で構築された静�
 ### 必要な環境
 
 - [Node.js](https://nodejs.org/) 22.12 以上
-- [pnpm](https://pnpm.io/) 9.x（リポジトリでは `pnpm@9.14.4` を固定）
+- [pnpm](https://pnpm.io/) 11.x（リポジトリでは `pnpm@11.28.2` を固定）
 
 ### ローカルで起動する
 

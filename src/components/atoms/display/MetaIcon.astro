@@ -6,7 +6,7 @@
  * 纯装饰展示件：无交互、无文字，图标自带 aria-hidden；
  * 与外部文字搭配使用（PostMeta 的日期/分类/标签等）。
  */
-import { Icon } from "astro-icon/components";
+import Icon from "@iconify/svelte";
 
 interface Props {
 	/** iconify 图标名（如 "material-symbols:calendar-today-outline-rounded"） */
@@ -19,7 +19,7 @@ const { icon, class: className, style } = Astro.props;
 ---
 
 <span class:list={["m3-meta-icon", className]} style={style} aria-hidden="true">
-	<Icon name={icon} is:inline />
+	<Icon icon={icon} is:inline />
 </span>
 
 <style lang="stylus">

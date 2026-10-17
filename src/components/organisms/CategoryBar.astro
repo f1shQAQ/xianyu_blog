@@ -9,9 +9,9 @@ import Chip from "@components/atoms/action/Chip.astro";
 import Card from "@components/atoms/display/Card.svelte";
 import I18nKey from "@i18n/i18nKey";
 import { i18n } from "@i18n/translation";
+import Icon from "@iconify/svelte";
 import { getCategoryList } from "@utils/content-utils";
 import { pathsEqual, url } from "@utils/url-utils";
-import { Icon } from "astro-icon/components";
 
 interface Props {
 	/** 文章页所属分类名：非首页/归档时对该分类做弱高亮 */
@@ -53,7 +53,7 @@ const softCategory = !isHome && !isArchive && postCategory ? postCategory : "";
 				label={i18n(I18nKey.home)}
 				class="shrink-0"
 			>
-				<Icon name="material-symbols:home" class="text-lg" aria-hidden="true" />
+				<Icon icon="material-symbols:home" class="text-lg" aria-hidden="true" />
 			</Chip>
 			<Chip
 				variant="tonal"

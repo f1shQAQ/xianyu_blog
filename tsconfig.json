@@ -20,6 +20,9 @@
 			"@i18n/*": ["src/i18n/*"],
 			"@constants/*": ["src/constants/*"],
 			"@assets/*": ["src/assets/*"],
+			"@iconify/svelte": [
+				"src/components/atoms/display/Icon.svelte"
+			],
 			"@shirone/iconify-offline": [
 				"node_modules/@iconify/svelte/dist/OfflineIcon.svelte"
 			],

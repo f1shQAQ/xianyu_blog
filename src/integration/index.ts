@@ -6,7 +6,6 @@ import type { AstroIntegration } from "astro";
 import {
 	expressiveCodeShared,
 	IMAGE_ENDPOINT_ROUTE,
-	iconInclude,
 	isMusicBundleFile,
 	MUSIC_SIDEBAR_VIRTUAL_ID,
 	mdxOptions,
@@ -32,6 +31,10 @@ import {
 } from "./resolve/registry.ts";
 import { collectRoutes, filterRoutes } from "./routes.ts";
 import type { ResolvedShironesPaths, ShironesOptions } from "./types.ts";
+import {
+	reportPeerViolations,
+	verifyPeerRequirements,
+} from "./verify-peers.ts";
 import { shironesFallbackResolver } from "./vite/fallback-resolver.ts";
 import { shironesIconRegeneration } from "./vite/icon/regeneration.ts";
 import { shironesOverlay } from "./vite/overlay.ts";
@@ -171,6 +174,22 @@ export function shirones(options: ShironesOptions = {}): AstroIntegration {
 				logger,
 			}) => {
 				paths = resolvePaths(options, config.root, import.meta.url);
+
+				// Before anything else: a missing peer dependency fails later as a
+				// resolution error inside a bundled plugin, which names neither the
+				// dependency nor the fix. The theme repo is self-sufficient, so only
+				// package mode is checked.
+				const peerViolations = verifyPeerRequirements({
+					packageRoot: paths.packageRoot,
+					projectRoot: paths.projectRoot,
+					skip: paths.isThemeRepo,
+				});
+				if (reportPeerViolations(peerViolations, logger)) {
+					throw new Error(
+						"[shirones] the project is missing dependencies the theme requires — " +
+							"see the error above for the list and the install command.",
+					);
+				}
 
 				logger.info(
 					`${paths.isThemeRepo ? "theme repository" : "installed package"} mode | content: ${paths.contentDir}`,
@@ -505,7 +524,6 @@ async function createBundledIntegrations(
 ) {
 	const [
 		{ default: swup },
-		{ default: icon },
 		{ default: expressiveCode },
 		{ default: svelte, vitePreprocess },
 		{ default: sitemap },
@@ -514,7 +532,6 @@ async function createBundledIntegrations(
 		{ pluginLineNumbers },
 	] = await Promise.all([
 		import("@swup/astro"),
-		import("astro-icon"),
 		import("astro-expressive-code"),
 		import("@astrojs/svelte"),
 		import("@astrojs/sitemap"),
@@ -569,7 +586,6 @@ async function createBundledIntegrations(
 	return [
 		...(oddmiscIntegration ? [oddmiscIntegration] : []),
 		swup({ ...swupOptions, ...swupForwardOptions }),
-		icon({ include: iconInclude }),
 		expressiveCode({
 			// `themes` is built here rather than shared: it reads
 			// expressiveCodeConfig, which this mode loads through

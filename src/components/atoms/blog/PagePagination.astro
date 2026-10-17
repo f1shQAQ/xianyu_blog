@@ -8,7 +8,7 @@
  * - 桌面端（≥ lg）：完整页码行（箭头 + 页码窗口 + 省略号折叠）。
  * 激活页 primary 实底；文案由消费方传 i18n 结果（不硬编码）。
  */
-import { Icon } from "astro-icon/components";
+import Icon from "@iconify/svelte";
 
 interface Props {
 	currentPage: number;
@@ -82,11 +82,11 @@ const pageLabel = (p: number) => labels.page.replace("{page}", String(p));
 	<div class="m3-blog-pagination__mobile">
 		{prevUrl ? (
 			<a href={prevUrl} aria-label={labels.prev} class="m3-blog-pagination__arrow m3-state-layer">
-				<Icon name="material-symbols:chevron-left-rounded" />
+				<Icon icon="material-symbols:chevron-left-rounded" />
 			</a>
 		) : (
 			<span class="m3-blog-pagination__arrow m3-blog-pagination__arrow--disabled" aria-hidden="true">
-				<Icon name="material-symbols:chevron-left-rounded" />
+				<Icon icon="material-symbols:chevron-left-rounded" />
 			</span>
 		)}
 		<button
@@ -104,11 +104,11 @@ const pageLabel = (p: number) => labels.page.replace("{page}", String(p));
 		</button>
 		{nextUrl ? (
 			<a href={nextUrl} aria-label={labels.next} class="m3-blog-pagination__arrow m3-state-layer">
-				<Icon name="material-symbols:chevron-right-rounded" />
+				<Icon icon="material-symbols:chevron-right-rounded" />
 			</a>
 		) : (
 			<span class="m3-blog-pagination__arrow m3-blog-pagination__arrow--disabled" aria-hidden="true">
-				<Icon name="material-symbols:chevron-right-rounded" />
+				<Icon icon="material-symbols:chevron-right-rounded" />
 			</span>
 		)}
 	</div>
@@ -121,18 +121,18 @@ const pageLabel = (p: number) => labels.page.replace("{page}", String(p));
 				aria-label={labels.prev}
 				class="m3-blog-pagination__arrow m3-state-layer"
 			>
-				<Icon name="material-symbols:chevron-left-rounded" />
+				<Icon icon="material-symbols:chevron-left-rounded" />
 			</a>
 		) : (
 			<span class="m3-blog-pagination__arrow m3-blog-pagination__arrow--disabled" aria-hidden="true">
-				<Icon name="material-symbols:chevron-left-rounded" />
+				<Icon icon="material-symbols:chevron-left-rounded" />
 			</span>
 		)}
 		<div class="m3-blog-pagination__nums">
 			{pages.map((p) =>
 				p === HIDDEN ? (
 					<span class="m3-blog-pagination__ellipsis" aria-hidden="true">
-						<Icon name="material-symbols:more-horiz" />
+						<Icon icon="material-symbols:more-horiz" />
 					</span>
 				) : p === currentPage ? (
 					<span class="m3-blog-pagination__num m3-blog-pagination__num--active" aria-current="page">
@@ -151,11 +151,11 @@ const pageLabel = (p: number) => labels.page.replace("{page}", String(p));
 				aria-label={labels.next}
 				class="m3-blog-pagination__arrow m3-state-layer"
 			>
-				<Icon name="material-symbols:chevron-right-rounded" />
+				<Icon icon="material-symbols:chevron-right-rounded" />
 			</a>
 		) : (
 			<span class="m3-blog-pagination__arrow m3-blog-pagination__arrow--disabled" aria-hidden="true">
-				<Icon name="material-symbols:chevron-right-rounded" />
+				<Icon icon="material-symbols:chevron-right-rounded" />
 			</span>
 		)}
 	</div>

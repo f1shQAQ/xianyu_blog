@@ -30,6 +30,8 @@ resolve/                      "where is this file?"
   load-config.ts               config module loading with the overlay applied
   registry.ts                  which files a user has overridden
 
+verify-peers.ts               which dependencies the project must declare
+
 vite/                         everything handed to Vite as a Plugin
   overlay.ts                   lets a user shadow package files from shirones/
   fallback-resolver.ts         resolves theme-internal imports the project cannot see

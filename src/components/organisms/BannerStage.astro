@@ -1,9 +1,9 @@
 ---
 import { getImage } from "astro:assets";
 import BannerWaves from "@components/molecules/BannerWaves.astro";
+import Icon from "@iconify/svelte";
 import { resolveImageAsset } from "@utils/asset-utils";
 import { url } from "@utils/url-utils";
-import { Icon } from "astro-icon/components";
 import { siteConfig } from "@/config";
 import type { SidebarPage } from "@/types/sidebarConfig";
 
@@ -81,9 +81,14 @@ const optimizeBannerImage = async (
 	};
 };
 
-function normalizeBannerSource(source: unknown, name: string): { light: string[]; dark: string[] } {
+function normalizeBannerSource(
+	source: unknown,
+	name: string,
+): { light: string[]; dark: string[] } {
 	if (Array.isArray(source)) {
-		const list = source.filter((item): item is string => typeof item === "string");
+		const list = source.filter(
+			(item): item is string => typeof item === "string",
+		);
 		return { light: list, dark: list };
 	}
 	if (typeof source === "object" && source !== null) {
@@ -94,15 +99,23 @@ function normalizeBannerSource(source: unknown, name: string): { light: string[]
 			);
 		}
 		return {
-			light: obj.light.filter((item): item is string => typeof item === "string"),
+			light: obj.light.filter(
+				(item): item is string => typeof item === "string",
+			),
 			dark: obj.dark.filter((item): item is string => typeof item === "string"),
 		};
 	}
 	return { light: [], dark: [] };
 }
 
-const desktopSource = normalizeBannerSource(siteConfig.banner.src.desktop, "desktop");
-const mobileSource = normalizeBannerSource(siteConfig.banner.src.mobile, "mobile");
+const desktopSource = normalizeBannerSource(
+	siteConfig.banner.src.desktop,
+	"desktop",
+);
+const mobileSource = normalizeBannerSource(
+	siteConfig.banner.src.mobile,
+	"mobile",
+);
 
 // 对图片按路径去重进行优化缓存
 const optimizationCache = new Map<string, Promise<ResponsiveBannerImage>>();
@@ -243,7 +256,7 @@ const initialMobileBanner = page === "home";
 				{initialSupportingText}
 			</p>
 			<div class="banner-stage__context-meta" data-banner-context-meta hidden={!initialDate}>
-				<Icon name="material-symbols:calendar-today-rounded" aria-hidden="true" />
+				<Icon icon="material-symbols:calendar-today-rounded" aria-hidden="true" />
 				<time data-banner-context-date datetime={initialDate}>{initialDate}</time>
 			</div>
 		</div>

@@ -4,7 +4,7 @@ import AccentBar from "@components/atoms/display/AccentBar.svelte";
 import Card from "@components/atoms/display/Card.svelte";
 import I18nKey from "@i18n/i18nKey";
 import { i18n } from "@i18n/translation";
-import { Icon } from "astro-icon/components";
+import Icon from "@iconify/svelte";
 
 interface Props {
 	id: string;
@@ -41,7 +41,7 @@ const className = Astro.props.class;
     {isCollapsed && <div class="expand-btn px-4 mt-2">
         <Button variant="text" full radius="m" class="!h-9">
             <div class="flex items-center justify-center gap-2">
-                <Icon name="material-symbols:more-horiz" class="text-[1.75rem]" />
+                <Icon icon="material-symbols:more-horiz" class="text-[1.75rem]" />
                 <span>{i18n(I18nKey.more)}</span>
             </div>
         </Button>

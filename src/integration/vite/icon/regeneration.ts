@@ -57,12 +57,17 @@ export function shironesIconRegeneration(
 	// `packageSrc` covers the theme's own components; `contentDir` covers a
 	// user's posts in package mode and does not exist in source mode.
 	const roots = [paths.packageSrc, paths.contentDir];
+	// The project's own `src/icons/`, emitted as the `local` collection. It is
+	// the only icon source owned by the user, so it is resolved from
+	// `projectRoot` rather than from the package.
+	const localIconDir = join(paths.projectRoot, "src", "icons");
 
 	const generate = () => {
 		try {
 			generateIconCollections({
 				roots,
 				outputPath: userCopy,
+				localIconDir,
 			});
 		} catch (error) {
 			// A typo in one post should cost one icon, not take the dev

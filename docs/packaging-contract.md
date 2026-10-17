@@ -99,6 +99,46 @@ CSS file, so it resolves to the theme's own `src/` in both modes.
   dynamic `import()` outside the bundle) must be a **peer** dependency, because
   pnpm's strict layout hides the theme's own copy from the project root.
 
+## The peer dependency list
+
+The shortest possible one, and each entry has a verified reason in
+`src/integration/verify-peers.ts`. Three distinct mechanisms force a package
+onto the user's project:
+
+| Mechanism | Packages | Why bundling fails |
+| --- | --- | --- |
+| Imported by the user's own config | `astro` | the project *is* an Astro project |
+| Registered in `optimizeDeps.include` | `svelte`, `@astrojs/svelte` | Vite resolves that list from the project root, so a nested copy is invisible and islands silently stay server-side |
+| Imported by Astro itself, dynamically | `sharp` | Astro's image service resolves it from its own location; the `@img/*` bindings must also be version-matched |
+
+Plus `@astrojs/check` and `typescript`, which only `astro check` needs — they
+are declared so the command works right after `init`, not because a build
+requires them.
+
+The four `@iconify-json/*` sets used to belong in this table. They were
+removed when `astro-icon` was dropped: it located icon sets by reading the
+**user's** `package.json`, so no amount of bundling could make them
+transitive. Nothing in the theme reads a manifest for icons any more —
+`vite/icon/collections.ts` resolves them from inside the installed package and
+emits a tree-shaken collection — so they now ship as ordinary dependencies.
+
+That is the case worth internalising: *resolving* and *discovering* are
+different questions, and only the consumer's source tells you which one it
+does. A package that resolves fine from inside the theme is still unusable if
+the consumer looks it up in a manifest you do not control. The removal left
+one extra step behind — the theme now owns icon rendering, including the
+`local` collection a project's own `src/icons/*.svg` feeds, and the
+`@iconify/svelte` alias is mirrored in `tsconfig.json` so TypeScript resolves
+the theme's `Icon.svelte` rather than the real package's deprecated types.
+
+`src/integration/verify-peers.ts` is the single source of truth for that list,
+and `astro:config:setup` enforces it before anything expensive runs. Adding a
+package there means adding it to `PEER_REQUIREMENTS`, choosing its tier, and
+writing down the mechanism — the reason string is user-visible, so it is the
+contract's documentation as much as the code is. Its tests
+(`tests/verify-peers.test.mjs`) cover absent, stale, unparseable and
+tooling-only cases.
+
 ## Adding things
 
 | You add | What to do |

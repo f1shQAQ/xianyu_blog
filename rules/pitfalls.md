@@ -73,11 +73,11 @@ svelte({
 
 **现象**：Svelte 原子（如 IconButton）在**无 `client:*` 指令**的 Astro 页面（TopAppBar / Profile / 文章页）中，`icon` prop 渲染的图标消失，按钮只剩空圆。
 
-**根因**：`@iconify/svelte` 的在线 `Icon` 组件靠运行时 `loadIcon`（浏览器 API）加载图标数据；SSR 无 hydration 时数据永远为 null → 渲染空，还可能在客户端请求 Iconify API。astro-icon 是构建期收集数据、SSR 直出 svg，无此问题。
+**根因**：`@iconify/svelte` 的在线 `Icon` 组件靠运行时 `loadIcon`（浏览器 API）加载图标数据；SSR 无 hydration 时数据永远为 null → 渲染空，还可能在客户端请求 Iconify API。`atoms/display/Icon.svelte` 是构建期把用到的图标摇成一棵小树、SSR 直出 svg，无此问题。
 
 **解法**：
-- 静态 SSR 场景：用 `children` snippet 传 astro-icon 的 `<Icon>`（或任何已渲染 svg），**禁止**用 `icon` prop；
-- 需要水合的 Svelte 场景：统一使用 `src/components/atoms/display/Icon.svelte`，它通过 `OfflineIcon` 消费 `src/generated/local-icon-collections.ts`，禁止业务组件直接导入在线 Iconify 组件；
+- 静态 SSR 场景：一律用 `<Icon icon="prefix:name" />`（`atoms/display/Icon.svelte`，别名 `@iconify/svelte`），**禁止**直接导入 `@iconify/svelte/dist/Icon.svelte` 这类在线组件；
+- 需要水合的 Svelte 场景：同一个 `Icon.svelte` 照样可用，它经 `OfflineIcon` 消费 `src/generated/local-icon-collections.ts`，禁止业务组件直接导入在线 Iconify 组件；
 - 新增或改名图标后确认图标名真实存在（`src/generated/local-icon-collections.ts` 会自动重算），无效图标名必须修正，不能依赖网络回退；
 - 组件 scoped CSS 里 `> :global(svg)` 会强制覆盖 children 图标的尺寸（如强制 24px 覆盖调用方 `text-[1.25rem]`）——尺寸规则只应作用于 `icon` prop 模式的图标容器（`.m3-icon-button__icon`），children 图标尺寸由调用方 class 控制。
 
@@ -556,4 +556,46 @@ snapshotPathTemplate: "{snapshotDir}/{testFileDir}/{testFileName}-snapshots/{arg
 **延伸**：以 `body.style.overflow = "hidden"` 锁定页面滚动的代码（代码树全屏、Mermaid 全屏）必须走 `src/utils/scroll-lock.ts`，不得内联直接改。该工具**不能**用 `window.innerWidth - documentElement.clientWidth` 判断是否需要补偿：槽位预留生效时该差值在锁定后会变成 0，但布局宽度根本没变，补偿会把 `#top-row` 白窄 15px（1265 → 1250）。正确做法是用 `body` 的 border box 宽度锁定前后各测一次，只在真的变宽时补等量内边距。补偿只覆盖 `body` 内容盒内的常规流元素（`#top-row`、顶部栏），绝对定位的 `#main-layout` 只能靠槽位预留兜底。
 
 **防回归**：`tests/site/layout-stability.spec.ts`（覆盖槽位预留、长短页宽度一致、长/短页双向导航、壁纸模式切换、页面滚动锁、无槽位时的补偿）。注意 Playwright 默认带 `--hide-scrollbars`，滚动条宽度为 0 时该契约完全不可观测，spec 必须显式关掉该默认参数。
+
+---
+
+## 11. npm 包模式的依赖归属
+
+### 11.1 「能不能解析」和「会不会被发现」是两件事
+
+**现象**：想把 `@iconify-json/*` 从 peer 依赖下沉成 `shirones` 自己的依赖，这样用户 `package.json` 里就不用列图标集。把包从 `devDependencies` 挪进 `dependencies`、删掉 `package.manifest.json` 的 `extraDependencies` 条目，一切静态检查全绿，但真按包模式装出来，每个图标都抛 `Unable to locate the "material-symbols" icon set!`。
+
+**根因**：`astro-icon` 有两个独立环节，容易被「依赖解析」的直觉混为一谈：
+
+1. **文件解析** —— `loadCollectionFromFS` 用 `import-meta-resolve` 从 `process.cwd()` 往上找 `<set>/icons.json`。pnpm 严格布局下**这条是通的**：主题自己的依赖装在
+   `.pnpm/<pkg>@<ver>/node_modules/`，与主题源码同级，Node 向上走一级就命中。实测（真实 tarball 安装后调用 astro-icon 的 loader）确认解析成功。
+2. **集合发现** —— `detectInstalledCollections(root)` 读的是**用户项目的 `package.json`**，只收集其中声明过的 `@iconify-json/*`；`include` 只能往这个列表里补 `["*"]`，**不能把列表外的集合加进来**。下沉依赖后用户 `package.json` 里没有这些条目，发现列表为空，虚拟模块导出 `{}` —— 文件明明在盘上，图标却一个都不渲染。
+
+**解法（演进，非一步到位）**：
+
+- **短期**：`@iconify-json/*` 留在 peer 依赖里。`package.manifest.json` 的 `extraDependencies` 也不要因「主题自己 import 了」就删——真正判断某个包该放哪，按「谁需要发现它」而不是「谁能 import 它」。
+- **终局（已落地）**：彻底删掉 `astro-icon`，改由 `vite/icon/collections.ts` 用
+  `createRequire(import.meta.url)` 在**包内部**解析并摇出小集合，`Icon.svelte` +
+  `@shirone/iconify-offline` 消费。这条链路没有发现环节，所以四个图标集现在是
+  shirones 的普通 `dependencies`，用户 `package.json` 里一个都不用写。
+  `src/icons/*.svg` 的 `local` 集合也由同一模块接管（`collectLocalIcons`），
+  `Icon.svelte` 对裸名回退 `local:` 前缀以保持 astro-icon 时代的调用写法。
+  代价是放弃 astro-icon 的 symbol/use 复用——实测全站 HTML 只涨 0.65%
+  （去重本来就是每页的，跨页重复它也没解决），为这一点在 Svelte SSR 里自建
+  注册表不值得。顺带 `tsconfig.json` 给 `@iconify/svelte` 加了指向主题
+  `Icon.svelte` 的 path，否则 TypeScript 会解析到真包的废弃签名，28 个
+  `.astro` 调用点全报 ts(2322)。
+
+**教训（可迁移）**：pnpm 的严格布局下，「主题的依赖在主题内部能不能解析」和「消费方要不要在别处查它」是两个问题，且只有读消费方源码才能知道后者。any 依赖下沉前，先确认消费方是按文件系统走还是按清单查——按清单查的（`astro-icon` 查用户 `package.json`）永远下不去，除非把消费方换掉。
+
+**验证方式**：不要用「`astro check` 过了 + `check:package-manifest` 过了」当下沉的证据。必须真装一次：流水线 `pnpm templates && pnpm build` 产出 tarball → 临时目录 `pnpm add file:…` → `shirones init` → `pnpm build` → 数 `dist/` 里 svg 是否渲染、数据量是否符合预期。本仓库 `icons.spec.ts` 的 5 条用例中 4 条在干净 `work` 分支上也会因 `networkidle` 点击超时而失败，**不能**用它单独证明回归；要和未改动提交跑同一 spec 对比。
+
+### 11.2 并发跑多个重型构建会把验证阶段打成假失败
+
+**现象**：流水线 `validate` 的 dev-server 冒烟阶段报 `[ERROR] transport invoke timed out after 60000ms` 并 `dev server returned 500 for /`，同一批日志里 `astro build` 却刚成功。
+
+**根因**：`validate`、`override-test` 和 Playwright 各自要起 Astro dev/build，各自峰值 3–6 GB。2 核 8 GB 上并行跑，cgroup 先 OOM kill 掉其中一两个，剩下的看起来像是代码坏掉。
+
+**解法**：这几个步骤**串行**跑，每步单独占满内存；同时跑两个必假阳性。判断「是不是我的改动引起的」—— 同一条命令在未改动提交上再跑一遍，结果一致即为环境问题。
+
 

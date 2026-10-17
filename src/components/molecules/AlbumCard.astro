@@ -1,8 +1,8 @@
 ---
 import I18nKey from "@i18n/i18nKey";
 import { i18n } from "@i18n/translation";
+import Icon from "@iconify/svelte";
 import { url } from "@utils/url-utils";
-import { Icon } from "astro-icon/components";
 import type { AlbumIndexItem } from "@/types/album";
 
 interface Props {
@@ -25,16 +25,16 @@ const albumUrl = url(`/albums/${album.id}/`);
 				referrerpolicy="no-referrer"
 			/>
 				<div class="album-card__cover-fallback" aria-hidden="true">
-					<Icon name="material-symbols:image-outline-rounded" />
+					<Icon icon="material-symbols:image-outline-rounded" />
 				</div>
 				<div class="album-card__badges">
 					<span class="album-card__count">
-						<Icon name="material-symbols:photo-library-outline-rounded" aria-hidden="true" />
+						<Icon icon="material-symbols:photo-library-outline-rounded" aria-hidden="true" />
 						{album.photoCount}
 					</span>
 					{album.protected && (
 						<span class="album-card__protected" title={i18n(I18nKey.albumPasswordTitle)}>
-							<Icon name="material-symbols:lock-rounded" aria-hidden="true" />
+							<Icon icon="material-symbols:lock-rounded" aria-hidden="true" />
 							<span class="sr-only">{i18n(I18nKey.albumPasswordTitle)}</span>
 						</span>
 					)}
@@ -43,7 +43,7 @@ const albumUrl = url(`/albums/${album.id}/`);
 		<div class="album-card__body">
 				<div class="album-card__title-row">
 					<h2>{album.title}</h2>
-					<Icon name="material-symbols:arrow-forward-rounded" class="album-card__arrow" aria-hidden="true" />
+					<Icon icon="material-symbols:arrow-forward-rounded" class="album-card__arrow" aria-hidden="true" />
 				</div>
 			{album.description && <p class="album-card__description">{album.description}</p>}
 			<div class="album-card__meta">

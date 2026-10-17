@@ -27,7 +27,7 @@ let {
 	style = "",
 	radius = "",
 }: {
-	/** 图标内容插槽（优先于 icon prop；SSR 静态场景请用此方式传入 astro-icon 等已渲染图标，尺寸由调用方 class 控制） */
+	/** 图标内容插槽（优先于 icon prop；SSR 静态场景请用此方式传入 Icon 原子等已渲染图标，尺寸由调用方 class 控制） */
 	children?: import("svelte").Snippet;
 	/** 图标（Iconify 名；仅客户端水合场景可用，SSR 无水合时图标不会加载） */
 	icon?: string;

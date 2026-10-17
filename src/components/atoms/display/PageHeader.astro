@@ -3,9 +3,9 @@
  * 页内大标题（SSR 静态页版）：装饰图标 + 标题 + 可选副标题。
  * 视觉与 molecules/PageHeader.svelte 完全一致；区别在图标渲染——
  * Svelte 版用 @iconify/svelte，在无 hydration 的静态页上图标为空，
- * 本组件用 astro-icon（构建期内联），供纯 SSR 页面直接使用。
+ * 本组件用 Icon 原子（构建期内联的 SVG），供纯 SSR 页面直接使用。
  */
-import { Icon } from "astro-icon/components";
+import Icon from "@iconify/svelte";
 
 interface Props {
 	title: string;
@@ -22,7 +22,7 @@ const { title, subtitle = "", icon, class: className } = Astro.props;
 	<div class="page-header__title-row">
 		{icon && (
 			<span class="page-header__icon" aria-hidden="true">
-				<Icon name={icon} />
+				<Icon icon={icon} />
 			</span>
 		)}
 		<h1 class="page-header__title">{title}</h1>

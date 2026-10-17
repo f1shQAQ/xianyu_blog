@@ -183,6 +183,60 @@ test.describe("项目页", () => {
 			.toBe(true);
 	});
 
+	// ≥md 的网格把行距烘焙进 span（grid-auto-rows: 8px + row-gap: 0），所以
+	// 单列时也必须写 span：只占一行 8px 的卡片会让下一张紧贴着叠上来。
+	// 1280px 视口下内容列只有 577px，只排得下一列——正是出问题的那个状态。
+	test("窄桌面单列下卡片不重叠", async ({ page }) => {
+		await page.setViewportSize({ width: 1280, height: 900 });
+		const cards = page.locator(".project-card");
+
+		await expect
+			.poll(() =>
+				page
+					.locator(".projects-section__grid")
+					.evaluate(
+						(element) =>
+							getComputedStyle(element)
+								.gridTemplateColumns.split(" ")
+								.filter(Boolean).length,
+					),
+			)
+			.toBe(1);
+
+		// 网格已进入「行距烘焙进 span」的模式，这正是需要 span 的前提。
+		await expect
+			.poll(() =>
+				page
+					.locator(".projects-section__grid")
+					.evaluate((element) => getComputedStyle(element).gridAutoRows),
+			)
+			.not.toBe("auto");
+
+		await expect
+			.poll(() =>
+				cards.evaluateAll((elements) =>
+					elements.every(
+						(element) => (element as HTMLElement).style.gridRowEnd !== "",
+					),
+				),
+			)
+			.toBe(true);
+
+		// 逐对检查：后一张的顶边必须不早于前一张的底边。
+		const boxes = await cards.evaluateAll((elements) =>
+			elements.map((element) => {
+				const rect = element.getBoundingClientRect();
+				return { top: rect.top, bottom: rect.bottom };
+			}),
+		);
+		for (let index = 1; index < boxes.length; index += 1) {
+			expect(
+				boxes[index].top,
+				`第 ${index + 1} 张卡片叠到了第 ${index} 张上`,
+			).toBeGreaterThanOrEqual(boxes[index - 1].bottom);
+		}
+	});
+
 	test("无封面卡片在桌面端将技术栈与源码操作合并为同一行", async ({ page }) => {
 		await page.setViewportSize({ width: 1280, height: 900 });
 		const cards = page.locator(".project-card--without-cover");

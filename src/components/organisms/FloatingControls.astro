@@ -3,10 +3,10 @@ import FloatingActionButton from "@components/molecules/FloatingActionButton.ast
 import FloatingTOCPanel from "@components/molecules/FloatingTOCPanel.astro";
 import I18nKey from "@i18n/i18nKey";
 import { i18n } from "@i18n/translation";
+import Icon from "@iconify/svelte";
 import { resolveDeviceClasses } from "@utils/fab-responsive";
 import { isWidgetVisibleOnPage } from "@utils/sidebar-page";
 import type { MarkdownHeading } from "astro";
-import { Icon } from "astro-icon/components";
 /**
  * FloatingControls.astro
  * 右下角悬浮控制流有机体：统领全站 FAB 导航项、响应式设备适配与 Swup 生命周期。
@@ -77,7 +77,7 @@ const isHomeItemVisible = homeItem
 				size={fabConfig.size}
 				class={!isWidgetVisibleOnPage(tocItem.pages, page) ? "is-page-hidden" : ""}
 			>
-				<Icon name="material-symbols:format-list-bulleted-rounded" class="text-xl" />
+				<Icon icon="material-symbols:format-list-bulleted-rounded" class="text-xl" />
 			</FloatingActionButton>
 		</div>
 	)}
@@ -95,7 +95,7 @@ const isHomeItemVisible = homeItem
 			class={(!isWidgetVisibleOnPage(commentItem.pages, page) || !isCommentActiveOnPage) ? "is-page-hidden" : ""}
 			onclick="window.__shironeFab?.scrollToComment()"
 		>
-			<Icon name="material-symbols:chat-bubble-outline-rounded" class="text-xl" />
+			<Icon icon="material-symbols:chat-bubble-outline-rounded" class="text-xl" />
 		</FloatingActionButton>
 	)}
 
@@ -112,7 +112,7 @@ const isHomeItemVisible = homeItem
 			class={!isHomeItemVisible ? "is-page-hidden" : ""}
 			onclick="window.__shironeFab?.navigateToHome()"
 		>
-			<Icon name="material-symbols:home-outline-rounded" class="text-xl" />
+			<Icon icon="material-symbols:home-outline-rounded" class="text-xl" />
 		</FloatingActionButton>
 	)}
 
@@ -129,7 +129,7 @@ const isHomeItemVisible = homeItem
 			class:list={["is-hidden", { "is-page-hidden": !isWidgetVisibleOnPage(topItem.pages, page) }]}
 			onclick="window.__shironeFab?.scrollToTop()"
 		>
-			<Icon name="material-symbols:keyboard-arrow-up-rounded" class="text-2xl" />
+			<Icon icon="material-symbols:keyboard-arrow-up-rounded" class="text-2xl" />
 		</FloatingActionButton>
 	)}
 </aside>
