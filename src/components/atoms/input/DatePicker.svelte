@@ -31,12 +31,19 @@ let viewYear = $state(2026);
 let viewMonth = $state(0);
 let today = $state("");
 
+// Intl.Locale 周信息：现行规范为 getWeekInfo() 方法；
+// 旧实现（Chrome < 130、Safari < 17）只有 weekInfo 访问器，TS 未声明
+type WeekInfoLocale = {
+	getWeekInfo?: () => { firstDay: number };
+	weekInfo?: { firstDay: number };
+};
+
 // 初始化
 const weekStart = $derived(
 	(() => {
-		// 周一=1（zh）/ 周日=0（en）按 locale 周起始
-		const t = new Intl.Locale(locale);
-		const w = t.weekInfo?.firstDay ?? 1;
+		// 周一=1（zh-CN）/ 周日=7（en-US）按 locale 周起始
+		const t: WeekInfoLocale = new Intl.Locale(locale);
+		const w = t.getWeekInfo?.().firstDay ?? t.weekInfo?.firstDay ?? 1;
 		return w; // 1 = Monday, 7 = Sunday
 	})(),
 );
