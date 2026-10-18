@@ -1,4 +1,4 @@
-import type { SvelteComponent } from "svelte";
+import type { Component } from "svelte";
 
 /**
  * Props the theme's Icon accepts.
@@ -25,8 +25,15 @@ export interface IconProps {
 	rotate?: number | string;
 	/** Marks the icon decorative for assistive technology. */
 	"aria-hidden"?: boolean | "true" | "false";
+	/** Classes for the rendered `<svg>`, forwarded with the other props. */
+	class?: string;
 }
 
-declare const Icon: SvelteComponent<IconProps>;
+/**
+ * Typed as a Svelte 5 `Component` (a function), not `SvelteComponent` (a class
+ * instance): `svelte-check` rejects an instance type at every `<Icon>` in a
+ * `.svelte` file.
+ */
+declare const Icon: Component<IconProps>;
 
 export default Icon;
