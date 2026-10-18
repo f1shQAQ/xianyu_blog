@@ -418,14 +418,19 @@ export async function buildFontDeclarations(
 
 	const { fontProviders } = await import("astro/config");
 	const declarations: unknown[] = [];
+	const hasMonoCjk = Boolean(resolvedFontOptions.roles["mono-cjk"]?.family);
 
-	for (const role of ["body", "cjk", "mono"]) {
+	for (const role of ["body", "cjk", "mono", "mono-cjk"]) {
 		const resolvedRole = resolvedFontOptions.roles[role];
 		if (!resolvedRole?.family) continue;
 
-		// `body` and `cjk` compose one sans stack, so Astro's automatic fallback
-		// metrics must stay off to avoid double-declaring fallback families.
-		const isCompositeSans = role === "body" || role === "cjk";
+		// `body` and `cjk` compose one sans stack, and `mono` joins them when a
+		// `mono-cjk` supplement exists. In all three cases Astro's automatic
+		// fallback metrics must stay off: the theme composes the language order
+		// itself (`mono → mono-cjk → system mono`) and a second fallback family
+		// inside the variable would sit before the supplement.
+		const isCompositeSans =
+			role === "body" || role === "cjk" || (role === "mono" && hasMonoCjk);
 		const fallbackOpts = isCompositeSans
 			? { fallbacks: [], optimizedFallbacks: false }
 			: {};

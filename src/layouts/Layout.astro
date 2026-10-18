@@ -113,6 +113,8 @@ const hasCjkFont =
 	customFontsEnabled && Boolean(resolvedFontOptions.roles.cjk.family);
 const hasMonoFont =
 	customFontsEnabled && Boolean(resolvedFontOptions.roles.mono.family);
+const hasMonoCjkFont =
+	customFontsEnabled && Boolean(resolvedFontOptions.roles["mono-cjk"].family);
 ---
 
 <!DOCTYPE html>
@@ -150,6 +152,7 @@ const hasMonoFont =
 		{hasBodyFont && <Font cssVariable={resolvedFontOptions.roles.body.cssVariable as never} preload={resolvedFontOptions.roles.body.preload} />}
 		{hasCjkFont && <Font cssVariable={resolvedFontOptions.roles.cjk.cssVariable as never} preload={resolvedFontOptions.roles.cjk.preload} />}
 		{hasMonoFont && <Font cssVariable={resolvedFontOptions.roles.mono.cssVariable as never} preload={resolvedFontOptions.roles.mono.preload} />}
+		{hasMonoCjkFont && <Font cssVariable={resolvedFontOptions.roles["mono-cjk"].cssVariable as never} preload={resolvedFontOptions.roles["mono-cjk"].preload} />}
 		{umamiOptions?.websiteId && umamiOptions.scriptUrl && (
 			<script is:inline async src={umamiOptions.scriptUrl} data-website-id={umamiOptions.websiteId} data-auto-track="true"></script>
 		)}
