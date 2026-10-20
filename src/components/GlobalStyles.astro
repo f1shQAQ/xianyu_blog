@@ -317,6 +317,98 @@ color_set({
     .custom-md img, #post-cover img {
         @apply cursor-zoom-in
     }
+
+    /* Expressive Code copy button and frames (used by Markdown.astro) */
+    .btn-regular-dark {
+        @apply flex items-center justify-center
+        bg-[oklch(0.45_0.01_var(--hue))] hover:bg-[oklch(0.50_0.01_var(--hue))] active:bg-[oklch(0.55_0.01_var(--hue))]
+        dark:bg-[oklch(0.30_0.02_var(--hue))] dark:hover:bg-[oklch(0.35_0.03_var(--hue))] dark:active:bg-[oklch(0.40_0.03_var(--hue))]
+    }
+    .btn-regular-dark.success {
+        @apply bg-[oklch(0.75_0.14_var(--hue))] dark:bg-[oklch(0.75_0.14_var(--hue))]
+    }
+
+    /* Needs .expressive-code in front: Expressive Code resets every element
+       inside it with `.expressive-code *:not(...) { all: revert }`, which
+       outranks a single class and left the button unstyled */
+    .expressive-code .copy-btn {
+        all: initial;
+        @apply btn-regular-dark opacity-0 shadow-lg shadow-black/50 absolute active:scale-90 h-8 w-8 top-3 right-3 text-sm rounded-lg transition-all ease-in-out z-20 cursor-pointer;
+    }
+    .frame:hover .copy-btn {
+        opacity: 1;
+    }
+    .copy-btn-icon {
+        @apply absolute top-1/2 left-1/2 transition -translate-x-1/2 -translate-y-1/2 w-4 h-4 fill-white pointer-events-none;
+    }
+    .copy-btn .copy-icon {
+        @apply opacity-100 fill-white dark:fill-white/75;
+    }
+    .copy-btn.success .copy-icon {
+        @apply opacity-0 fill-[var(--deep-text)];
+    }
+    .copy-btn .success-icon {
+        @apply opacity-0 fill-white;
+    }
+    .copy-btn.success .success-icon {
+        @apply opacity-100;
+    }
+    .expressive-code {
+        @apply my-4;
+    }
+    .expressive-code ::selection {
+        @apply bg-[var(--codeblock-selection)];
+    }
+    .expressive-code .frame {
+        @apply shadow-none !important;
+    }
+    .expressive-code .title {
+        font-family: "JetBrains Mono Variable", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    }
+    .custom-md h1 {
+        @apply text-3xl
+    }
+
+    /* Banner, navbar and TOC (used by Layout.astro and MainGridLayout.astro) */
+    .toc-hide,
+    .toc-not-ready {
+        @apply opacity-0 pointer-events-none
+    }
+    #toc-inner-wrapper {
+        mask-image: linear-gradient(to bottom, transparent 0%, black 2rem, black calc(100% - 2rem), transparent 100%);
+    }
+    .hide-scrollbar {
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+    }
+    .hide-scrollbar::-webkit-scrollbar {
+        display: none;
+    }
+    .enable-banner.is-home #banner-wrapper {
+        @apply h-[var(--banner-height-home)] translate-y-[30vh]
+    }
+    .enable-banner #banner-wrapper {
+        @apply h-[var(--banner-height-home)]
+    }
+
+    .enable-banner.is-home #banner {
+        @apply h-[var(--banner-height-home)] translate-y-0
+    }
+    .enable-banner #banner {
+        @apply h-[var(--banner-height-home)] translate-y-[var(--bannerOffset)]
+    }
+    .enable-banner.is-home #main-grid {
+        @apply translate-y-[30vh];
+    }
+    .enable-banner #top-row {
+        @apply h-[calc(var(--banner-height-home)_-_4.5rem)] transition-all duration-300
+    }
+    .enable-banner.is-home #sidebar-sticky {
+        @apply -top-[30vh]
+    }
+    .navbar-hidden {
+        @apply opacity-0 -translate-y-16
+    }
 }
 
 @keyframes fade-in-up {

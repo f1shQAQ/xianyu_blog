@@ -1,7 +1,7 @@
 ---
 import path from 'node:path'
 import { type CollectionEntry, render } from 'astro:content'
-import { getSortedPosts } from '@utils/content-utils'
+import { getRelatedPosts, getSortedPosts } from '@utils/content-utils'
 import License from '@components/misc/License.astro'
 import Markdown from '@components/misc/Markdown.astro'
 import KatexStyles from '@components/misc/KatexStyles.astro'
@@ -13,9 +13,11 @@ import { Icon } from 'astro-icon/components'
 import { licenseConfig } from 'src/config'
 import PostMetadata from '../../components/PostMeta.astro'
 import ImageWrapper from '../../components/misc/ImageWrapper.astro'
-import { profileConfig, siteConfig } from '../../config'
+import { postConfig, profileConfig, siteConfig } from '../../config'
 import { formatDateToYYYYMMDD } from '../../utils/date-utils'
 import Comment from "@components/comment/index.astro"
+import RelatedPosts from '@components/RelatedPosts.astro'
+import OutdatedNotice from '@components/misc/OutdatedNotice.astro'
 
 export async function getStaticPaths() {
   // getSortedPosts fills in prevSlug/nextSlug; Astro 5's getCollection returns
@@ -23,11 +25,17 @@ export async function getStaticPaths() {
   const blogEntries = (await getSortedPosts()) as unknown as CollectionEntry<'posts'>[]
   return blogEntries.map(entry => ({
     params: { slug: entry.id },
-    props: { entry },
+    props: {
+      entry,
+      related: postConfig.relatedPosts.enable
+        ? getRelatedPosts(entry, blogEntries, postConfig.relatedPosts.count)
+        : [],
+    },
   }))
 }
 
-const { entry } = Astro.props
+const { entry, related } = Astro.props
+const showOutdatedNotice = postConfig.outdatedNotice.enable && entry.data.outdatedNotice
 const { Content, headings, remarkPluginFrontmatter } = await render(entry)
 
 const coverImage = entry.data.image
@@ -112,6 +120,7 @@ const jsonLd = {
 
 
             <Markdown class="mb-6 markdown-content onload-animation">
+                {showOutdatedNotice && <OutdatedNotice published={entry.data.published} updated={entry.data.updated} />}
                 <Content />
             </Markdown>
 
@@ -119,6 +128,8 @@ const jsonLd = {
 
         </div>
     </div>
+
+    <RelatedPosts posts={related} />
 
     <Comment post={entry}></Comment>
 

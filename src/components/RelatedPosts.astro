@@ -1,0 +1,45 @@
+---
+import path from 'node:path'
+import I18nKey from '@i18n/i18nKey'
+import { i18n } from '@i18n/translation'
+import type { RelatedPost } from '@utils/content-utils'
+import { formatDateToYYYYMMDD } from '@utils/date-utils'
+import { getDir, getPostUrlBySlug } from '@utils/url-utils'
+import { Icon } from 'astro-icon/components'
+import ImageWrapper from './misc/ImageWrapper.astro'
+
+interface Props {
+  posts: RelatedPost[]
+}
+
+const { posts } = Astro.props
+---
+{posts.length > 0 && (
+  <div class="card-base px-6 md:px-9 py-6 mb-4 onload-animation">
+    <div class="flex items-center gap-2 font-bold text-lg text-black/90 dark:text-white/90 mb-4 transition">
+      <Icon name="material-symbols:auto-stories-outline-rounded" class="text-[1.5rem] text-[var(--primary)]" />
+      {i18n(I18nKey.relatedPosts)}
+    </div>
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+      {posts.map(post => (
+        <a href={getPostUrlBySlug(post.id)} class="group btn-card rounded-xl overflow-hidden flex flex-col items-stretch justify-start active:scale-95">
+          {post.image ? (
+            <ImageWrapper src={post.image} alt={post.title} basePath={path.join('content/posts/', getDir(post.id))}
+                          widths={[320, 480]} sizes="(min-width: 640px) 280px, 100vw"
+                          class="h-28 w-full"/>
+          ) : (
+            <div class="h-28 w-full flex items-center justify-center bg-[var(--btn-regular-bg)]">
+              <Icon name="material-symbols:article-outline-rounded" class="text-4xl text-[var(--primary)] opacity-50" />
+            </div>
+          )}
+          <div class="px-3 py-2.5 flex flex-col gap-1">
+            <div class="font-bold text-sm line-clamp-2 text-black/75 dark:text-white/75 group-hover:text-[var(--primary)] transition">
+              {post.title}
+            </div>
+            <div class="text-xs text-black/30 dark:text-white/30 transition">{formatDateToYYYYMMDD(post.published)}</div>
+          </div>
+        </a>
+      ))}
+    </div>
+  </div>
+)}

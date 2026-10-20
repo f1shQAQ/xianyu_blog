@@ -36,5 +36,11 @@ export const zh_CN: Translation = {
   [Key.publishedAt]: '发布于',
   [Key.license]: '许可协议',
   [Key.friends]: '友链🌷',
+  [Key.relatedPosts]: '相关文章',
+  [Key.outdatedTitle]: '内容可能已过时',
+  [Key.outdatedBody]: '本文最后更新于 {days} 天前，其中的软件版本、下载链接或操作步骤可能已经变化，请注意甄别。',
+  [Key.notFoundTitle]: '页面不存在',
+  [Key.notFoundBody]: '你要找的页面可能已经被删除、改名，或者地址输错了。',
+  [Key.backHome]: '返回首页',
   
 }

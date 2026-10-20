@@ -69,6 +69,17 @@ export type LicenseConfig = {
   url: string
 }
 
+export type PostConfig = {
+  outdatedNotice: {
+    enable: boolean
+    days: number // show the notice when the last update is older than this
+  }
+  relatedPosts: {
+    enable: boolean
+    count: number
+  }
+}
+
 export type LIGHT_DARK_MODE =
   | typeof LIGHT_MODE
   | typeof DARK_MODE

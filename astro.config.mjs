@@ -28,6 +28,9 @@ import { expressiveCodeConfig } from "./src/config.ts"
 import { pluginLanguageBadge } from "./src/plugins/expressive-code/language-badge.ts"
 import { pluginCustomCopyButton } from "./src/plugins/expressive-code/custom-copy-button.ts"
 import { imageDomains } from "./src/constants/image-domains.ts"
+import { postLastModified } from "./src/plugins/sitemap-lastmod.mjs"
+
+const lastModified = postLastModified()
 
 const oklchToHex = (str) => {
   const DEFAULT_HUE = 250
@@ -118,7 +121,15 @@ export default defineConfig({
       },
     }),
     svelte(),
-    sitemap(),
+    sitemap({
+      // The uncategorized archive is empty while every post has a category
+      filter: page => !page.endsWith("/archive/category/uncategorized/"),
+      serialize(item) {
+        const date = lastModified.get(new URL(item.url).pathname)
+        if (date) item.lastmod = date.toISOString()
+        return item
+      },
+    }),
     Compress({
       CSS: false,
       Image: false,
@@ -173,6 +184,9 @@ export default defineConfig({
 
   vite: {
     build: {
+      // Never inline fonts as base64: inlined into the CSS, every subset of
+      // every font blocks the first render, even subsets the page never uses
+      assetsInlineLimit: file => (/\.(woff2?|ttf|otf)$/i.test(file) ? false : undefined),
       rollupOptions: {
         onwarn(warning, warn) {
           // temporarily suppress this warning

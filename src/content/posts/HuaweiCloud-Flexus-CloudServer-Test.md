@@ -5,6 +5,7 @@ description: '不到六块钱搞了 14 个月，要啥自行车'
 image: 'https://bu.dusays.com/2024/11/26/6745c6fbcf59c.png'
 tags: [测试, 华为云]
 category: '存档'
+outdatedNotice: false
 draft: false
 ---
 

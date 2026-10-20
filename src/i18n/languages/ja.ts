@@ -5,6 +5,12 @@ export const ja: Translation = {
   [Key.home]: 'Home',
   [Key.about]: 'About',
   [Key.friends]: 'リンク',
+  [Key.relatedPosts]: '関連記事',
+  [Key.outdatedTitle]: '内容が古くなっている可能性があります',
+  [Key.outdatedBody]: 'この記事は {days} 日前に更新されました。バージョンやリンク、手順が変わっている可能性があります。',
+  [Key.notFoundTitle]: 'ページが見つかりません',
+  [Key.notFoundBody]: 'ページが削除・移動されたか、アドレスが間違っている可能性があります。',
+  [Key.backHome]: 'ホームに戻る',
   [Key.archive]: 'Archive',
   [Key.search]: '検索',
 

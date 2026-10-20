@@ -5,6 +5,7 @@ description: '一些高效的语言学习方法'
 image: 'https://bu.dusays.com/2023/12/05/656eeebe695c9.jpg'
 tags: [转载, 语言学习]
 category: '分享'
+outdatedNotice: false
 draft: false 
 ---
 

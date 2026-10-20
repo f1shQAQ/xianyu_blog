@@ -1,0 +1,38 @@
+---
+import MainGridLayout from '@layouts/MainGridLayout.astro'
+import I18nKey from '@i18n/i18nKey'
+import { i18n } from '@i18n/translation'
+import { getSortedPosts } from '@utils/content-utils'
+import { formatDateToYYYYMMDD } from '@utils/date-utils'
+import { getPostUrlBySlug, url } from '@utils/url-utils'
+import { Icon } from 'astro-icon/components'
+
+const recent = (await getSortedPosts()).slice(0, 5)
+---
+<MainGridLayout title={i18n(I18nKey.notFoundTitle)} description={i18n(I18nKey.notFoundBody)}>
+    <div class="card-base px-6 md:px-9 py-10 mb-4 flex flex-col items-center text-center onload-animation">
+        <div class="text-[5rem] leading-none font-bold text-[var(--primary)] mb-4 transition">404</div>
+        <h1 class="text-2xl font-bold text-black/90 dark:text-white/90 mb-2 transition">{i18n(I18nKey.notFoundTitle)}</h1>
+        <p class="text-black/50 dark:text-white/50 mb-6 transition">{i18n(I18nKey.notFoundBody)}</p>
+        <a href={url('/')} class="btn-regular rounded-lg h-10 px-4 gap-2 font-bold active:scale-95">
+            <Icon name="material-symbols:home-outline-rounded" class="text-[1.25rem]" />
+            {i18n(I18nKey.backHome)}
+        </a>
+    </div>
+
+    {recent.length > 0 && (
+        <div class="card-base px-6 md:px-9 py-6 mb-4 onload-animation">
+            <div class="font-bold text-lg text-black/90 dark:text-white/90 mb-3 transition">{i18n(I18nKey.recentPosts)}</div>
+            <ul class="flex flex-col">
+                {recent.map(post => (
+                    <li>
+                        <a href={getPostUrlBySlug(post.id)} class="group flex items-center justify-between gap-4 py-2 rounded-lg px-2 -mx-2 hover:bg-[var(--btn-plain-bg-hover)] transition">
+                            <span class="text-black/75 dark:text-white/75 group-hover:text-[var(--primary)] transition line-clamp-1">{post.data.title}</span>
+                            <span class="text-sm text-black/30 dark:text-white/30 shrink-0">{formatDateToYYYYMMDD(post.data.published)}</span>
+                        </a>
+                    </li>
+                ))}
+            </ul>
+        </div>
+    )}
+</MainGridLayout>

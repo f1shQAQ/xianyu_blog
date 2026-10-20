@@ -5,6 +5,7 @@ description: '介绍小鹤双拼的基本使用方法'
 image: 'https://bu.dusays.com/2023/12/18/657ff64b2fd1e.png'
 tags: [双拼]
 category: '分享'
+outdatedNotice: false
 draft: false 
 ---
 

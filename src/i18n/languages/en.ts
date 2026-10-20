@@ -5,6 +5,12 @@ export const en: Translation = {
   [Key.home]: 'Home',
   [Key.about]: 'About',
   [Key.friends]: 'Friends',
+  [Key.relatedPosts]: 'Related Posts',
+  [Key.outdatedTitle]: 'This post may be outdated',
+  [Key.outdatedBody]: 'This post was last updated {days} days ago. Versions, download links or steps in it may have changed.',
+  [Key.notFoundTitle]: 'Page Not Found',
+  [Key.notFoundBody]: 'The page may have been removed or renamed, or the address is mistyped.',
+  [Key.backHome]: 'Back to Home',
   [Key.archive]: 'Archive',
   [Key.search]: 'Search',
 

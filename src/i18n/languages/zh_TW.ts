@@ -5,6 +5,12 @@ export const zh_TW: Translation = {
   [Key.home]: '首頁',
   [Key.about]: '關於',
   [Key.friends]: '友鏈',
+  [Key.relatedPosts]: '相關文章',
+  [Key.outdatedTitle]: '內容可能已過時',
+  [Key.outdatedBody]: '本文最後更新於 {days} 天前，其中的軟體版本、下載連結或操作步驟可能已經變化，請注意甄別。',
+  [Key.notFoundTitle]: '頁面不存在',
+  [Key.notFoundBody]: '你要找的頁面可能已被刪除、改名，或網址輸入錯誤。',
+  [Key.backHome]: '返回首頁',
   [Key.archive]: '彙整',
   [Key.search]: '搜尋',
 

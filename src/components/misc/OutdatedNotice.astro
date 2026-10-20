@@ -1,0 +1,35 @@
+---
+import { postConfig } from '@/config'
+import I18nKey from '@i18n/i18nKey'
+import { i18n } from '@i18n/translation'
+
+interface Props {
+  published: Date
+  updated?: Date
+}
+
+const { published, updated } = Astro.props
+const lastUpdated = (updated ?? published).toISOString()
+const days = postConfig.outdatedNotice.days
+// The body text carries a {days} placeholder, filled in on the client
+const [before, after = ''] = i18n(I18nKey.outdatedBody).split('{days}')
+---
+<!--
+  Age is computed in the browser, not at build time: the site is rebuilt
+  rarely, so a build-time check would go stale.
+-->
+<blockquote class="admonition bdm-warning outdated-notice" style="display: none"
+            data-last-updated={lastUpdated} data-threshold-days={days} data-pagefind-ignore>
+  <span class="bdm-title">{i18n(I18nKey.outdatedTitle)}</span>
+  <p>{before}<span class="outdated-days"></span>{after}</p>
+</blockquote>
+<script is:inline>
+  ;(() => {
+    for (const el of document.querySelectorAll('.outdated-notice[data-last-updated]')) {
+      const age = Math.floor((Date.now() - Date.parse(el.dataset.lastUpdated)) / 86400000)
+      if (age <= Number(el.dataset.thresholdDays)) continue
+      el.querySelector('.outdated-days').textContent = String(age)
+      el.style.display = ''
+    }
+  })()
+</script>

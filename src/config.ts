@@ -2,6 +2,7 @@ import type {
   CommentConfig,
   ExpressiveCodeConfig,
   LicenseConfig,
+  PostConfig,
   NavBarConfig,
   ProfileConfig,
   SiteConfig,
@@ -85,6 +86,17 @@ export const licenseConfig: LicenseConfig = {
   enable: true,
   name: 'CC BY-NC-SA 4.0',
   url: 'https://creativecommons.org/licenses/by-nc-sa/4.0/',
+}
+
+export const postConfig: PostConfig = {
+  outdatedNotice: {
+    enable: true,
+    days: 365,   // Posts not updated for this many days show an "may be outdated" notice. Set `outdatedNotice: false` in a post's front-matter to hide it
+  },
+  relatedPosts: {
+    enable: true,
+    count: 3,    // Max related posts (by shared tags / category) shown under a post
+  },
 }
 
 export const expressiveCodeConfig: ExpressiveCodeConfig = {
