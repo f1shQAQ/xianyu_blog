@@ -101,6 +101,7 @@ export const devicesData: DeviceItem[] = [
 		description: "便宜捡的二手，日常吃灰，出门用来拍拍视频，还不错",
 		icon: "material-symbols:photo-camera-outline-rounded",
 		year: "2023",
+		link: "https://www.dji.com/cn/osmo-pocket-3",
 	},
 ];
 
