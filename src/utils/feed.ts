@@ -101,6 +101,16 @@ export async function getFeedPosts(site: URL): Promise<FeedPostItem[]> {
 				: await renderPostHtml(post as unknown as CollectionEntry<"posts">);
 			contentHtml = sanitizeHtml(stripInvalidXmlChars(html), {
 				allowedTags: sanitizeHtml.defaults.allowedTags.concat(["img"]),
+				// Co-located images render as root-relative /_astro/ paths; feed
+				// readers resolve them against their own origin, so make them absolute.
+				transformTags: {
+					img: (tagName, attribs) => ({
+						tagName,
+						attribs: attribs.src
+							? { ...attribs, src: new URL(attribs.src, site).href }
+							: attribs,
+					}),
+				},
 			});
 		}
 
