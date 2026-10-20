@@ -449,7 +449,7 @@ Color usage must adhere to strict WCAG 2.1 AA contrast requirements across both 
 
 ## Typography
 
-Shirone uses a refined typography hierarchy calibrated for bilingual editorial comfort. The default configuration pairs **Outfit** for Latin UI text, **Yozai Medium** for CJK text, and **JetBrains Mono** for code.
+Shirone uses a refined typography hierarchy calibrated for bilingual editorial comfort. The default configuration pairs **Outfit** for Latin UI text, **LXGW WenKai** for CJK text, and **JetBrains Mono** for code.
 
 The system adopts the complete Material Design 3 15-scale baseline hierarchy organized into five categories (Display, Headline, Title, Body, Label) across three sizes (Large, Medium, Small), supplemented by Emphasized variants and a dedicated Code scale:
 
