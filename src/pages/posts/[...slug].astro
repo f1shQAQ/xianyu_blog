@@ -1,6 +1,7 @@
 ---
 import path from 'node:path'
-import { getCollection, render } from 'astro:content'
+import { type CollectionEntry, render } from 'astro:content'
+import { getSortedPosts } from '@utils/content-utils'
 import License from '@components/misc/License.astro'
 import Markdown from '@components/misc/Markdown.astro'
 import I18nKey from '@i18n/i18nKey'
@@ -16,9 +17,9 @@ import { formatDateToYYYYMMDD } from '../../utils/date-utils'
 import Comment from "@components/comment/index.astro"
 
 export async function getStaticPaths() {
-  const blogEntries = await getCollection('posts', ({ data }) => {
-    return import.meta.env.PROD ? data.draft !== true : true
-  })
+  // getSortedPosts fills in prevSlug/nextSlug; Astro 5's getCollection returns
+  // fresh objects on every call, so the entries must come from it directly
+  const blogEntries = (await getSortedPosts()) as unknown as CollectionEntry<'posts'>[]
   return blogEntries.map(entry => ({
     params: { slug: entry.id },
     props: { entry },
