@@ -12,33 +12,33 @@ import { withUserConfig } from "../utils/config-overlay.ts";
  * 注：设备的具体清单数据（设备名、品牌、规格、感受说明、图片等）请在 `src/data/devices.ts` 中维护。
  */
 export const devicesConfig: DevicesConfig = withUserConfig("devices", {
-	enable: false,
+	enable: true,
 	title: "$t:devices",
 	description: "$t:devicesBanner",
 	categories: [
 		{
 			key: "desk",
-			label: "Desk Setup",
+			label: "桌面",
 			icon: "material-symbols:desktop-windows-outline-rounded",
-			description: "Workstation & home office hardware",
+			description: "电脑与桌面设备",
 		},
 		{
 			key: "mobile",
-			label: "Mobile & EDC",
+			label: "随身",
 			icon: "material-symbols:phone-iphone",
-			description: "Daily portable devices & smart gadgets",
+			description: "手机、平板与随身小物",
 		},
 		{
 			key: "audio",
-			label: "Audio & Visual",
+			label: "影音",
 			icon: "material-symbols:headphones-rounded",
-			description: "Headphones, speakers & monitoring gears",
+			description: "耳机、音箱与显示设备",
 		},
 		{
 			key: "peripheral",
-			label: "Peripherals",
+			label: "外设",
 			icon: "material-symbols:keyboard-outline-rounded",
-			description: "Keyboards, mice & desk accessories",
+			description: "键盘、鼠标与桌面配件",
 		},
 	],
 	// disabledIds: [],
