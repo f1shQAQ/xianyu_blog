@@ -15,7 +15,6 @@
 > - 源码托管于 [GitHub](https://github.com/f1shQAQ/xianyu_blog) ，站点托管于 [Cloudflare Pages](https://cloudflare.com)
 > - 域名注册于 [Spaceship](https://www.spaceship.com/)
 > - [Cloudflare](https://cloudflare.com/) 提供 CDN 服务
-> - [去不图床](https://7bu.top/) 提供图床服务
 
 
 
