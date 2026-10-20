@@ -16,6 +16,14 @@ export interface FriendItem {
 
 // 友情链接数据
 export const friendsData: FriendItem[] = [
+	{
+		id: 1,
+		title: "Hazuki's Site",
+		imgurl: "https://hazukii.top/usr/uploads/icon.jpg",
+		siteurl: "https://hazukii.top/",
+		tags: [],
+		desc: "さあ、出発進行！",
+	},
 ];
 
 // 获取所有友情链接数据（稳定顺序，测试可复现）
