@@ -6,7 +6,8 @@ image: './657ff64b2fd1e.png'
 tags: [双拼]
 category: '分享'
 outdatedNotice: false
-draft: false 
+draft: false
+aiSummary: 本文介绍小鹤双拼的入门：双拼将拼音拆为声母和韵母、每字两键，可减少击键并提升速度；学习不必死记码表，应借助助记皮肤、码表和练习网站多练，逐步形成肌肉记忆。文中还推荐了手机与电脑输入法，并简要提及进阶的小鹤音形。
 ---
 
 > 封面图片来源于：[小鹤双拼官方文档](https://flypy.cc/#/up)

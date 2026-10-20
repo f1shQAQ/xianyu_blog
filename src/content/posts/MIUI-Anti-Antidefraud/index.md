@@ -6,6 +6,7 @@ image: './656f37749920d.webp'
 tags: [MIUI, 小米, 澎湃OS]
 category: '日常'
 draft: false
+aiSummary: 本文介绍在解锁 BootLoader 并获取 Root（或用 Shizuku 替代）的前提下，规避 MIUI/澎湃 OS 自带应用检测与安装限制的经验，包括关闭自动更新、冻结系统应用、用 Cemiuiler 阻止上传应用列表、替换系统安装器、关闭自带杀毒和反诈服务、限制应用列表权限及优先使用 Google Play，最终可选择刷国际版或类原生系统。
 ---
 
 > 封面图片来源于网络

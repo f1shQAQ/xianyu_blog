@@ -5,7 +5,8 @@ description: '简单快速的搭建无人直播间'
 image: './656f4612e6f92.webp'
 tags: [无人直播]
 category: '折腾'
-draft: false 
+draft: false
+aiSummary: 本文介绍如何用闲置 VPS 搭建 24 小时无人直播间，通过上传 mp4 视频、安装 ffmpeg 和 screen、下载一键推流脚本并在 screen 中运行，循环推流到 B 站或油管等平台。文章提醒服务器需带宽足够，并给出推流地址获取和脚本配置步骤。
 ---
 
 ## 前言

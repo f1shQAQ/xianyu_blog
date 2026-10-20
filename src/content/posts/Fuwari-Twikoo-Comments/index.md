@@ -5,7 +5,8 @@ description: 'Fuwari 博客接入 Twikoo 评论'
 image: './66fd356fc1592.webp'
 tags: [Twikoo]
 category: '折腾'
-draft: false 
+draft: false
+aiSummary: 本文介绍如何为 Fuwari 博客接入 Twikoo 评论：先部署 Twikoo 后端，再复制 Comments 分支中的 comment 组件，修改配置文件和类型定义，最后在文章页面引入评论组件即可显示评论区。
 ---
 
 ## 部署 Twikoo 后端

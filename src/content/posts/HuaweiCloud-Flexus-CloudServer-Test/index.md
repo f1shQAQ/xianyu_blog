@@ -7,6 +7,7 @@ tags: [测试, 华为云]
 category: '存档'
 outdatedNotice: false
 draft: false
+aiSummary: 本文介绍近乎免费领取的华为云2核1G香港服务器，并提醒领取后须在六个月内提交开源项目，否则华为有权收回使用权。文章给出融合怪脚本与IP质量测试结果，涵盖CPU、内存、磁盘、延迟、测速及流媒体解锁，显示该机为KVM、Debian 12，IP多被识别为机房或云提供商。
 ---
 
 具体领取方式请参考：[华为云401无门槛优惠券 可白嫖1年+服务器](https://jike.info/topic/39488/%E5%8D%8E%E4%B8%BA%E4%BA%91401%E6%97%A0%E9%97%A8%E6%A7%9B%E4%BC%98%E6%83%A0%E5%88%B8-%E5%8F%AF%E7%99%BD%E5%AB%961%E5%B9%B4-%E6%9C%8D%E5%8A%A1%E5%99%A8)

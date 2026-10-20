@@ -5,7 +5,8 @@ description: '香港hahaSIM保号卡年费仅10港币，开箱测评与大陆使
 image: './67d8cfeb0ad8d.png'
 tags: [境外保号卡]
 category: '分享'
-draft: false 
+draft: false
+aiSummary: 本文介绍丰泽联合3HK推出的hahaSIM旅游卡：无月租，每年充值10 HKD即可保号收短信，适合在大陆作境外副卡。文章说明了购买、激活和实名流程，并指出漫游流量为10 HKD/天或138 HKD/月，超500MB限速128Kbps，不建议长期使用。
 ---
 
 # 前言

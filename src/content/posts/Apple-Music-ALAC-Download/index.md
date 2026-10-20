@@ -5,7 +5,8 @@ description: '如标题所示，感觉写的有点烂'
 image: './673760bf8a544.jpg'
 tags: [AppleMusic]
 category: '折腾'
-draft: false 
+draft: false
+aiSummary: 本文介绍如何借助特定版本 Apple Music、SAI、MuMu 模拟器、Frida 和 Apple Music ALAC Downloader 等工具，在模拟器中登录账号并通过命令行下载 ALAC 格式音乐；流程包括开启 Root、端口转发和启动 Frida 代理，且该工具目前只能下载整张专辑，不能下载单曲。
 ---
 
 ## 需要使用的工具

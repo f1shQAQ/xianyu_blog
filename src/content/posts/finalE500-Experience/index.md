@@ -6,7 +6,8 @@ image: './657ddac3de932.webp'
 tags: [耳机, 闲聊]
 category: '日常'
 outdatedNotice: false
-draft: false 
+draft: false
+aiSummary: 本文作者首次为听ASMR购买final E500，京东自营到手143元，认为其做工质感偏廉价但佩戴舒适。相比此前几十元有线耳机，它听舔耳、掏耳和轻语时层次更清晰，提升明显，并称附赠耳机套价值较高。
 ---
 
 ## 前言

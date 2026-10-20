@@ -5,7 +5,8 @@ description: 'Telegram 人形机器人 PagerMaid-Pyro 使用指北'
 image: './65f3d02c7c2a2.png'
 tags: [Bot]
 category: '折腾'
-draft: false 
+draft: false
+aiSummary: 本文介绍 PagerMaid-Pyro 这一开源 Telegram 人形 Bot 的安装与使用，包括获取 Telegram API、用 Docker 脚本安装并扫码登录，以及通过 ,help、,apt install 等命令使用和安装插件，并推荐 pmcaptcha、ids、netease 等插件；文中提醒使用该插件有 Telegram 被强制销号的风险，且无 Premium 账户更易被封。
 ---
 
 # 前言

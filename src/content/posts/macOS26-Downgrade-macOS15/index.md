@@ -5,7 +5,8 @@ description: '出厂为 macOS26 的 M1-M4 机型也可降级'
 image: './69661bc54d67b.png'
 tags: [macOS, 降级]
 category: '折腾'
-draft: false 
+draft: false
+aiSummary: 本文介绍如何将预装 macOS 26 的 M4 Mac mini 降级到 macOS 15，需准备 32GB 以上 U 盘并备份数据，因为降级会清除本机和 U 盘数据。文章说明该过程仅支持 M1 至 M4 及 Intel 设备，M5 不支持，并给出下载安装包、制作启动盘、抹盘和重装系统的步骤。
 ---
 
 # 前言

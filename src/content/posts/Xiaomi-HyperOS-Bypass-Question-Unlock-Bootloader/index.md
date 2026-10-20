@@ -6,6 +6,7 @@ image: './6645a329ac7e5.jpg'
 tags: [玩机]
 category: '折腾'
 draft: false
+aiSummary: 本文介绍用PHP项目和替换设置APK绕过澎湃OS社区答题限制、绑定账号解锁BootLoader的步骤，并提醒仍需遵守168小时限制；文末更新称该方法已在澎湃OS 2.0及后续封堵后彻底失效。
 ---
 
 

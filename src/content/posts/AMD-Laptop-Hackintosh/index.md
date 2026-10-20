@@ -5,7 +5,8 @@ description: '小新Pro 14 安装黑苹果个人主观体验'
 image: './65b13b0213400.png'
 tags: [黑苹果, 使用体验]
 category: '折腾'
-draft: false 
+draft: false
+aiSummary: 本文记录作者在小新 Pro 14 2021 ACH（R5-5600H）上安装 macOS Ventura 黑苹果的体验，称 BFixup 补丁明显改善 Chromium 应用流畅度，但硬解仍未真正解决。作者还分享了自用 EFI，并提及触控板体验好、鼠标和输入法需调整，以及 Windows/Office 激活、Adobe 闪退和 Apple Music 卡死等个别问题。
 ---
 
 # 前言

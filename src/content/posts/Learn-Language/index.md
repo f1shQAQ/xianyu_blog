@@ -6,7 +6,8 @@ image: './656eeebe695c9.jpg'
 tags: [转载, 语言学习]
 category: '分享'
 outdatedNotice: false
-draft: false 
+draft: false
+aiSummary: 本文介绍 Chris Lonsdale 的六个月语言学习法：用感觉和图像而非母语连接新词，模仿发音面部动作，像婴儿一样自由表达并逐步加入连接词，聚焦约3000个高频词，选择感兴趣素材并长时间播放背景音。
 ---
 
 > 封面图片来源于网络
