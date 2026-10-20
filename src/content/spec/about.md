@@ -11,8 +11,8 @@
 
 
 > ### 关于本站
-> - 使用框架 [Astro](https://github.com/withastro/astro)，主题 [Fuwari](https://github.com/saicaca/fuwari)
-> - 源码托管于 [GitHub](https://github.com/f1shQAQ/xianyu_blog) ，站点及评论系统托管于 [Vercel](https://vercel.com)
+> - 使用框架 [Astro](https://github.com/withastro/astro)，主题 [Shirone](https://blog.qqquq.com/)
+> - 源码托管于 [GitHub](https://github.com/f1shQAQ/xianyu_blog) ，站点托管于 [Cloudflare Pages](https://cloudflare.com)
 > - 域名注册于 [Spaceship](https://www.spaceship.com/)
 > - [Cloudflare](https://cloudflare.com/) 提供 CDN 服务
 > - [去不图床](https://7bu.top/) 提供图床服务
@@ -20,6 +20,7 @@
 
 
 > ### 本站纪事
+> - 2026.10.21 从 Fuwari 主题迁移至 Shirone 主题，从 Vercel 部署迁移至 Cloudflare Pages部署
 > - 2024.9.23  由于 WordPress.com 域名续费价格上涨，已将域名转移至 Spaceship
 > - 2024.9.15  从 WordPress 迁移至 Astro，主题换用 Fuwari
 > - 2024.3.14  从 NotionNext 迁移至 WordPress，主题换用 Argon
