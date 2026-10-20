@@ -20,6 +20,7 @@ export {
 	type ArticleShareOptions,
 	articleConfig,
 	normalizeDiscoveryCount,
+	resolveAiSummaryOptions,
 	resolveArticleDiscoveryOptions,
 	resolveArticleShareOptions,
 	resolveLastUpdatedNoticeOptions,

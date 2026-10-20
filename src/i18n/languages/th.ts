@@ -269,6 +269,9 @@ export const th: Translation = {
 	[Key.publishedAt]: "เผยแพร่เมื่อ",
 	[Key.lastUpdatedNotice]: "อัปเดตล่าสุดเมื่อ {date} ผ่านมาแล้ว {days} วัน",
 	[Key.lastUpdatedWarning]: "เนื้อหาบางส่วนอาจล้าสมัย",
+	[Key.aiSummaryLabel]: "สรุปโดย AI",
+	[Key.aiSummaryDisclaimer]:
+		"สร้างโดย AI เพื่อใช้อ้างอิงเท่านั้น โปรดยึดเนื้อหาบทความเป็นหลัก",
 	[Key.license]: "สัญญาอนุญาต",
 	[Key.continueReading]: "อ่านต่อ",
 	[Key.relatedReading]: "บทความที่เกี่ยวข้อง",

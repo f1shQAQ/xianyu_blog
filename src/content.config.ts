@@ -16,6 +16,8 @@ const postsCollection = defineCollection({
 		/** false 时不显示“最后更新于 N 天前”提示（文章内容不会过时，如转载的方法论） */
 		outdatedNotice: z.boolean().optional().default(true),
 		description: z.string().optional().default(""),
+		/** AI 生成的文章摘要（由 Kurone 写入；空 = 不显示摘要卡片） */
+		aiSummary: z.string().optional().default(""),
 		image: z.string().optional().default(""),
 		tags: z.array(z.string()).optional().default([]),
 		category: z.string().optional().nullable().default(""),

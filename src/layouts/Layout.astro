@@ -284,6 +284,7 @@ const configuredFontRoles = getConfiguredFontRoles(resolvedFontOptions);
 </style>
 
 <script>
+import { initAiSummaries } from "../utils/ai-summary";
 import { initLastUpdatedNotices } from "../utils/last-updated-notice";
 import {getHue, getStoredTheme, setHue, setTheme} from "../utils/setting-utils";
 import { WALLPAPER_MODE_CHANGE_EVENT, BANNER_HEIGHT, BANNER_HEIGHT_EXTEND } from "../constants/constants";
@@ -313,6 +314,7 @@ function init() {
 }
 init();
 initLastUpdatedNotices();
+initAiSummaries();
 
 document.addEventListener("click", async (event) => {
 	const target = event.target;

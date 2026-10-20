@@ -284,6 +284,9 @@ export const id: Translation = {
 	[Key.lastUpdatedNotice]:
 		"Terakhir diperbarui pada {date}, {days} hari yang lalu",
 	[Key.lastUpdatedWarning]: "Sebagian konten mungkin sudah tidak berlaku",
+	[Key.aiSummaryLabel]: "Ringkasan AI",
+	[Key.aiSummaryDisclaimer]:
+		"Dibuat oleh AI hanya sebagai referensi; isi artikel tetap menjadi acuan",
 	[Key.license]: "Lisensi",
 	[Key.continueReading]: "Lanjut membaca",
 	[Key.relatedReading]: "Bacaan terkait",

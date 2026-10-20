@@ -1,6 +1,7 @@
 import type { CollectionEntry } from "astro:content";
-import { getPostUrl } from "./url-utils.ts";
 import type { LlmsConfig, LlmsCustomLink } from "@/types/llmsConfig";
+import { getPostDescription } from "./post-description.ts";
+import { getPostUrl } from "./url-utils.ts";
 
 const CODE_BLOCK_RE =
 	/(?:^|\n)(?<marker>\s*(?:`{3,}|~{3,}))([\s\w-]*)\n[\s\S]*?\n\k<marker>(?:\n|$)/g;
@@ -173,7 +174,7 @@ export function generateLlmsTxt(options: GenerateLlmsTxtOptions): string {
 		output += "## Articles\n";
 		for (const post of posts) {
 			const postUrl = toAbsoluteUrl(getPostUrl(post), baseUrl);
-			const rawDesc = post.data.description || "";
+			const rawDesc = getPostDescription(post.data);
 			const desc = rawDesc ? `: ${truncateDescription(rawDesc, maxLen)}` : "";
 			output += `- [${post.data.title}](${postUrl})${desc}\n`;
 		}
@@ -223,8 +224,8 @@ export function generateLlmsFullTxt(
 		if (post.data.category) output += `- **Category**: ${post.data.category}\n`;
 		if (post.data.tags?.length)
 			output += `- **Tags**: ${post.data.tags.join(", ")}\n`;
-		if (post.data.description)
-			output += `- **Description**: ${post.data.description}\n`;
+		const description = getPostDescription(post.data);
+		if (description) output += `- **Description**: ${description}\n`;
 		output += "\n";
 
 		const cleanedBody = cleanMarkdownForLLM(post.body || "");

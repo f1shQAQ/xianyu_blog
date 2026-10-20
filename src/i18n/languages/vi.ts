@@ -281,6 +281,9 @@ export const vi: Translation = {
 	[Key.publishedAt]: "Đăng vào lúc",
 	[Key.lastUpdatedNotice]: "Cập nhật lần cuối vào {date}, cách đây {days} ngày",
 	[Key.lastUpdatedWarning]: "Một số nội dung có thể đã lỗi thời",
+	[Key.aiSummaryLabel]: "Tóm tắt bằng AI",
+	[Key.aiSummaryDisclaimer]:
+		"Do AI tạo, chỉ mang tính tham khảo; vui lòng lấy nội dung bài viết làm chuẩn",
 	[Key.license]: "Giấy phép bản quyền",
 	[Key.continueReading]: "Đọc tiếp",
 	[Key.relatedReading]: "Bài viết liên quan",
