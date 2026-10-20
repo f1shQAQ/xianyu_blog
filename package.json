@@ -1,7 +1,7 @@
 {
 	"name": "shirone",
 	"type": "module",
-	"version": "1.0.3",
+	"version": "1.0.6",
 	"description": "An expressive, anime-inspired blog theme built on Material 3 Expressive, Astro 7, and Svelte 5",
 	"license": "MIT",
 	"author": "matsuzaka-yuki",
