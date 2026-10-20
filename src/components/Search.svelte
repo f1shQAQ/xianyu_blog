@@ -3,6 +3,13 @@ import { onMount } from 'svelte'
 import { url } from '@utils/url-utils.ts'
 import { i18n } from '@i18n/translation'
 import I18nKey from '@i18n/i18nKey'
+// Type-only: lets Astro pass the named-slot icons as children under Svelte 5
+interface $$Slots {
+  default: {}
+  'search-icon': {}
+  'search-switch': {}
+  'arrow-icon': {}
+}
 let keywordDesktop = ''
 let keywordMobile = ''
 let result = []

@@ -14,8 +14,7 @@ interface Props {
   loading?: 'lazy' | 'eager'
   fetchpriority?: 'high' | 'low' | 'auto'
 }
-import { Image } from 'astro:assets'
-import { inferRemoteSize } from 'astro/assets/utils'
+import { Image, inferRemoteSize } from 'astro:assets'
 import { imageDomains } from '../../constants/image-domains'
 import { url } from '../../utils/url-utils'
 
@@ -46,8 +45,7 @@ let remoteSize: { width: number; height: number } | undefined
 if (src.startsWith('http')) {
   try {
     isOptimizableRemote = imageDomains.includes(new URL(src).hostname)
-    // Astro 4 does not cap srcset widths for remote images; probe the
-    // real size so we never upscale. Fall back to a plain <img> on failure.
+    // Probe the real size so the srcset never upscales the source. Fall back to a plain <img> on failure.
     if (isOptimizableRemote) remoteSize = await inferRemoteSize(src)
   } catch (e) {
     console.warn(`[ImageWrapper] cannot probe ${src}, serving it unoptimized`)

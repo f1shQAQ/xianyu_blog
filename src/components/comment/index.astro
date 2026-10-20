@@ -11,7 +11,7 @@ interface Props {
 
 const { post } = Astro.props
 // No trailing slash: existing Twikoo comments are keyed by this exact path
-const path = post ? `/posts/${post.slug}` : (Astro.props.path ?? Astro.url.pathname)
+const path = post ? `/posts/${post.id}` : (Astro.props.path ?? Astro.url.pathname)
 
 let commentService = ''
 if (commentConfig?.twikoo) {
