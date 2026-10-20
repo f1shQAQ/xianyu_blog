@@ -95,9 +95,6 @@ importers:
       katex:
         specifier: ^0.16.47
         version: 0.16.47
-      lxgw-wenkai-screen-webfont:
-        specifier: ^1.7.0
-        version: 1.7.0
       markdown-it:
         specifier: ^15.0.2
         version: 15.0.2
@@ -4540,9 +4537,6 @@ packages:
   lru-cache@7.18.3:
     resolution: {integrity: sha512-jumlc0BIUrS3qJGgIkWZsyfAM7NCWiBcCDhnd+3NNM5KbBmLTgHVfWBcg6W+rLUsIpzpERPsvwUP7CckAQSOoA==}
     engines: {node: '>=12'}
-
-  lxgw-wenkai-screen-webfont@1.7.0:
-    resolution: {integrity: sha512-xvfF4V26Mb335xKg3uxljz+V2nq4F5ek0ku9pmyKgT0Dzo/d2rHi7WpnqgvM9mlXAcAKOrxrcDmUZiIs/ZQ9bQ==}
 
   magic-string@0.25.9:
     resolution: {integrity: sha512-RmF0AsMzgt25qzqqLc1+MbHmhdx0ojF2Fvs4XnOqz2ZOBXzzkEwc/dJQZCYHAn7v1jbVOjAZfK8msRn4BxO4VQ==}
@@ -11630,8 +11624,6 @@ snapshots:
       yallist: 3.1.1
 
   lru-cache@7.18.3: {}
-
-  lxgw-wenkai-screen-webfont@1.7.0: {}
 
   magic-string@0.25.9:
     dependencies:
