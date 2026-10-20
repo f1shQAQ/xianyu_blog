@@ -270,6 +270,8 @@ export const zh_TW: Translation = {
 	[Key.publishedAt]: "發佈於",
 	[Key.lastUpdatedNotice]: "最後更新於 {date}，距今已過 {days} 天",
 	[Key.lastUpdatedWarning]: "部分內容可能已過時",
+	[Key.aiSummaryLabel]: "AI 摘要",
+	[Key.aiSummaryDisclaimer]: "由 AI 生成，僅供參考，請以正文為準",
 	[Key.license]: "許可協議",
 	[Key.continueReading]: "繼續閱讀",
 	[Key.relatedReading]: "沿著主題讀",

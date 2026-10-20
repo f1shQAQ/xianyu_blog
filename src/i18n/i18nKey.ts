@@ -294,6 +294,8 @@ enum I18nKey {
 	publishedAt = "publishedAt",
 	lastUpdatedNotice = "lastUpdatedNotice",
 	lastUpdatedWarning = "lastUpdatedWarning",
+	aiSummaryLabel = "aiSummaryLabel",
+	aiSummaryDisclaimer = "aiSummaryDisclaimer",
 	license = "license",
 	continueReading = "continueReading",
 	relatedReading = "relatedReading",

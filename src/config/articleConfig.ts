@@ -11,6 +11,12 @@ export const articleConfig: ArticleConfig = withUserConfig("article", {
 		// 按 UTC 日历日计算；达到该天数当天开始显示，0 表示立即显示。
 		minimumAgeDays: 365,
 	},
+	aiSummary: {
+		// 关闭后不渲染 frontmatter `aiSummary` 的 AI 摘要卡片。
+		enable: true,
+		// 卡片进入视口时逐字显示摘要；减少动效偏好下不播放，点击摘要立即显示全文。
+		typewriter: true,
+	},
 	discovery: {
 		// 总开关关闭后不计算、不渲染文章尾部的延伸阅读区域。
 		enable: true,
@@ -72,6 +78,12 @@ export function resolveArticleShareOptions(
 ): ArticleShareOptions | null {
 	if (!config.share.enable) return null;
 	return { includeCover: config.share.includeCover };
+}
+
+export function resolveAiSummaryOptions(
+	config: Pick<ArticleConfig, "aiSummary">,
+): ArticleConfig["aiSummary"] | null {
+	return config.aiSummary.enable ? config.aiSummary : null;
 }
 
 export function resolveLastUpdatedNoticeOptions(

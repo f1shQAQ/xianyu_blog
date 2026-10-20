@@ -5,6 +5,7 @@ import IconButton from "@components/atoms/action/IconButton.svelte";
 import AccentBar from "@components/atoms/display/AccentBar.svelte";
 import Card from "@components/atoms/display/Card.svelte";
 import Markdown from "@components/content/Markdown.astro";
+import AiSummary from "@components/molecules/AiSummary.astro";
 import ImageWrapper from "@components/molecules/ImageWrapper.astro";
 import LastUpdatedNotice from "@components/molecules/LastUpdatedNotice.astro";
 import License from "@components/molecules/License.astro";
@@ -39,6 +40,7 @@ import {
 	hasCustomPermalink,
 	initPostIdMap,
 } from "@utils/permalink-utils";
+import { getPostDescription } from "@utils/post-description";
 import {
 	buildSeriesContexts,
 	type SeriesPostContext,
@@ -52,6 +54,7 @@ import {
 	licenseConfig,
 	permalinkConfig,
 	profileConfig,
+	resolveAiSummaryOptions,
 	resolveArticleDiscoveryOptions,
 	resolveArticleShareOptions,
 	resolveCommentOptions,
@@ -172,6 +175,10 @@ const updatedInstant = getUpdatedInstant(entry.data);
 const postCommentEnabled =
 	entry.data.comment !== false && Boolean(resolveCommentOptions(commentConfig));
 const lastUpdatedNotice = resolveLastUpdatedNoticeOptions(articleConfig);
+const aiSummaryOptions = resolveAiSummaryOptions(articleConfig);
+// 加密文章不显示摘要：摘要由正文生成，展示即等于泄露正文要点
+const aiSummary =
+	aiSummaryOptions && !isEncrypted ? entry.data.aiSummary.trim() : "";
 const shareOptions = resolveArticleShareOptions(articleConfig);
 const umamiEnabled = resolveUmamiOptions(umamiConfig) !== null;
 const authorAvatarUrl = shareOptions
@@ -181,7 +188,7 @@ const authorAvatarUrl = shareOptions
 const effectiveDescription =
 	isEncrypted && entry.data.hideHomeContent
 		? i18n(I18nKey.postEncryptedSummary)
-		: entry.data.description || entry.data.title;
+		: getPostDescription(entry.data) || entry.data.title;
 const ogImage = entry.data.image
 	? await resolveAsset(entry.data.image, imageBasePath)
 	: undefined;
@@ -311,6 +318,14 @@ const jsonLd = {
 					quality={65}
 				/>
 			}
+
+			{aiSummary && (
+				<AiSummary
+					summary={aiSummary}
+					typewriter={aiSummaryOptions?.typewriter}
+					class="mb-6 onload-animation"
+				/>
+			)}
 
             {isEncrypted ? (
                 <EncryptedContent

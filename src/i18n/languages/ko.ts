@@ -278,6 +278,9 @@ export const ko: Translation = {
 	[Key.publishedAt]: "게시일",
 	[Key.lastUpdatedNotice]: "마지막 업데이트: {date} ({days}일 전)",
 	[Key.lastUpdatedWarning]: "일부 내용이 오래되었을 수 있습니다",
+	[Key.aiSummaryLabel]: "AI 요약",
+	[Key.aiSummaryDisclaimer]:
+		"AI가 생성한 참고용 요약입니다. 본문 내용을 기준으로 해 주세요",
 	[Key.license]: "라이선스",
 	[Key.continueReading]: "계속 읽기",
 	[Key.relatedReading]: "관련 글",

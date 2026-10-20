@@ -1,0 +1,123 @@
+---
+import I18nKey from "@i18n/i18nKey";
+import { i18n } from "@i18n/translation";
+import Icon from "@iconify/svelte";
+
+interface Props {
+	summary: string;
+	/** 是否在进入视口时逐字显示；脚本由布局按需加载，服务端始终输出全文 */
+	typewriter?: boolean;
+	class?: string;
+}
+
+const { summary, typewriter = false, class: className = "" } = Astro.props;
+const text = summary.trim();
+---
+
+{text && (
+	<div
+		class={`ai-summary${className ? ` ${className}` : ""}`}
+		role="note"
+		aria-labelledby="ai-summary-label"
+		data-ai-summary
+		data-ai-summary-typewriter={typewriter ? "" : undefined}
+	>
+		<span class="ai-summary__icon" aria-hidden="true">
+			<Icon icon="material-symbols:auto-awesome-rounded" />
+		</span>
+		<div class="ai-summary__content">
+			<p class="ai-summary__label" id="ai-summary-label">
+				{i18n(I18nKey.aiSummaryLabel)}
+			</p>
+			<p class="ai-summary__text" data-ai-summary-text>{text}</p>
+			<p class="ai-summary__disclaimer">
+				{i18n(I18nKey.aiSummaryDisclaimer)}
+			</p>
+		</div>
+	</div>
+)}
+
+<style lang="stylus">
+.ai-summary
+	display: flex
+	align-items: flex-start
+	gap: var(--m3e-space-3)
+	min-width: 0
+	padding: var(--m3e-space-4) var(--m3e-space-5)
+	border-radius: var(--shape-corner-l)
+	// 与 LastUpdatedNotice 同处文章卡片内部：用高一级的容器面与卡片（--card-bg）区分
+	background: var(--surface-container-high)
+	color: var(--on-surface)
+	overflow: hidden
+
+	&__icon
+		display: flex
+		align-items: center
+		justify-content: center
+		flex: none
+		width: 2.25rem
+		height: 2.25rem
+		border-radius: var(--shape-corner-m)
+		background: var(--tertiary-container)
+		color: var(--on-tertiary-container)
+
+		:global(svg)
+			width: 1.25rem
+			height: 1.25rem
+
+	&__content
+		display: flex
+		flex-direction: column
+		gap: var(--m3e-space-1)
+		min-width: 0
+
+	&__label
+		margin: 0
+		color: var(--tertiary)
+		font: var(--m3e-type-label-large)
+
+	&__text
+		min-width: 0
+		margin: 0
+		color: var(--on-surface)
+		font: var(--m3e-type-body-large)
+		overflow-wrap: anywhere
+
+	&__disclaimer
+		margin: 0
+		color: var(--on-surface-variant)
+		font: var(--m3e-type-body-small)
+		overflow-wrap: anywhere
+
+	// 打字机运行时结构（由 utils/ai-summary-typewriter.ts 生成）：
+	// 未显示部分透明占位，卡片高度从首帧起就是最终高度，文字仍可复制与页内搜索
+	:global([data-ai-summary-pending])
+		color: transparent
+
+	:global([data-ai-summary-cursor])
+		position: relative
+		display: inline-block
+		width: 0
+		height: 1em
+		vertical-align: text-bottom
+		transition: opacity var(--m3e-duration-medium) var(--m3e-easing-standard)
+
+		// 光标不占行内宽度，避免逐字推进时改变换行位置
+		&::before
+			content: ""
+			position: absolute
+			inset-block: 0
+			inset-inline-start: 0
+			width: 0.125em
+			border-radius: var(--shape-corner-full)
+			background: var(--tertiary)
+
+	:global([data-ai-summary-cursor].is-done)
+		opacity: 0
+
+	@media (max-width: 30rem)
+		padding: var(--m3e-space-4)
+
+		&__text
+			font: var(--m3e-type-body-medium)
+</style>

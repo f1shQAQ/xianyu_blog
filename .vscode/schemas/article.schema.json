@@ -18,6 +18,20 @@
       },
       "additionalProperties": false
     },
+    "aiSummary": {
+      "type": "object",
+      "properties": {
+        "enable": {
+          "type": "boolean",
+          "description": "是否显示 frontmatter `aiSummary` 生成的 AI 摘要卡片。"
+        },
+        "typewriter": {
+          "type": "boolean",
+          "description": "摘要卡片进入视口时是否播放打字机动画（减少动效偏好下始终不播放）。"
+        }
+      },
+      "additionalProperties": false
+    },
     "discovery": {
       "type": "object",
       "properties": {

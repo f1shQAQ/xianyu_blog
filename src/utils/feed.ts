@@ -2,6 +2,7 @@ import I18nKey from "@i18n/i18nKey";
 import { i18n } from "@i18n/translation";
 import { getPublishedInstant, getUpdatedInstant } from "@utils/content-date";
 import { getSortedPosts } from "@utils/content-utils";
+import { getPostDescription } from "@utils/post-description";
 import { isEncryptedPost } from "@utils/post-encryption";
 import { getPostUrl } from "@utils/url-utils";
 import { experimental_AstroContainer as AstroContainer } from "astro/container";
@@ -127,7 +128,7 @@ export async function getFeedPosts(site: URL): Promise<FeedPostItem[]> {
 			description:
 				isEncrypted && post.data.hideHomeContent
 					? i18n(I18nKey.postEncryptedSummary)
-					: post.data.description || "",
+					: getPostDescription(post.data),
 			contentHtml,
 			category: post.data.category || undefined,
 			tags: post.data.tags || [],

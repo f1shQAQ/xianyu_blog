@@ -281,6 +281,9 @@ export const es: Translation = {
 	[Key.publishedAt]: "Publicado el",
 	[Key.lastUpdatedNotice]: "Última actualización el {date}, hace {days} días",
 	[Key.lastUpdatedWarning]: "Parte del contenido puede estar desactualizado",
+	[Key.aiSummaryLabel]: "Resumen con IA",
+	[Key.aiSummaryDisclaimer]:
+		"Generado por IA solo como referencia; el artículo es la fuente fiable",
 	[Key.license]: "Licencia",
 	[Key.continueReading]: "Seguir leyendo",
 	[Key.relatedReading]: "Lecturas relacionadas",

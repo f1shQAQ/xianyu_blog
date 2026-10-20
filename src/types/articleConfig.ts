@@ -6,6 +6,12 @@ export interface ArticleConfig {
 		/** 距最后更新达到该日历天数时显示；0 表示立即显示。 */
 		minimumAgeDays: number;
 	};
+	aiSummary: {
+		/** 是否显示 frontmatter `aiSummary` 生成的 AI 摘要卡片。 */
+		enable: boolean;
+		/** 摘要卡片进入视口时是否播放打字机动画（减少动效偏好下始终不播放）。 */
+		typewriter: boolean;
+	};
 	discovery: {
 		/** 是否启用文章尾部的延伸阅读区域。 */
 		enable: boolean;

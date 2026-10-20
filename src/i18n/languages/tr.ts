@@ -281,6 +281,9 @@ export const tr: Translation = {
 	[Key.publishedAt]: "Yayınlanma:",
 	[Key.lastUpdatedNotice]: "Son güncelleme: {date}, {days} gün önce",
 	[Key.lastUpdatedWarning]: "Bazı içerikler güncelliğini yitirmiş olabilir",
+	[Key.aiSummaryLabel]: "Yapay zekâ özeti",
+	[Key.aiSummaryDisclaimer]:
+		"Yapay zekâ tarafından yalnızca referans için üretildi; esas olan makalenin kendisidir",
 	[Key.license]: "Lisans",
 	[Key.continueReading]: "Okumaya devam et",
 	[Key.relatedReading]: "İlgili yazılar",
