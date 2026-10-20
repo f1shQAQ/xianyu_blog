@@ -153,7 +153,7 @@ test.describe("article last updated notice", () => {
 		await expect(page.locator("[data-last-updated-days]")).toHaveText("101");
 	});
 
-	test("sits between the article card and navigation without narrow overflow", async ({
+	test("sits at the top of the article, before the body, without narrow overflow", async ({
 		page,
 	}) => {
 		await page.setViewportSize({ width: 390, height: 844 });
@@ -163,14 +163,13 @@ test.describe("article last updated notice", () => {
 		const notice = page.locator(NOTICE);
 		await expect(notice).toBeVisible();
 		const layout = await notice.evaluate((element) => {
-			// `#post-container` no longer exists; the article body is wrapped in
-			// `#content-wrapper`.
-			const article = document.querySelector("#content-wrapper");
+			const body = document.querySelector("#content-wrapper .markdown-content");
 			const navigation = document.querySelector(".post-nav");
 			return {
-				afterArticle: Boolean(
-					article &&
-						article.compareDocumentPosition(element) &
+				insideArticle: Boolean(element.closest("#content-wrapper")),
+				beforeBody: Boolean(
+					body &&
+						element.compareDocumentPosition(body) &
 							Node.DOCUMENT_POSITION_FOLLOWING,
 				),
 				beforeNavigation: Boolean(
@@ -182,7 +181,8 @@ test.describe("article last updated notice", () => {
 			};
 		});
 		expect(layout).toEqual({
-			afterArticle: true,
+			insideArticle: true,
+			beforeBody: true,
 			beforeNavigation: true,
 			overflows: false,
 		});

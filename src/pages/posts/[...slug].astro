@@ -293,6 +293,15 @@ const jsonLd = {
 				{!entry.data.image && <div class="border-[var(--outline-variant)] border-dashed border-b-[1px] mb-5"></div>}
 			</div>
 
+			{/* 过时提示放在正文之前：读者开读前就能看到「最后更新距今多久」，放在评论之后几乎没人注意到 */}
+			{lastUpdatedNotice && entry.data.outdatedNotice !== false && (
+				<LastUpdatedNotice
+					date={updatedInstant}
+					minimumAgeDays={lastUpdatedNotice.minimumAgeDays}
+					class="mb-6 onload-animation"
+				/>
+			)}
+
             <!-- always show cover as long as it has one -->
 
 			{entry.data.image &&
@@ -326,7 +335,7 @@ const jsonLd = {
 
 			{/* 系列块（cardPosition: bottom）紧贴正文之后：与 top 变体对称（元信息之后 / 正文之后），
 			    并排在版权、分享与 Continue reading 这些收尾区块之前——系列导航是「继续读」，
-			    应先于署名/分发/相关推荐（页面实际顺序：系列 → 版权 → 分享 → 延伸阅读 → 评论 → 更新提示 → 全局 post-nav） */}
+			    应先于署名/分发/相关推荐（页面实际顺序：系列 → 版权 → 分享 → 延伸阅读 → 评论 → 全局 post-nav；更新提示已移到正文之前） */}
 			{seriesCardVisible && !seriesCardAtTop && series && (
 				<SeriesCard context={series} class="mb-6 onload-animation" />
 			)}
@@ -369,14 +378,6 @@ const jsonLd = {
         postCommentEnabled={entry.data.comment}
         class="onload-animation"
     />
-
-    {lastUpdatedNotice && entry.data.outdatedNotice !== false && (
-        <LastUpdatedNotice
-            date={updatedInstant}
-            minimumAgeDays={lastUpdatedNotice.minimumAgeDays}
-            class="mb-4 onload-animation"
-        />
-    )}
 
     <div class="flex flex-col md:flex-row justify-between mb-4 gap-4 overflow-hidden w-full">
         {entry.data.nextSlug ? (
