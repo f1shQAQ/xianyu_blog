@@ -32,7 +32,7 @@ export const commentConfig: CommentConfig = withUserConfig("comment", {
 	/** 全局评论总开关：false 时完全不加载评论脚本与 DOM */
 	enable: true,
 	/** 评论提供商类型："none" | "twikoo" | "giscus" */
-	provider: "twikoo",
+	provider: "giscus",
 	/** 是否开启视口懒加载：滚动进入视口才动态加载评论组件（推荐 true） */
 	lazy: true,
 	/** Twikoo 专有配置 */
@@ -49,17 +49,17 @@ export const commentConfig: CommentConfig = withUserConfig("comment", {
 	/** Giscus 专有配置（基于 GitHub Discussions，评论数据存储在公开仓库中） */
 	giscus: {
 		/** 公开仓库，格式 "owner/repo"（必填） */
-		repo: "",
+		repo: "f1shQAQ/xianyu_blog",
 		/** 仓库 ID，从 giscus.app 配置生成器获取（必填） */
-		repoId: "",
+		repoId: "R_kgDOMx4vnA",
 		/** Discussion 分类名，如 "Announcements"；留空表示不限制分类搜索范围 */
-		category: "Announcements",
+		category: "Comments",
 		/** 分类 ID，从 giscus.app 配置生成器获取（必填） */
-		categoryId: "",
+		categoryId: "DIC_kwDOMx4vnM4DJL0k",
 		/** 页面 ↔ Discussion 映射：pathname（默认）/ url / title / og:title / specific / number */
 		mapping: "pathname",
 		/** 严格标题匹配（SHA-1 校验），避免 GitHub 模糊搜索误配相似标题 */
-		strict: false,
+		strict: true,
 		/** 是否显示主贴表情反应 */
 		reactionsEnabled: true,
 		/** 是否向父页面周期性发送 Discussion 元数据（供脚本消费） */
@@ -67,7 +67,7 @@ export const commentConfig: CommentConfig = withUserConfig("comment", {
 		/** 评论输入框位置：bottom（默认，评论框在列表下方）| top（评论框在列表上方） */
 		inputPosition: "bottom",
 		/** 明暗两套 giscus 主题（giscus 主题键或自定义主题 CSS URL），跟随站点明暗切换 */
-		theme: { light: "light", dark: "dark" },
+		theme: { light: "noborder_light", dark: "noborder_dark" },
 		/** 评论语言："auto"（跟随站点）| giscus 语言码（如 "zh-CN"、"en"） */
 		lang: "auto",
 		/** giscus client.js 地址；自托管 giscus 时替换为自有地址 */
