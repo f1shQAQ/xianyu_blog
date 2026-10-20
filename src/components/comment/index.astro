@@ -2,14 +2,16 @@
 import type { CollectionEntry } from 'astro:content'
 import { commentConfig } from '@/config'
 import Twikoo from './Twikoo.astro'
+
+// Pass `post` on post pages; pass `path` on standalone pages (e.g. friends)
 interface Props {
-  post: CollectionEntry<'posts'>
+  post?: CollectionEntry<'posts'>
+  path?: string
 }
 
-const { id, data, slug } = Astro.props.post
-
-const path = `/posts/${slug}`
-const url = `${Astro.site?.href}${path}`
+const { post } = Astro.props
+// No trailing slash: existing Twikoo comments are keyed by this exact path
+const path = post ? `/posts/${post.slug}` : (Astro.props.path ?? Astro.url.pathname)
 
 let commentService = ''
 if (commentConfig?.twikoo) {
@@ -18,5 +20,4 @@ if (commentConfig?.twikoo) {
 ---
 <div class="card-base p-6 mb-4">
   {commentService === 'twikoo' && <Twikoo path={path} />}
-  {commentService === '' && null}
 </div>

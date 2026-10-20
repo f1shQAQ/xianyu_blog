@@ -1,8 +1,8 @@
 ---
 import GlobalStyles from '@components/GlobalStyles.astro'
-import '@fontsource/lxgw-wenkai/300.css'
-import '@fontsource/lxgw-wenkai/500.css'
-import '@fontsource/lxgw-wenkai/700.css'
+// Split by unicode-range: browsers only download the glyph subsets a page uses
+import 'lxgw-wenkai-webfont/lxgwwenkai-regular.css'
+import 'lxgw-wenkai-webfont/lxgwwenkai-bold.css'
 import ImageWrapper from '@components/misc/ImageWrapper.astro'
 
 import { profileConfig, siteConfig } from '@/config'
@@ -22,9 +22,19 @@ interface Props {
   banner?: string
   description?: string
   lang?: string
+  ogType?: 'website' | 'article'
 }
 
-let { title, banner, description, lang } = Astro.props
+let { title, banner, description, lang, ogType = 'website' } = Astro.props
+
+// Social preview image: the post cover if there is one, otherwise the site banner
+const ogImageSrc = banner && banner.trim() !== '' ? banner : siteConfig.banner.src
+const ogImage = /^https?:\/\//.test(ogImageSrc)
+  ? ogImageSrc
+  : ogImageSrc.startsWith('/')
+    ? new URL(url(ogImageSrc), Astro.site).href
+    : undefined // relative (src/) images have no stable public URL
+const canonical = new URL(Astro.url.pathname, Astro.site).href
 
 // apply a class to the body element to decide the height of the banner, only used for initial page load
 // Swup can update the body for each page visit, but it's after the page transition, causing a delay for banner height change
@@ -80,19 +90,23 @@ const bannerOffset = bannerOffsetByPosition[siteConfig.banner.position || 'cente
 		<meta name="description" content={description || pageTitle}>
 		<meta name="author" content={profileConfig.name}>
 
+		<link rel="canonical" href={canonical}>
+
 		<meta property="og:site_name" content={siteConfig.title}>
-		<meta property="og:url" content={Astro.url}>
+		<meta property="og:type" content={ogType}>
+		<meta property="og:url" content={canonical}>
 		<meta property="og:title" content={pageTitle}>
 		<meta property="og:description" content={description || pageTitle}>
+		{ogImage && <meta property="og:image" content={ogImage}>}
 
-		<meta name="twitter:card" content="summary_large_image">
-		<meta property="twitter:url" content={Astro.url}>
+		<meta name="twitter:card" content={ogImage ? 'summary_large_image' : 'summary'}>
+		<meta property="twitter:url" content={canonical}>
 		<meta name="twitter:title" content={pageTitle}>
 		<meta name="twitter:description" content={description || pageTitle}>
+		{ogImage && <meta name="twitter:image" content={ogImage}>}
 
-		<meta name="viewport" content="width=device-width" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<meta name="generator" content={Astro.generator} />
-		<meta name="google-adsense-account" content="ca-pub-1416703587395957">
 		{favicons.map(favicon => (
 			<link rel="icon"
 				  href={favicon.src.startsWith('/') ? url(favicon.src) : favicon.src}
@@ -121,9 +135,7 @@ const bannerOffset = bannerOffsetByPosition[siteConfig.banner.position || 'cente
 
 		<slot name="head"></slot>
 
-		<link rel="stylesheet" href="https://cdn.staticfile.net/KaTeX/0.16.9/katex.min.css" integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI+WdtXRGWt2kTvGFasHpSy3SV" crossorigin="anonymous">
-
-		<link rel="alternate" type="application/rss+xml" title={profileConfig.name} href={`${Astro.site}rss.xml`}/>
+		<link rel="alternate" type="application/rss+xml" title={siteConfig.title} href={new URL(url('/rss.xml'), Astro.site).href}/>
 
 		<style define:vars={{ configHue }}></style>  <!-- defines global css variables. This will be applied to <html> <body> and some other elements idk why -->
 
@@ -134,6 +146,7 @@ const bannerOffset = bannerOffsetByPosition[siteConfig.banner.position || 'cente
 		{siteConfig.banner.enable && <div id="banner-wrapper" class="absolute -top-[30vh] w-full transition duration-700 overflow-hidden">
 			<ImageWrapper id="banner" alt="Banner image of the blog" class:list={["object-cover h-full transition duration-700"]}
 					  src={siteConfig.banner.src} position={siteConfig.banner.position}
+					  widths={[768, 1280, 1920, 2560]} sizes="100vw" loading="eager" fetchpriority="high"
 			>
 			</ImageWrapper>
 		</div>}

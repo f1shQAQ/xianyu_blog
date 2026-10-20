@@ -17,7 +17,11 @@ import { AdmonitionComponent } from "./src/plugins/rehype-component-admonition.m
 import { GithubCardComponent } from "./src/plugins/rehype-component-github-card.mjs"
 import {parseDirectiveNode} from "./src/plugins/remark-directive-rehype.js";
 import { remarkReadingTime } from "./src/plugins/remark-reading-time.mjs"
+import { remarkHasMath } from "./src/plugins/remark-has-math.mjs"
+import { rehypeDemoteHeadings } from "./src/plugins/rehype-demote-headings.mjs"
+import { rehypeLazyImages } from "./src/plugins/rehype-lazy-images.mjs"
 import {remarkExcerpt} from "./src/plugins/remark-excerpt.js";
+import { imageDomains } from "./src/constants/image-domains.ts"
 
 const oklchToHex = (str) => {
   const DEFAULT_HUE = 250
@@ -33,6 +37,11 @@ const oklchToHex = (str) => {
 export default defineConfig({
   site: "https://blog.qqquq.com",
   trailingSlash: "always",
+
+  image: {
+    // Remote images on these hosts are downloaded and optimized at build time
+    domains: imageDomains,
+  },
 
   integrations: [
     tailwind(),
@@ -70,10 +79,12 @@ export default defineConfig({
   ],
 
   markdown: {
-    remarkPlugins: [remarkMath, remarkReadingTime, remarkExcerpt, remarkGithubAdmonitionsToDirectives, remarkDirective, parseDirectiveNode],
+    remarkPlugins: [remarkMath, remarkHasMath, remarkReadingTime, remarkExcerpt, remarkGithubAdmonitionsToDirectives, remarkDirective, parseDirectiveNode],
     rehypePlugins: [
       rehypeKatex,
+      rehypeDemoteHeadings,
       rehypeSlug,
+      rehypeLazyImages,
       [rehypeComponents, {
         components: {
           github: GithubCardComponent,

@@ -7,11 +7,29 @@ interface Props {
   alt?: string
   position?: string
   basePath?: string
+  /** Rendered widths for the srcset (CSS px). Defaults suit a content-width image */
+  widths?: number[]
+  sizes?: string
+  /** Above-the-fold images (banner) should be eager */
+  loading?: 'lazy' | 'eager'
+  fetchpriority?: 'high' | 'low' | 'auto'
 }
 import { Image } from 'astro:assets'
+import { inferRemoteSize } from 'astro/assets/utils'
+import { imageDomains } from '../../constants/image-domains'
 import { url } from '../../utils/url-utils'
 
-const { id, src, alt, position = 'center', basePath = '/' } = Astro.props
+const {
+  id,
+  src,
+  alt,
+  position = 'center',
+  basePath = '/',
+  widths: requestedWidths = [480, 960, 1440],
+  sizes = '(min-width: 1024px) 900px, 100vw',
+  loading = 'lazy',
+  fetchpriority,
+} = Astro.props
 const className = Astro.props.class
 
 const isLocal = !(
@@ -21,6 +39,21 @@ const isLocal = !(
   src.startsWith('data:')
 )
 const isPublic = src.startsWith('/')
+
+// Remote images on an allowed domain are downloaded and optimized at build time
+let isOptimizableRemote = false
+let remoteSize: { width: number; height: number } | undefined
+if (src.startsWith('http')) {
+  try {
+    isOptimizableRemote = imageDomains.includes(new URL(src).hostname)
+    // Astro 4 does not cap srcset widths for remote images; probe the
+    // real size so we never upscale. Fall back to a plain <img> on failure.
+    if (isOptimizableRemote) remoteSize = await inferRemoteSize(src)
+  } catch (e) {
+    console.warn(`[ImageWrapper] cannot probe ${src}, serving it unoptimized`)
+    isOptimizableRemote = false
+  }
+}
 
 // TODO temporary workaround for images dynamic import
 // https://github.com/withastro/astro/issues/3373
@@ -38,12 +71,24 @@ if (isLocal) {
   }
 }
 
+// Never upscale: cap every width (srcset and the fallback src) at the source width
+const maxWidth = remoteSize
+  ? Math.min(remoteSize.width, Math.max(...requestedWidths))
+  : undefined
+const widths = maxWidth
+  ? [...new Set([...requestedWidths.filter(w => w < maxWidth), maxWidth])]
+  : requestedWidths
+const remoteDims = remoteSize && maxWidth
+  ? { width: maxWidth, height: Math.round((remoteSize.height * maxWidth) / remoteSize.width) }
+  : undefined
+
 const imageClass = 'w-full h-full object-cover'
 const imageStyle = `object-position: ${position}`
+const common = { alt: alt || '', class: imageClass, style: imageStyle, loading, fetchpriority, decoding: 'async' } as const
 ---
 <div id={id} class:list={[className, 'overflow-hidden relative']}>
     <div class="transition absolute inset-0 dark:bg-black/10 bg-opacity-50 pointer-events-none"></div>
-    {isLocal && img && <Image src={img} alt={alt || ""} class={imageClass} style={imageStyle}/>}
-    {!isLocal && <img src={isPublic ? url(src) : src} alt={alt || ""} class={imageClass} style={imageStyle}/>}
+    {isLocal && img && <Image src={img} widths={widths} sizes={sizes} {...common}/>}
+    {isOptimizableRemote && remoteDims && <Image src={src} width={remoteDims.width} height={remoteDims.height} widths={widths} sizes={sizes} format="webp" {...common}/>}
+    {!isLocal && !isOptimizableRemote && <img src={isPublic ? url(src) : src} {...common}/>}
 </div>
-

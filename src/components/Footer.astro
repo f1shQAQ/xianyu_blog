@@ -21,8 +21,28 @@ import { url } from '../utils/url-utils'
     </div>
     
     <!--运行时间 -->
-    <script type="text/javascript">function runtime(){const t=new Date("03/07/2023 00:00:00"),n=new Date,s=n-t,e=Math.floor(s/1e3),o=Math.floor(e/86400),i=Math.floor(e%86400/3600),a=Math.floor(e%3600/60),r=e%60;document.getElementById("runningtime").innerHTML=`⭐本站已在风雨中顽强运行了: ${o}天${i}小时${a}分${r}秒☁️`}setInterval(runtime,1e3)</script>
+
     <div class="transition text-50 text-sm text-center hidden md:block"><p id="runningtime"> </p></div>
+    <script is:inline>
+      ;(() => {
+        // Only tick while the element is visible (it is hidden below md)
+        if (window.__runtimeTimer) return
+        const start = new Date('2023-03-07T00:00:00+08:00').getTime()
+        const mq = window.matchMedia('(min-width: 768px)')
+        const tick = () => {
+          const el = document.getElementById('runningtime')
+          if (!el) return
+          const e = Math.floor((Date.now() - start) / 1000)
+          el.textContent = `⭐本站已在风雨中顽强运行了: ${Math.floor(e / 86400)}天${Math.floor((e % 86400) / 3600)}小时${Math.floor((e % 3600) / 60)}分${e % 60}秒☁️`
+        }
+        const sync = () => {
+          clearInterval(window.__runtimeTimer)
+          window.__runtimeTimer = mq.matches ? (tick(), setInterval(tick, 1000)) : 0
+        }
+        mq.addEventListener('change', sync)
+        sync()
+      })()
+    </script>
 
     <!--备案信息 -->
     <div class="transition text-50 text-sm max-md:text-right mt-2">

@@ -10,10 +10,36 @@ const config = {
   el: '#tcomment',
   path: Astro.props.path,
 }
+const src = 'https://cdn.jsdelivr.net/npm/twikoo@1.6.40/dist/twikoo.min.js'
 ---
 
 <div id="tcomment"></div>
-<script is:inline src="https://cdn.jsdelivr.net/npm/twikoo@1.6.40/dist/twikoo.min.js"></script>
-<script is:inline define:vars={{ config }}>
-  twikoo.init(config)
+<!-- Load Twikoo only when the comment area is near the viewport -->
+<script is:inline define:vars={{ config, src }}>
+  ;(() => {
+    const el = document.querySelector(config.el)
+    if (!el) return
+    const load = () => {
+      window.__twikooLoading ??= new Promise((resolve, reject) => {
+        const s = document.createElement('script')
+        s.src = src
+        s.async = true
+        s.onload = resolve
+        s.onerror = reject
+        document.head.appendChild(s)
+      })
+      window.__twikooLoading.then(() => twikoo.init(config))
+    }
+    if (!('IntersectionObserver' in window)) return load()
+    const io = new IntersectionObserver(
+      entries => {
+        if (entries.some(e => e.isIntersecting)) {
+          io.disconnect()
+          load()
+        }
+      },
+      { rootMargin: '400px' },
+    )
+    io.observe(el)
+  })()
 </script>
