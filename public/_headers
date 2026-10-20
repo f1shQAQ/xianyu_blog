@@ -1,4 +1,4 @@
-# Cloudflare Pages / Netlify. Vercel uses vercel.json instead.
+# Cloudflare Pages / Netlify.
 /_astro/*
   Cache-Control: public, max-age=31536000, immutable
 
