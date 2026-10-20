@@ -1,5 +1,6 @@
 import type {
   CommentConfig,
+  ExpressiveCodeConfig,
   LicenseConfig,
   NavBarConfig,
   ProfileConfig,
@@ -24,6 +25,10 @@ export const siteConfig: SiteConfig = {
       text: '空色天絵 / NEO TOKYO NOIR 01',              // Credit text to be displayed
       url: 'https://www.pixiv.net/artworks/111024784'                // (Optional) URL link to the original artwork or artist's page
     }
+  },
+  toc: {
+    enable: true,     // Display the table of contents on the right side of posts (very wide screens only)
+    depth: 2,         // Maximum heading depth shown in the table, from 1 to 3
   },
   favicon: [    // Leave this array empty to use the default favicon
     // {
@@ -80,6 +85,12 @@ export const licenseConfig: LicenseConfig = {
   enable: true,
   name: 'CC BY-NC-SA 4.0',
   url: 'https://creativecommons.org/licenses/by-nc-sa/4.0/',
+}
+
+export const expressiveCodeConfig: ExpressiveCodeConfig = {
+  // Note: Some styles (such as background color) are overridden in astro.config.mjs.
+  // Pick a dark theme: the code block background is always dark
+  theme: 'github-dark',
 }
 
 export const commentConfig: CommentConfig = {

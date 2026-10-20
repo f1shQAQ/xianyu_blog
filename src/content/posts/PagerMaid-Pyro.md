@@ -40,7 +40,7 @@ Python 版本查询： `Python3 -V`
 
 建议直接使用Docker版的一键安装脚本，直接按照提示安装就行
 
-```
+```bash
 wget https://raw.githubusercontent.com/TeamPGM/PagerMaid-Pyro/development/utils/docker.sh -O docker.sh && chmod +x docker.sh && bash docker.sh
 ```
 

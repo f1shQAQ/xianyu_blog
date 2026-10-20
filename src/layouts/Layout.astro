@@ -168,6 +168,20 @@ const bannerOffset = bannerOffsetByPosition[siteConfig.banner.position || 'cente
 @tailwind utilities;
 
 @layer components {
+	.toc-hide,
+	.toc-not-ready {
+		@apply opacity-0 pointer-events-none
+	}
+	#toc-inner-wrapper {
+		mask-image: linear-gradient(to bottom, transparent 0%, black 2rem, black calc(100% - 2rem), transparent 100%);
+	}
+	.hide-scrollbar {
+		scrollbar-width: none;
+		-ms-overflow-style: none;
+	}
+	.hide-scrollbar::-webkit-scrollbar {
+		display: none;
+	}
 	.enable-banner.is-home #banner-wrapper {
 		@apply h-[var(--banner-height-home)] translate-y-[30vh]
 	}
@@ -297,16 +311,6 @@ function initCustomScrollbar() {
 			autoHideSuspend: false,
 		},
 	});
-	document.querySelectorAll('pre').forEach((ele) => {
-		OverlayScrollbars(ele, {
-			scrollbars: {
-				theme: 'scrollbar-base scrollbar-dark px-2',
-				autoHide: 'leave',
-				autoHideDelay: 500,
-				autoHideSuspend: false
-			}
-		});
-	});
 }
 
 function init() {
@@ -339,6 +343,9 @@ const setup = () => {
 	// Remove the delay for the first time page load
 	window.swup.hooks.on('link:click', () => {
 		document.documentElement.style.setProperty('--content-delay', '0ms')
+
+		// Hide the TOC while the page is switching
+		document.getElementById('toc-wrapper')?.classList.add('toc-not-ready')
 
 		// prevent elements from overlapping the navbar
 		let threshold = window.innerHeight * 0.30 - 72 - 16
@@ -379,6 +386,9 @@ const setup = () => {
 		if (heightExtend) {
 			heightExtend.classList.add('hidden')
 		}
+		setTimeout(() => {
+			document.getElementById('toc-wrapper')?.classList.remove('toc-not-ready')
+		}, 200)
 	});
 }
 if (window?.swup?.hooks) {
@@ -396,6 +406,17 @@ function scrollFunction() {
 			backToTopBtn.classList.remove('hide')
 		} else {
 			backToTopBtn.classList.add('hide')
+		}
+	}
+
+	// With a banner, the TOC only shows once the banner has scrolled out of view
+	const toc = document.getElementById('toc-wrapper')
+	if (bannerEnable && toc) {
+		const bannerHeight = window.innerHeight * 0.35
+		if (document.body.scrollTop > bannerHeight || document.documentElement.scrollTop > bannerHeight) {
+			toc.classList.remove('toc-hide')
+		} else {
+			toc.classList.add('toc-hide')
 		}
 	}
 

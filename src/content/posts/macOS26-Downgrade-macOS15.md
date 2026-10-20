@@ -43,7 +43,7 @@ draft: false
 
 5. 待下载完成后，打开终端，输入命令
 
-   ```
+   ```bash
    sudo /Applications/Install\ macOS\ Sequoia.app/Contents/Resources/createinstallmedia --volume /Volumes/MyVolume
    ```
 

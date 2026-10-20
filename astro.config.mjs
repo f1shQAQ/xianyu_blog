@@ -5,6 +5,9 @@ import swup from '@swup/astro';
 import Compress from "astro-compress"
 import icon from "astro-icon"
 import { defineConfig } from "astro/config"
+import { pluginCollapsibleSections } from "@expressive-code/plugin-collapsible-sections"
+import { pluginLineNumbers } from "@expressive-code/plugin-line-numbers"
+import expressiveCode from "astro-expressive-code"
 import Color from "colorjs.io"
 import rehypeAutolinkHeadings from "rehype-autolink-headings"
 import rehypeComponents from "rehype-components";/* Render the custom directive content */
@@ -21,6 +24,9 @@ import { remarkHasMath } from "./src/plugins/remark-has-math.mjs"
 import { rehypeDemoteHeadings } from "./src/plugins/rehype-demote-headings.mjs"
 import { rehypeLazyImages } from "./src/plugins/rehype-lazy-images.mjs"
 import {remarkExcerpt} from "./src/plugins/remark-excerpt.js";
+import { expressiveCodeConfig } from "./src/config.ts"
+import { pluginLanguageBadge } from "./src/plugins/expressive-code/language-badge.ts"
+import { pluginCustomCopyButton } from "./src/plugins/expressive-code/custom-copy-button.ts"
 import { imageDomains } from "./src/constants/image-domains.ts"
 
 const oklchToHex = (str) => {
@@ -50,7 +56,7 @@ export default defineConfig({
       animationClass: 'transition-swup-',   // see https://swup.js.org/options/#animationselector
                                             // the default value `transition-` cause transition delay
                                             // when the Tailwind class `transition-all` is used
-      containers: ['main'],
+      containers: ['main', '#toc'],
       smoothScrolling: true,
       cache: true,
       preload: true,
@@ -65,6 +71,50 @@ export default defineConfig({
         "fa6-brands": ["*"],
         "fa6-regular": ["*"],
         "fa6-solid": ["*"],
+      },
+    }),
+    expressiveCode({
+      themes: [expressiveCodeConfig.theme, expressiveCodeConfig.theme],
+      plugins: [
+        pluginCollapsibleSections(),
+        pluginLineNumbers(),
+        pluginLanguageBadge(),
+        pluginCustomCopyButton(),
+      ],
+      defaultProps: {
+        wrap: true,
+        overridesByLang: {
+          shellsession: {
+            showLineNumbers: false,
+          },
+        },
+      },
+      styleOverrides: {
+        codeBackground: "var(--codeblock-bg)",
+        borderRadius: "0.75rem",
+        borderColor: "none",
+        codeFontSize: "0.875rem",
+        codeFontFamily: "'JetBrains Mono Variable', 'LXGW Wenkai', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace",
+        codeLineHeight: "1.5rem",
+        frames: {
+          editorBackground: "var(--codeblock-bg)",
+          terminalBackground: "var(--codeblock-bg)",
+          terminalTitlebarBackground: "var(--codeblock-topbar-bg)",
+          editorTabBarBackground: "var(--codeblock-topbar-bg)",
+          editorActiveTabBackground: "none",
+          editorActiveTabIndicatorBottomColor: "var(--primary)",
+          editorActiveTabIndicatorTopColor: "none",
+          editorTabBarBorderBottomColor: "var(--codeblock-topbar-bg)",
+          terminalTitlebarBorderBottomColor: "none",
+        },
+        textMarkers: {
+          delHue: 0,
+          insHue: 180,
+          markHue: 250,
+        },
+      },
+      frames: {
+        showCopyToClipboardButton: false,
       },
     }),
     svelte(),

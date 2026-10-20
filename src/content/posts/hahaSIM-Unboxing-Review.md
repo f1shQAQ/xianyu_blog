@@ -16,7 +16,7 @@ draft: false
 
 ![官方介绍图](https://fastly.jsdelivr.net/gh/bucketio/img16@main/2025/03/13/1741869104402-18e5cc4a-9022-4da5-b9ab-5d1975e287c0.png)
 
-```
+```text
 套餐详情（搬运自蚊子玩卡）：
 初始余额：50 HKD
 月租：无月租，自由选择漫游套餐
@@ -91,7 +91,7 @@ draft: false
 
 任意充值一笔金额就可以延长一年的有效期，这里建议前往 3HK 的官网充值。
 
-```
+```text
 https://www.three.com.hk/3Care/chi/prepay/payonline1.jsp
 ```
 

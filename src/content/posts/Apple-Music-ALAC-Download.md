@@ -33,7 +33,7 @@ draft: false
 
 4. 在主机系统上安装 Frida
 
-   ```
+   ```bash
    pip3 install frida frida-tools
    ```
 
@@ -45,7 +45,7 @@ draft: false
 
 6. 使用 ADB 给模拟器设置端口转发，转发至 10020 端口
 
-   ```
+   ```bash
    adb forward tcp:10020 tcp:10020
    ```
 
@@ -54,7 +54,7 @@ draft: false
 
 8. 在 ALAC Downloader 目录下启动 Frida 代理
 
-   ```
+   ```bash
    frida -U -l agent.js -f com.apple.android.music
    ```
 
@@ -65,7 +65,7 @@ draft: false
 
    然后就可以使用工具开始下载了，下载时需要保持模拟器是打开状态，记得将命令内的链接替换为你想要下载的专辑的链接
 
-   ```
+   ```bash
    go run main.go https://music.apple.com/xxxxxxxxxx
    ```
 

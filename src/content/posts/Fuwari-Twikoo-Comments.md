@@ -24,7 +24,7 @@ draft: false
 
 删除 `Disqus.astro` 和 `Giscus.astro` ，然后打开 `index.astro` ，把里面的内容替换成以下内容
 
-```
+```astro
 ---
 import type { CollectionEntry } from 'astro:content'
 import { commentConfig } from '@/config'
@@ -51,7 +51,7 @@ if (commentConfig?.twikoo) {
 
 打开 `/src/types/config.ts`，将这段代码添加至 72 行处
 
-```
+```ts
   export type CommentConfig = {
     twikoo?: TwikooConfig
   }
@@ -67,7 +67,7 @@ if (commentConfig?.twikoo) {
 
 打开 `/src/config.ts` ，引入 `CommentConfig`
 
-```
+```diff
 import type {
 +  CommentConfig,
   LicenseConfig,
@@ -80,7 +80,7 @@ import { LinkPreset } from './types/config'
 
 然后，在末尾添加这段代码
 
-```
+```ts
 export const commentConfig: CommentConfig = {
   twikoo: {
     envId: '这里替换为你的 envId',
@@ -92,7 +92,7 @@ export const commentConfig: CommentConfig = {
 
 打开 `/src/pages/posts/[...slug].astro` ，在16行处添加 `import Comment from "@components/comment/index.astro"`
 
-```
+```astro
 ---
 import path from 'node:path'
 import { getCollection } from 'astro:content'
@@ -113,7 +113,7 @@ import { formatDateToYYYYMMDD } from '../../utils/date-utils'
 
 在 112 行处添加
 
-```
+```astro
 <Comment post={entry}></Comment>
 ```
 

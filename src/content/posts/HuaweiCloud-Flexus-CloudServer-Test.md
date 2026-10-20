@@ -16,7 +16,7 @@ draft: false
 
 融合怪测评脚本
 
-```
+```text
 --------------------- A Bench Script By spiritlhl ----------------------
                    测评频道: https://t.me/vps_reviews                    
 VPS融合怪版本：2024.11.08
@@ -140,7 +140,7 @@ Speedtest.net    67.97Mbps       92.59Mbps       2.16ms
 
 IP 质量
 
-```
+```text
 ########################################################################
                       IP质量体检报告：159.138.*.*
                     bash <(curl -sL IP.Check.Place)

@@ -21,6 +21,11 @@ export type SiteConfig = {
     }
   }
 
+  toc: {
+    enable: boolean
+    depth: 1 | 2 | 3
+  }
+
   favicon: Favicon[]
 }
 
@@ -78,6 +83,10 @@ export type LIGHT_DARK_MODE =
     region?: string
     lang?: string
   }
+
+export type ExpressiveCodeConfig = {
+  theme: string
+}
 
 export type BlogPostData = {
   body: string

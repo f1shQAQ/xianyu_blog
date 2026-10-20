@@ -40,7 +40,7 @@ draft: false
   ![](https://bu.dusays.com/2023/12/05/656f41b051c8b.webp "")
 2. 安装 ffmpeg 和 screen。虽然一键脚本也内置了安装 ffmpeg 的功能，但是因为版本太旧且只支持 CentOS，所以这里我们选择自行安装
 
-  ```
+  ```bash
   apt update -y && apt upgrade -y && apt install ffmpeg screen -y
   ```
 3. 输入这行命令: “ffmpeg -version” ，检查 ffmpeg 有没有被正确安装
@@ -49,18 +49,18 @@ draft: false
   ![](https://bu.dusays.com/2023/12/05/656f4259b6c12.webp "")
 4. 输入这串命令，下载脚本
 
-  ```
+  ```bash
   wget https://raw.githubusercontent.com/f1shQAQ/7x24stream/main/stream.sh
   ```
 
   如果你搭建使用的 VPS 在国内无法访问 GitHub，使用这串命令
 
-  ```
+  ```bash
   wget https://ghproxy.com/https://raw.githubusercontent.com/wfnie/7x24stream/main/stream.sh
   ```
 5. 在 Screen 中运行脚本
 
-  ```
+  ```bash
   screen -S stream
   bash stream.sh
   ```
