@@ -11,7 +11,7 @@
 
 
 > ### 关于本站
-> - 使用框架 [Astro](https://github.com/withastro/astro)，主题 [Shirone](https://blog.qqquq.com/)
+> - 使用框架 [Astro](https://github.com/withastro/astro)，主题 [Shirone](https://fishqaq.com/)
 > - 源码托管于 [GitHub](https://github.com/f1shQAQ/xianyu_blog) ，站点托管于 [Cloudflare Pages](https://cloudflare.com)
 > - 域名注册于 [Spaceship](https://www.spaceship.com/)
 > - [Cloudflare](https://cloudflare.com/) 提供 CDN 服务

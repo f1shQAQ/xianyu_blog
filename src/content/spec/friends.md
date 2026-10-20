@@ -8,9 +8,9 @@
 
 - 名称: 咸鱼小窝
 - 描述: 我们终将会在没有黑暗的地方相遇
-- 链接: [https://blog.qqquq.com/](https://blog.qqquq.com/)
-- 头像: https://blog.qqquq.com/images/avatar.webp
-- RSS: [https://blog.qqquq.com/rss.xml](https://blog.qqquq.com/rss.xml)
+- 链接: [https://fishqaq.com/](https://fishqaq.com/)
+- 头像: https://fishqaq.com/images/avatar.webp
+- RSS: [https://fishqaq.com/rss.xml](https://fishqaq.com/rss.xml)
 
 ### 如何申请
 
