@@ -1,24 +1,34 @@
 {
-  "extends": "astro/tsconfigs/strict",
-  "compilerOptions": {
-    "baseUrl": ".",
-    "strictNullChecks": true,
-    "allowJs": false,
-    "declaration": true,
-    "plugins": [
-      {
-        "name": "@astrojs/ts-plugin"
-      }
-    ],
-    "paths": {
-      "@components/*": ["src/components/*"],
-      "@assets/*": ["src/assets/*"],
-      "@constants/*": ["src/constants/*"],
-      "@utils/*": ["src/utils/*"],
-      "@i18n/*": ["src/i18n/*"],
-      "@layouts/*": ["src/layouts/*"],
-      "@/*": ["src/*"]
-    }
-  },
-  "include": ["src/**/*"]
+	"extends": "astro/tsconfigs/strict",
+	"include": ["src/**/*"],
+	"compilerOptions": {
+		"ignoreDeprecations": "6.0",
+		"strictNullChecks": true,
+		"allowJs": false,
+		"baseUrl": ".",
+		"declaration": true,
+		"plugins": [
+			{
+				"name": "@astrojs/ts-plugin"
+			}
+		],
+		"paths": {
+			"@/*": ["src/*"],
+			"@components/*": ["src/components/*"],
+			"@utils/*": ["src/utils/*"],
+			"@layouts/*": ["src/layouts/*"],
+			"@i18n/*": ["src/i18n/*"],
+			"@constants/*": ["src/constants/*"],
+			"@assets/*": ["src/assets/*"],
+			"@iconify/svelte": [
+				"src/components/atoms/display/Icon.svelte"
+			],
+			"@shirone/iconify-offline": [
+				"node_modules/@iconify/svelte/dist/OfflineIcon.svelte"
+			],
+			"@shirone/iconify-offline-functions": [
+				"node_modules/@iconify/svelte/dist/offline-functions.js"
+			]
+		}
+	}
 }

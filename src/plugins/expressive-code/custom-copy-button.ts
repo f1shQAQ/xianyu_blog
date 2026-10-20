@@ -1,21 +1,22 @@
 import { definePlugin } from "@expressive-code/core";
 import type { Element } from "hast";
 
-export function pluginCustomCopyButton() {
+export function pluginCustomCopyButton(): ReturnType<typeof definePlugin> {
 	return definePlugin({
 		name: "Custom Copy Button",
 		hooks: {
 			postprocessRenderedBlock: (context) => {
-				function traverse(node: Element) {
-					if (node.type === "element" && node.tagName === "pre") {
-						processCodeBlock(node);
-						return;
+				// 找到 <pre> 的父级（Frames 插件渲染出的 figure.frame）。
+				// 按钮挂在 .frame 而不是 <pre> 内：.frame 始终 position: relative 且不滚动，
+				// 能与折叠按钮共用同一定位参考系；挂进 <pre> 会受其 overflow / 相对定位影响而错位或被裁剪。
+				function findPreParent(node: Element): Element | null {
+					for (const child of node.children ?? []) {
+						if (child.type !== "element") continue;
+						if (child.tagName === "pre") return node;
+						const parent = findPreParent(child);
+						if (parent) return parent;
 					}
-					if (node.children) {
-						for (const child of node.children) {
-							if (child.type === "element") traverse(child);
-						}
-					}
+					return null;
 				}
 
 				function processCodeBlock(node: Element) {
@@ -83,7 +84,8 @@ export function pluginCustomCopyButton() {
 					node.children.push(copyButton);
 				}
 
-				traverse(context.renderData.blockAst);
+				const frame = findPreParent(context.renderData.blockAst);
+				if (frame) processCodeBlock(frame);
 			},
 		},
 	});

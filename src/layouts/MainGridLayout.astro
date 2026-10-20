@@ -1,94 +1,133 @@
 ---
-import Footer from '@components/Footer.astro'
-import Navbar from '@components/Navbar.astro'
-import BackToTop from '@components/control/BackToTop.astro'
-import SideBar from '@components/widget/SideBar.astro'
-import Layout from './Layout.astro'
-import { Icon } from 'astro-icon/components'
-import type { MarkdownHeading } from 'astro'
-import TOC from '../components/widget/TOC.astro'
-import { siteConfig } from '../config'
+import BannerStage from "@components/organisms/BannerStage.astro";
+import CategoryBar from "@components/organisms/CategoryBar.astro";
+import ContextMenu from "@components/organisms/ContextMenu.svelte";
+import FloatingControls from "@components/organisms/FloatingControls.astro";
+import Footer from "@components/organisms/Footer.astro";
+import RouteProgress from "@components/organisms/RouteProgress.svelte";
+import SideBar from "@components/organisms/SideBar.astro";
+import SiteNavigationDrawer from "@components/organisms/SiteNavigationDrawer.svelte";
+import TopAppBar from "@components/organisms/TopAppBar.astro";
+import {
+	generateGridClasses,
+	generateMainContentClasses,
+	generatePrimarySidebarClasses,
+	generateSecondarySidebarClasses,
+	getResponsiveSidebarConfig,
+	isDualColumn,
+} from "@utils/responsive-utils";
+import type { MarkdownHeading } from "astro";
+import { contextMenuConfig } from "@/config";
+import type { SidebarPage } from "@/types/sidebarConfig";
+import Layout from "./Layout.astro";
 
 interface Props {
-  title?: string
-  banner?: string
-  description?: string
-  lang?: string
-  ogType?: 'website' | 'article'
-  headings?: MarkdownHeading[]
+	title?: string;
+	banner?: string;
+	ogImage?: string;
+	description?: string;
+	/** Banner 可选日期，使用 YYYY-MM-DD 等可直接写入 time[datetime] 的值。 */
+	bannerDate?: string;
+	lang?: string;
+	setOGTypeArticle?: boolean;
+	headings?: MarkdownHeading[];
+	/** 文章页所属分类名，透传给 CategoryBar 做弱高亮 */
+	postCategory?: string;
+	/** 当前页面标识符（SidebarPage），透传给 SideBar 做 pages 过滤，并输出到
+	 *  #swup-container 的 data-current-page——Swup 替换容器时同步该属性，
+	 *  侧栏据此在站内导航后重新过滤 */
+	page?: SidebarPage;
+	hasComments?: boolean;
 }
 
-const { title, banner, description, lang, ogType, headings = [] } = Astro.props
-const hasBannerCredit =
-  siteConfig.banner.enable && siteConfig.banner.credit.enable
-const hasBannerLink = !!siteConfig.banner.credit.url
+const {
+	title,
+	banner,
+	ogImage,
+	description,
+	bannerDate,
+	lang,
+	setOGTypeArticle,
+	headings = [],
+	postCategory,
+	page,
+	hasComments,
+} = Astro.props;
+
+// 响应式侧栏配置（数据驱动布局）
+const sidebarResponsive = getResponsiveSidebarConfig();
+const gridClasses = generateGridClasses(sidebarResponsive);
+const sidebarClasses = generatePrimarySidebarClasses(sidebarResponsive);
+const secondarySidebarClasses =
+	generateSecondarySidebarClasses(sidebarResponsive);
+const mainContentClasses = generateMainContentClasses(sidebarResponsive);
 ---
 
-<Layout title={title} banner={banner} description={description} lang={lang} ogType={ogType}>
+<Layout title={title} banner={banner} ogImage={ogImage} description={description} lang={lang} setOGTypeArticle={setOGTypeArticle} page={page}>
+
+<!-- Navbar -->
 <slot slot="head" name="head"></slot>
-<div id="top-row" class="z-50 pointer-events-none relative transition-all duration-700 max-w-[var(--page-width)] px-0 md:px-4 mx-auto" class:list={[""]}>
+<header id="top-row" class="z-50 pointer-events-none relative transition-all duration-700 max-w-[var(--page-width)] px-0 md:px-4 mx-auto" class:list={[""]}>
     <div id="navbar-wrapper" class="pointer-events-auto sticky top-0 transition-all">
-        <Navbar></Navbar>
+        <TopAppBar></TopAppBar>
     </div>
-</div>
+</header>
 
-<div class="absolute w-full" class:list={[{"top-[30vh]": siteConfig.banner.enable, "top-[5.5rem]": !siteConfig.banner.enable}]}>
-    <div class="relative max-w-[var(--page-width)] mx-auto">
-        <div id="main-grid" class="transition duration-700 w-full left-0 right-0 grid grid-cols-[17.5rem_auto] grid-rows-[auto_1fr_auto] lg:grid-rows-[auto]
-    mx-auto gap-4 px-0 md:px-4"
-        >
-            <!-- Banner image credit -->
-            {hasBannerCredit && <a href={siteConfig.banner.credit.url} id="banner-credit" target="_blank" rel="noopener" aria-label="Visit image source"
-                                   class:list={["group onload-animation transition-all absolute flex justify-center items-center rounded-full " +
-                                   "px-3 right-4 -top-[3.25rem] bg-black/60 hover:bg-black/70 h-9", {"hover:pr-9 active:bg-black/80": hasBannerLink}]}
-            >
-                <Icon class="text-white/75 text-[1.25rem] mr-1" name="material-symbols:copyright-outline-rounded" ></Icon>
-                <div class="text-white/75 text-xs">{siteConfig.banner.credit.text}</div>
-                <Icon class:list={["transition absolute text-[oklch(0.75_0.14_var(--hue))] right-4 text-[0.75rem] opacity-0",
-                    {"group-hover:opacity-100": hasBannerLink}]}
-                      name="fa6-solid:arrow-up-right-from-square">
-                </Icon>
-            </a>}
+<!-- Banner -->
+<BannerStage page={page} title={title} description={description} date={bannerDate} />
 
+<!-- Main content -->
+<div id="main-layout" class="absolute w-full z-30 pointer-events-none">
+    <!-- The pointer-events-none here prevent blocking the click event of the TOC -->
+    <div class="relative max-w-[var(--page-width)] mx-auto pointer-events-auto">
+		<div id="main-grid" class:list={["transition duration-[var(--m3e-duration-long)] w-full left-0 right-0 grid grid-rows-[auto_1fr_auto] lg:grid-rows-[auto] mx-auto gap-4 px-2 md:px-4", gridClasses]}>
+			<SideBar class={sidebarClasses} currentPage={page} headings={headings}></SideBar>
+			{isDualColumn(sidebarResponsive) && (
+				<SideBar id="sidebar-secondary" column="secondary" class={secondarySidebarClasses} currentPage={page} headings={headings}></SideBar>
+			)}
 
-            <SideBar class="mb-4 row-start-2 row-end-3 col-span-2 lg:row-start-1 lg:row-end-2 lg:col-span-1 lg:max-w-[17.5rem] onload-animation"></SideBar>
-
-            <main id="swup-container" class="transition-swup-fade col-span-2 lg:col-span-1 overflow-hidden">
-                <div id="content-wrapper" class="onload-animation">
-                    <!-- the overflow-hidden here prevent long text break the layout-->
-                    <!-- make id different from windows.swup global property -->
-                    <slot></slot>
-                    <div class="footer col-span-2 onload-animation hidden lg:block">
-                        <Footer></Footer>
+            <!-- 主内容列：分类导航栏静态渲染（位于 Swup 容器外），
+                 页面切换时保持固定不重渲染；仅内容区随导航替换 -->
+            <div id="main-content-column" class={mainContentClasses.replace("transition-swup-fade", "").trim()}>
+                <CategoryBar currentPostCategory={postCategory}></CategoryBar>
+                <main
+                    id="swup-container"
+                    data-current-post-category={postCategory || ""}
+                    data-current-page={page}
+                    data-has-comments={hasComments ? "true" : "false"}
+                    data-banner-title={title || ""}
+                    data-banner-description={description || ""}
+                    data-banner-date={bannerDate || ""}
+                    class="transition-swup-fade"
+                >
+                    <div id="content-wrapper" class="onload-animation">
+                        <!-- the overflow-hidden here prevent long text break the layout-->
+                        <!-- make id different from windows.swup global property -->
+                        <slot></slot>
+                        <div class="footer col-span-2 onload-animation hidden lg:block">
+                            <Footer></Footer>
+                        </div>
                     </div>
-                </div>
-            </main>
+                </main>
+            </div>
 
             <div class="footer col-span-2 onload-animation block lg:hidden">
                 <Footer></Footer>
             </div>
         </div>
-        <BackToTop></BackToTop>
+
+        <FloatingControls page={page} headings={headings} hasComments={hasComments} />
+        <RouteProgress client:load />
     </div>
 </div>
 
-<!-- The TOC sits in the page margin, so it only shows on very wide screens -->
-<div class="absolute w-full z-0 hidden 2xl:block pointer-events-none">
-    <div class="relative max-w-[var(--page-width)] mx-auto">
-        {siteConfig.toc.enable && <div id="toc-wrapper" class:list={["hidden lg:block transition absolute top-0 -right-[var(--toc-width)] w-[var(--toc-width)] items-center pointer-events-auto",
-            {"toc-hide": siteConfig.banner.enable}]}
-        >
-            <div id="toc-inner-wrapper" class="fixed top-14 w-[var(--toc-width)] h-[calc(100vh_-_20rem)] overflow-y-scroll overflow-x-hidden hide-scrollbar">
-                <div id="toc" class="w-full h-full transition-swup-fade ">
-                    <div class="h-8 w-full"></div>
-                    <TOC headings={headings}></TOC>
-                    <div class="h-8 w-full"></div>
-                </div>
-            </div>
-        </div>}
+<SiteNavigationDrawer client:load />
+{contextMenuConfig.enable && (
+	<ContextMenu
+		actions={contextMenuConfig.actions}
+		pages={contextMenuConfig.pages}
+		client:load
+	/>
+)}
 
-        <!-- #toc needs to exist for Swup to work normally -->
-        {!siteConfig.toc.enable && <div id="toc"></div>}
-    </div>
-</div>
 </Layout>

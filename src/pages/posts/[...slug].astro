@@ -1,167 +1,438 @@
 ---
-import path from 'node:path'
-import { type CollectionEntry, render } from 'astro:content'
-import { getRelatedPosts, getSortedPosts } from '@utils/content-utils'
-import License from '@components/misc/License.astro'
-import Markdown from '@components/misc/Markdown.astro'
-import KatexStyles from '@components/misc/KatexStyles.astro'
-import I18nKey from '@i18n/i18nKey'
-import { i18n } from '@i18n/translation'
-import MainGridLayout from '@layouts/MainGridLayout.astro'
-import { getDir, getPostUrlBySlug } from '@utils/url-utils'
-import { Icon } from 'astro-icon/components'
-import { licenseConfig } from 'src/config'
-import PostMetadata from '../../components/PostMeta.astro'
-import ImageWrapper from '../../components/misc/ImageWrapper.astro'
-import { postConfig, profileConfig, siteConfig } from '../../config'
-import { formatDateToYYYYMMDD } from '../../utils/date-utils'
-import Comment from "@components/comment/index.astro"
-import RelatedPosts from '@components/RelatedPosts.astro'
-import OutdatedNotice from '@components/misc/OutdatedNotice.astro'
+import { type CollectionEntry, render } from "astro:content";
+import path from "node:path";
+import IconButton from "@components/atoms/action/IconButton.svelte";
+import AccentBar from "@components/atoms/display/AccentBar.svelte";
+import Card from "@components/atoms/display/Card.svelte";
+import Markdown from "@components/content/Markdown.astro";
+import ImageWrapper from "@components/molecules/ImageWrapper.astro";
+import LastUpdatedNotice from "@components/molecules/LastUpdatedNotice.astro";
+import License from "@components/molecules/License.astro";
+import PostMetadata from "@components/molecules/PostMeta.astro";
+import SeriesCard from "@components/molecules/SeriesCard.astro";
+import ArticleDiscovery from "@components/organisms/ArticleDiscovery.astro";
+import ArticleShare from "@components/organisms/ArticleShare.svelte";
+import CommentSection from "@components/organisms/comment/CommentSection.astro";
+import EncryptedContent from "@components/organisms/EncryptedContent.astro";
+import UmamiStats from "@components/organisms/UmamiStats.astro";
+import I18nKey from "@i18n/i18nKey";
+import { i18n } from "@i18n/translation";
+import Icon from "@iconify/svelte";
+import MainGridLayout from "@layouts/MainGridLayout.astro";
+import { discoverArticles } from "@utils/article-discovery";
+import { resolveAsset } from "@utils/asset-utils";
+import { getPublishedInstant, getUpdatedInstant } from "@utils/content-date";
+import {
+	getSeriesCatalog,
+	getSortedPosts,
+	type PostForList,
+} from "@utils/content-utils";
+import { formatDateToYYYYMMDD } from "@utils/date-utils";
+import { getMarkdownStylesheetAssets } from "@utils/markdown-assets";
+import { getSourceMarkdownSyntaxSnapshot } from "@utils/markdown-source-syntaxes.mjs";
+import {
+	hasMarkdownSyntax,
+	mergeMarkdownSyntaxSnapshots,
+} from "@utils/markdown-syntaxes.mjs";
+import { initPostIdMap } from "@utils/permalink-utils";
+import {
+	buildSeriesContexts,
+	type SeriesPostContext,
+} from "@utils/series-utils";
+import {
+	getDir,
+	getPostUrl,
+	getPostUrlBySlug,
+	removeFileExtension,
+} from "@utils/url-utils";
+import katexStylesheet from "katex/dist/katex.css?url";
+import overlayScrollbarsStylesheet from "overlayscrollbars/overlayscrollbars.css?url";
+import {
+	articleConfig,
+	commentConfig,
+	licenseConfig,
+	profileConfig,
+	resolveArticleDiscoveryOptions,
+	resolveArticleShareOptions,
+	resolveCommentOptions,
+	resolveLastUpdatedNoticeOptions,
+	resolveUmamiOptions,
+	seriesConfig,
+	siteConfig,
+	umamiConfig,
+} from "@/config";
 
 export async function getStaticPaths() {
-  // getSortedPosts fills in prevSlug/nextSlug; Astro 5's getCollection returns
-  // fresh objects on every call, so the entries must come from it directly
-  const blogEntries = (await getSortedPosts()) as unknown as CollectionEntry<'posts'>[]
-  return blogEntries.map(entry => ({
-    params: { slug: entry.id },
-    props: {
-      entry,
-      related: postConfig.relatedPosts.enable
-        ? getRelatedPosts(entry, blogEntries, postConfig.relatedPosts.count)
-        : [],
-    },
-  }))
+	const blogEntries = await getSortedPosts();
+	initPostIdMap(blogEntries);
+
+	// 系列上下文：阅读顺序 + index/total + 组内上一篇/下一篇（仅对有系列的文章）。
+	// 功能关闭时不查集合、不构建上下文，文章页不产出任何系列 DOM（零额外负担）。
+	const seriesContexts = seriesConfig.enable
+		? buildSeriesContexts({
+				catalog: await getSeriesCatalog(),
+				posts: blogEntries.map((entry) => ({
+					slug: entry.id,
+					title: entry.data.title,
+					published: entry.data.published,
+					series: entry.data.series,
+					seriesOrder: entry.data.seriesOrder,
+				})),
+			})
+		: new Map<string, SeriesPostContext>();
+
+	const discoveryCandidates = blogEntries.map((entry) => ({
+		slug: entry.id,
+		data: entry.data,
+	}));
+	const discoveryOptions = resolveArticleDiscoveryOptions(articleConfig);
+
+	const paths: {
+		params: { slug: string };
+		props: {
+			entry: CollectionEntry<"posts">;
+			discovery: { related: PostForList[]; random: PostForList[] };
+			series: SeriesPostContext | null;
+		};
+	}[] = [];
+
+	for (const entry of blogEntries) {
+		const defaultSlug = removeFileExtension(entry.id);
+		const current = discoveryCandidates.find(
+			(candidate) => candidate.slug === entry.id,
+		);
+		const discovery =
+			discoveryOptions && current
+				? discoverArticles(
+						current,
+						discoveryCandidates,
+						discoveryOptions.relatedCount,
+						discoveryOptions.randomCount,
+					)
+				: { related: [], random: [] };
+
+		paths.push({
+			params: { slug: defaultSlug },
+			props: {
+				entry,
+				discovery,
+				series: seriesContexts.get(entry.id) ?? null,
+			},
+		});
+
+		if (entry.data.alias) {
+			let alias = entry.data.alias.replace(/^\/+/, "").replace(/\/+$/, "");
+			if (alias.startsWith("posts/")) {
+				alias = alias.replace(/^posts\//, "");
+			}
+			if (alias && alias !== defaultSlug) {
+				paths.push({
+					params: { slug: alias },
+					props: {
+						entry,
+						discovery,
+						series: seriesContexts.get(entry.id) ?? null,
+					},
+				});
+			}
+		}
+	}
+
+	return paths;
 }
 
-const { entry, related } = Astro.props
-const showOutdatedNotice = postConfig.outdatedNotice.enable && entry.data.outdatedNotice
-const { Content, headings, remarkPluginFrontmatter } = await render(entry)
+const { entry, discovery, series } = Astro.props;
+const seriesCardAtTop = seriesConfig.cardPosition !== "bottom";
+const isEncrypted = Boolean(
+	entry.data.password && entry.data.password.trim().length > 0,
+);
+// 加密且隐藏首页内容的文章：元信息区已被加密徽标替代，系列卡同样不渲染，
+// 避免用系列名/相邻文章标题绕过元信息隐藏；功能关闭时同样不渲染
+const seriesCardVisible =
+	seriesConfig.enable &&
+	series !== null &&
+	!(isEncrypted && entry.data.hideHomeContent);
+const scope = `post:${entry.id}`;
 
-const coverImage = entry.data.image
-const absoluteCover = /^https?:\/\//.test(coverImage)
-  ? coverImage
-  : coverImage.startsWith('/')
-    ? new URL(coverImage, Astro.site).href
-    : undefined
+const { Content, headings, remarkPluginFrontmatter } = await render(entry);
+const renderedMarkdownSyntaxes = remarkPluginFrontmatter.markdownSyntaxes;
+const sourceMarkdownSyntaxes = hasMarkdownSyntax(
+	renderedMarkdownSyntaxes,
+	"expressive-code",
+)
+	? undefined
+	: getSourceMarkdownSyntaxSnapshot(entry.body);
+const markdownSyntaxes = mergeMarkdownSyntaxSnapshots(
+	renderedMarkdownSyntaxes,
+	sourceMarkdownSyntaxes,
+);
+const hasMath = hasMarkdownSyntax(markdownSyntaxes, "math");
+const markdownStylesheetAssets =
+	await getMarkdownStylesheetAssets(markdownSyntaxes);
+const effectiveHeadings = isEncrypted ? [] : headings;
+const imageBasePath = entry.filePath
+	? path.relative(path.resolve("src"), path.dirname(entry.filePath))
+	: path.join("content/posts/", getDir(entry.id));
+const effectiveUpdatedDate = entry.data.updated ?? entry.data.published;
+const publishedInstant = getPublishedInstant(entry.data);
+const updatedInstant = getUpdatedInstant(entry.data);
+const postCommentEnabled =
+	entry.data.comment !== false && Boolean(resolveCommentOptions(commentConfig));
+const lastUpdatedNotice = resolveLastUpdatedNoticeOptions(articleConfig);
+const shareOptions = resolveArticleShareOptions(articleConfig);
+const umamiEnabled = resolveUmamiOptions(umamiConfig) !== null;
+const authorAvatarUrl = shareOptions
+	? await resolveAsset(profileConfig.avatar ?? "")
+	: "";
+
+const effectiveDescription =
+	isEncrypted && entry.data.hideHomeContent
+		? i18n(I18nKey.postEncryptedSummary)
+		: entry.data.description || entry.data.title;
+const ogImage = entry.data.image
+	? await resolveAsset(entry.data.image, imageBasePath)
+	: undefined;
+
+const canonicalPostUrl = getPostUrl(entry);
 
 const jsonLd = {
-  '@context': 'https://schema.org',
-  '@type': 'BlogPosting',
-  headline: entry.data.title,
-  description: entry.data.description || entry.data.title,
-  keywords: entry.data.tags,
-  author: {
-    '@type': 'Person',
-    name: profileConfig.name,
-    url: Astro.site,
-  },
-  datePublished: formatDateToYYYYMMDD(entry.data.published),
-  dateModified: formatDateToYYYYMMDD(entry.data.updated ?? entry.data.published),
-  mainEntityOfPage: new URL(Astro.url.pathname, Astro.site).href,
-  inLanguage: (entry.data.lang ? entry.data.lang.replace('_', '-') : siteConfig.lang.replace('_', '-')),
-  ...(absoluteCover && { image: absoluteCover }),
-}
+	"@context": "https://schema.org",
+	"@type": "BlogPosting",
+	headline: entry.data.title,
+	description: effectiveDescription,
+	keywords: entry.data.tags,
+	author: {
+		"@type": "Person",
+		name: profileConfig.name,
+		url: Astro.site,
+	},
+	datePublished: entry.data.publishedAt
+		? publishedInstant.toISOString()
+		: formatDateToYYYYMMDD(entry.data.published),
+	dateModified: entry.data.updatedAt
+		? updatedInstant.toISOString()
+		: formatDateToYYYYMMDD(effectiveUpdatedDate),
+	inLanguage: entry.data.lang
+		? entry.data.lang.replace("_", "-")
+		: siteConfig.lang.replace("_", "-"),
+};
 ---
-<MainGridLayout banner={entry.data.image} title={entry.data.title} description={entry.data.description} lang={entry.data.lang} ogType="article" headings={headings}>
+
+<MainGridLayout banner={entry.data.image} ogImage={ogImage} title={entry.data.title} description={effectiveDescription} bannerDate={formatDateToYYYYMMDD(entry.data.published)} lang={entry.data.lang} setOGTypeArticle={true} headings={effectiveHeadings} postCategory={entry.data.category || undefined} page="post" hasComments={postCommentEnabled}>
+    {hasMath && <link slot="head" rel="stylesheet" data-swup-optional="math" href={katexStylesheet} />}
+    {hasMath && <link slot="head" rel="stylesheet" data-swup-optional="math" href={overlayScrollbarsStylesheet} />}
+    {markdownStylesheetAssets.map(({ pack, css }) => <style is:inline slot="head" data-swup-optional={pack} set:html={css}></style>)}
     <script is:inline slot="head" type="application/ld+json" set:html={JSON.stringify(jsonLd)}></script>
-    {remarkPluginFrontmatter.hasMath && <KatexStyles />}
     <div class="flex w-full rounded-[var(--radius-large)] overflow-hidden relative mb-4">
-        <div id="post-container" class:list={["card-base z-10 px-6 md:px-9 pt-6 pb-4 relative w-full ",
-            {}
-        ]}>
-            <!-- word count and reading time -->
-            <div class="flex flex-row text-black/30 dark:text-white/30 gap-5 mb-3 transition onload-animation">
-                <div class="flex flex-row items-center">
-                    <div class="transition h-6 w-6 rounded-md bg-black/5 dark:bg-white/10 text-black/50 dark:text-white/50 flex items-center justify-center mr-2">
-                        <Icon name="material-symbols:notes-rounded"></Icon>
-                    </div>
-                    <div class="text-sm">{remarkPluginFrontmatter.words} {" " + i18n(I18nKey.wordsCount)}</div>
-                </div>
-                <div class="flex flex-row items-center">
-                    <div class="transition h-6 w-6 rounded-md bg-black/5 dark:bg-white/10 text-black/50 dark:text-white/50 flex items-center justify-center mr-2">
-                        <Icon name="material-symbols:schedule-outline-rounded"></Icon>
-                    </div>
-                    <div class="text-sm">{remarkPluginFrontmatter.minutes} {" " + i18n(I18nKey.minutesCount)}</div>
-                </div>
-            </div>
+		<Card color="var(--card-bg)" radius="l" class="post-card z-10 px-6 md:px-9 pt-6 pb-4 relative w-full">
+			<!-- word count and reading time -->
+			<div class="flex flex-row text-[var(--on-surface-variant)] gap-5 mb-3 transition onload-animation">
+				<div class="flex flex-row items-center">
+					<div class="transition h-6 w-6 rounded-[var(--shape-corner-xs)] bg-[var(--surface-container-high)] text-[var(--on-surface-variant)] flex items-center justify-center mr-2">
+						<Icon icon="material-symbols:notes-rounded"></Icon>
+					</div>
+					<div class="text-sm">{remarkPluginFrontmatter.words} {" " + i18n(remarkPluginFrontmatter.words === 1 ? I18nKey.wordCount : I18nKey.wordsCount)}</div>
+				</div>
+				<div class="flex flex-row items-center">
+					<div class="transition h-6 w-6 rounded-[var(--shape-corner-xs)] bg-[var(--surface-container-high)] text-[var(--on-surface-variant)] flex items-center justify-center mr-2">
+						<Icon icon="material-symbols:schedule-outline-rounded"></Icon>
+					</div>
+					<div class="text-sm">{remarkPluginFrontmatter.minutes} {" " + i18n(remarkPluginFrontmatter.minutes === 1 ? I18nKey.minuteCount : I18nKey.minutesCount)}</div>
+				</div>
+				{umamiEnabled && (
+					<div class="flex flex-row items-center">
+						<UmamiStats variant="meta" path={canonicalPostUrl} />
+					</div>
+				)}
+			</div>
 
-            <!-- title -->
-            <div class="relative onload-animation">
-                <h1
-                    data-pagefind-body data-pagefind-weight="10" data-pagefind-meta="title"
-                    class="transition w-full block font-bold mb-3
-                    text-3xl md:text-[2.5rem]/[2.75rem]
-                    text-black/90 dark:text-white/90
-                    md:before:w-1 before:h-5 before:rounded-md before:bg-[var(--primary)]
-                    before:absolute before:top-[0.75rem] before:left-[-1.125rem]
-                ">
-                    {entry.data.title}
-                </h1>
-            </div>
+			<!-- title -->
+			<div class="relative onload-animation">
+				<div
+					data-pagefind-body data-pagefind-weight="10" data-pagefind-meta="title"
+					class="transition w-full block font-bold mb-3
+					text-3xl md:text-[2.25rem]/[2.75rem]
+					text-[var(--on-surface)]
+					flex items-center gap-3"
+				>
+					<AccentBar size="large" />
+					<div class="inline-block">
+						{entry.data.title}
+					</div>
+					<IconButton
+						id="copy-post-link"
+						label={i18n(I18nKey.copyLink)}
+						class="ml-auto shrink-0"
+					>
+						<Icon icon="material-symbols:link-rounded" class="text-[1.25rem]" />
+					</IconButton>
+				</div>
+			</div>
 
-            <!-- metadata -->
-            <div class="onload-animation">
-                <PostMetadata
-                        class="mb-5"
-                        published={entry.data.published}
-                        updated={entry.data.updated}
-                        tags={entry.data.tags}
-                        category={entry.data.category}
-                ></PostMetadata>
-                {!entry.data.image && <div class="border-[var(--line-divider)] border-dashed border-b-[1px] mb-5"></div>}
-            </div>
+			<!-- metadata -->
+			<div class="onload-animation">
+				{isEncrypted && entry.data.hideHomeContent ? (
+					<div class="flex flex-wrap items-center gap-2 mb-5">
+						<div class="flex items-center gap-1.5 px-3 py-1 rounded-full bg-[var(--surface-container-highest)] text-xs font-semibold text-[var(--primary)]">
+							<Icon icon="material-symbols:lock-rounded" class="text-sm" />
+							<span>{i18n(I18nKey.postEncryptedBadge)}</span>
+						</div>
+					</div>
+				) : (
+					<PostMetadata
+						class="mb-5"
+						published={entry.data.published}
+						updated={entry.data.updated}
+						tags={entry.data.tags}
+						category={entry.data.category}
+					></PostMetadata>
+				)}
+				{seriesCardVisible && seriesCardAtTop && series && (
+					<SeriesCard context={series} class="mb-5 onload-animation" />
+				)}
+				{!entry.data.image && <div class="border-[var(--outline-variant)] border-dashed border-b-[1px] mb-5"></div>}
+			</div>
 
             <!-- always show cover as long as it has one -->
 
-            {entry.data.image &&
-                <ImageWrapper id="post-cover" src={entry.data.image} alt={entry.data.title} basePath={path.join("content/posts/", getDir(entry.id))} loading="eager" class="mb-8 rounded-xl banner-container onload-animation"/>
-            }
+			{entry.data.image &&
+				<ImageWrapper
+					id="post-cover"
+					src={entry.data.image}
+					basePath={imageBasePath}
+					class="mb-8 rounded-xl banner-container onload-animation"
+					loading="eager"
+					fetchPriority="high"
+					widths={[360, 720, 1080, 1440]}
+					sizes="(min-width: 1280px) 720px, (min-width: 768px) calc(100vw - 22rem), calc(100vw - 3.5rem)"
+					formats={["avif", "webp"]}
+					quality={65}
+				/>
+			}
 
+            {isEncrypted ? (
+                <EncryptedContent
+                    password={entry.data.password!}
+                    scope={scope}
+                    hint={entry.data.passwordHint}
+                >
+                    <Content />
+                </EncryptedContent>
+            ) : (
+                <Markdown class="mb-6 onload-animation">
+                    <Content />
+                </Markdown>
+            )}
 
-            <Markdown class="mb-6 markdown-content onload-animation">
-                {showOutdatedNotice && <OutdatedNotice published={entry.data.published} updated={entry.data.updated} />}
-                <Content />
-            </Markdown>
+			{/* 系列块（cardPosition: bottom）紧贴正文之后：与 top 变体对称（元信息之后 / 正文之后），
+			    并排在版权、分享与 Continue reading 这些收尾区块之前——系列导航是「继续读」，
+			    应先于署名/分发/相关推荐（页面实际顺序：系列 → 版权 → 分享 → 延伸阅读 → 评论 → 更新提示 → 全局 post-nav） */}
+			{seriesCardVisible && !seriesCardAtTop && series && (
+				<SeriesCard context={series} class="mb-6 onload-animation" />
+			)}
 
-            {licenseConfig.enable && <License title={entry.data.title} slug={entry.id} pubDate={entry.data.published} class="mb-6 rounded-xl license-container onload-animation"></License>}
+			{licenseConfig.enable && <License title={entry.data.title} slug={entry.id} pubDate={entry.data.published} class="mb-6 rounded-xl license-container onload-animation"></License>}
 
-        </div>
+			{shareOptions && (
+				<ArticleShare
+					client:visible
+					options={shareOptions}
+					title={entry.data.title}
+					description={effectiveDescription}
+					author={profileConfig.name}
+					published={formatDateToYYYYMMDD(entry.data.published)}
+					siteTitle={siteConfig.title}
+					postPath={canonicalPostUrl}
+					coverSelector={entry.data.image ? "#post-cover img" : undefined}
+					avatarUrl={authorAvatarUrl}
+					class="mb-6 rounded-xl onload-animation"
+				/>
+			)}
+
+			<ArticleDiscovery
+				related={discovery.related}
+				random={discovery.random}
+				class="onload-animation"
+			/>
+
+		</Card>
     </div>
 
-    <RelatedPosts posts={related} />
+    <CommentSection
+        context={{
+            key: `post:${entry.id}`,
+            // No trailing slash: existing Twikoo comments are keyed by this exact path
+            path: canonicalPostUrl.replace(/\/$/, ""),
+            title: entry.data.title,
+            language: entry.data.lang || siteConfig.lang,
+        }}
+        postCommentEnabled={entry.data.comment}
+        class="onload-animation"
+    />
 
-    <Comment post={entry}></Comment>
+    {lastUpdatedNotice && entry.data.outdatedNotice !== false && (
+        <LastUpdatedNotice
+            date={updatedInstant}
+            minimumAgeDays={lastUpdatedNotice.minimumAgeDays}
+            class="mb-4 onload-animation"
+        />
+    )}
 
     <div class="flex flex-col md:flex-row justify-between mb-4 gap-4 overflow-hidden w-full">
-        <a href={entry.data.nextSlug ? getPostUrlBySlug(entry.data.nextSlug) : "#"}
-           class:list={["w-full font-bold overflow-hidden active:scale-95", {"pointer-events-none": !entry.data.nextSlug}]}>
-            {entry.data.nextSlug && <div class="btn-card rounded-2xl w-full h-[3.75rem] max-w-full px-4 flex items-center justify-start gap-4" >
-                <Icon name="material-symbols:chevron-left-rounded" class="text-[2rem] text-[var(--primary)]" />
-                <div class="overflow-hidden transition overflow-ellipsis whitespace-nowrap max-w-[calc(100%_-_3rem)] text-black/75 dark:text-white/75">
+        {entry.data.nextSlug ? (
+            <Card
+                href={entry.data.nextUrl || getPostUrlBySlug(entry.data.nextSlug)}
+                color="var(--card-bg)"
+                radius="l"
+                class="post-nav post-nav--prev w-full font-bold h-[3.75rem] max-w-full px-4 !flex items-center !justify-start gap-4"
+            >
+                <Icon icon="material-symbols:chevron-left-rounded" class="post-nav__arrow text-[2rem] text-[var(--primary)]" />
+                <div class="post-nav__title overflow-hidden transition overflow-ellipsis whitespace-nowrap max-w-[calc(100%_-_3rem)]">
                     {entry.data.nextTitle}
                 </div>
-            </div>}
-        </a>
+            </Card>
+        ) : (
+            <div class="w-full"></div>
+        )}
 
-        <a href={entry.data.prevSlug ? getPostUrlBySlug(entry.data.prevSlug) : "#"}
-           class:list={["w-full font-bold overflow-hidden active:scale-95", {"pointer-events-none": !entry.data.prevSlug}]}>
-            {entry.data.prevSlug && <div class="btn-card rounded-2xl w-full h-[3.75rem] max-w-full px-4 flex items-center justify-end gap-4">
-                <div class="overflow-hidden transition overflow-ellipsis whitespace-nowrap max-w-[calc(100%_-_3rem)] text-black/75 dark:text-white/75">
+        {entry.data.prevSlug ? (
+            <Card
+                href={entry.data.prevUrl || getPostUrlBySlug(entry.data.prevSlug)}
+                color="var(--card-bg)"
+                radius="l"
+                class="post-nav post-nav--next w-full font-bold h-[3.75rem] max-w-full px-4 !flex items-center !justify-end gap-4"
+            >
+                <div class="post-nav__title overflow-hidden transition overflow-ellipsis whitespace-nowrap max-w-[calc(100%_-_3rem)]">
                     {entry.data.prevTitle}
                 </div>
-                <Icon name="material-symbols:chevron-right-rounded" class="text-[2rem] text-[var(--primary)]" />
-            </div>}
-        </a>
+                <Icon icon="material-symbols:chevron-right-rounded" class="post-nav__arrow text-[2rem] text-[var(--primary)]" />
+            </Card>
+        ) : (
+            <div class="w-full"></div>
+        )}
     </div>
 
 </MainGridLayout>
 
-<style is:global>
-#post-container :nth-child(1) { animation-delay: calc(var(--content-delay) + 0ms) }
-#post-container :nth-child(2) { animation-delay: calc(var(--content-delay) + 50ms) }
-#post-container :nth-child(3) { animation-delay: calc(var(--content-delay) + 100ms) }
-#post-container :nth-child(4) { animation-delay: calc(var(--content-delay) + 175ms) }
-#post-container :nth-child(5) { animation-delay: calc(var(--content-delay) + 250ms) }
-#post-container :nth-child(6) { animation-delay: calc(var(--content-delay) + 325ms) } 
+<style is:global lang="stylus">
+	/* ???/????? hover ????????????????????
+	   reduced-motion ??? motion-reduced ???????????? */
+	.post-nav
+		.post-nav__arrow
+			transition: transform var(--m3e-duration-medium) var(--m3e-easing-emphasized-decelerate)
+
+		.post-nav__title
+			font: var(--m3e-type-title-medium)
+			font-weight: 600
+			color: var(--on-surface-variant)
+			transition: color var(--m3e-duration-short) var(--m3e-easing-standard)
+
+		&:hover .post-nav__title
+			color: var(--primary)
+
+		&--prev:hover .post-nav__arrow
+			transform: translateX(-0.25rem)
+
+		&--next:hover .post-nav__arrow
+			transform: translateX(0.25rem)
 </style>

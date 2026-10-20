@@ -1,0 +1,7 @@
+# Cloudflare Pages / Netlify. Vercel uses vercel.json instead.
+# Fuwari-era tag and category pages became query strings on /archive/
+/archive/tag/:tag/ /archive/?tag=:tag 301
+/archive/tag/:tag /archive/?tag=:tag 301
+/archive/category/uncategorized/ /archive/?uncategorized=true 301
+/archive/category/:category/ /archive/?category=:category 301
+/archive/category/:category /archive/?category=:category 301

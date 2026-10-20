@@ -3,11 +3,10 @@
  */
 import { definePlugin } from "@expressive-code/core";
 
-export function pluginLanguageBadge() {
+export function pluginLanguageBadge(): ReturnType<typeof definePlugin> {
 	return definePlugin({
 		name: "Language Badge",
-		// @ts-expect-error
-		baseStyles: ({ _cssVar }) => `
+		baseStyles: () => `
       [data-language]::before {
         position: absolute;
         z-index: 2;
@@ -19,8 +18,8 @@ export function pluginLanguageBadge() {
         font-size: 0.75rem;
         font-weight: bold;
         text-transform: uppercase;
-        color: oklch(0.75 0.1 var(--hue));
-        background: oklch(0.33 0.035 var(--hue));
+        color: var(--btn-content, oklch(0.75 0.1 var(--hue)));
+        background: var(--btn-regular-bg, oklch(0.33 0.035 var(--hue)));
         border-radius: 0.5rem;
         pointer-events: none;
         transition: opacity 0.3s;

@@ -1,4 +1,11 @@
 {
+  "redirects": [
+    { "source": "/archive/tag/:tag/", "destination": "/archive/?tag=:tag", "permanent": true },
+    { "source": "/archive/tag/:tag", "destination": "/archive/?tag=:tag", "permanent": true },
+    { "source": "/archive/category/uncategorized/", "destination": "/archive/?uncategorized=true", "permanent": true },
+    { "source": "/archive/category/:category/", "destination": "/archive/?category=:category", "permanent": true },
+    { "source": "/archive/category/:category", "destination": "/archive/?category=:category", "permanent": true }
+  ],
   "headers": [
     {
       "source": "/_astro/(.*)",
