@@ -331,4 +331,8 @@ export const th: Translation = {
 		"เพิ่ม URL ฟีดด้านบนลงในโปรแกรมอ่าน RSS/Atom (เช่น NetNewsWire, Feedly, Inoreader, Follow) เพื่อรับการแจ้งเตือนบทความใหม่",
 	[Key.feedOpenXml]: "ดู XML ต้นฉบับ",
 	[Key.feedRecentPosts]: "บทความล่าสุดในฟีด",
+	[Key.wechat]: "บัญชีทางการ WeChat",
+	[Key.wechatSubtitle]: "สแกนคิวอาร์โค้ดด้วย WeChat เพื่อติดตาม",
+	[Key.wechatScanHint]: "เปิด WeChat แล้วสแกนโค้ด หรือกดค้างบนโทรศัพท์เพื่อจดจำโค้ด",
+	[Key.wechatQrAlt]: "คิวอาร์โค้ดบัญชีทางการ WeChat",
 };

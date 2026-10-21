@@ -349,4 +349,8 @@ export const id: Translation = {
 		"Tambahkan URL umpan di atas ke pembaca RSS/Atom favorit Anda (seperti NetNewsWire, Feedly, Inoreader, Follow) untuk menerima pembaruan.",
 	[Key.feedOpenXml]: "Lihat XML Asli",
 	[Key.feedRecentPosts]: "Artikel Terbaru di Umpan",
+	[Key.wechat]: "Akun Resmi WeChat",
+	[Key.wechatSubtitle]: "Pindai kode QR dengan WeChat untuk mengikuti",
+	[Key.wechatScanHint]: "Buka WeChat lalu pindai kode, atau tekan lama di ponsel untuk mengenalinya",
+	[Key.wechatQrAlt]: "Kode QR Akun Resmi WeChat",
 };

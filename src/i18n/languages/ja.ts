@@ -343,4 +343,8 @@ export const ja: Translation = {
 		"上記の購読 URL をお好みの RSS/Atom リーダー（NetNewsWire、Feedly、Inoreader、Follow など）に登録すると、最新記事が通知されます。",
 	[Key.feedOpenXml]: "XML を直接表示",
 	[Key.feedRecentPosts]: "最新の配信記事",
+	[Key.wechat]: "WeChat 公式アカウント",
+	[Key.wechatSubtitle]: "WeChat で QR コードをスキャンしてフォロー",
+	[Key.wechatScanHint]: "WeChat を開いてスキャンするか、スマートフォンでは長押しで認識できます",
+	[Key.wechatQrAlt]: "WeChat 公式アカウントの QR コード",
 };

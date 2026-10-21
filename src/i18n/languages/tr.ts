@@ -347,4 +347,8 @@ export const tr: Translation = {
 		"Yeni yazı bildirimleri almak için yukarıdaki bağlantıyı dilediğiniz RSS/Atom okuyucusuna (NetNewsWire, Feedly, Inoreader, Follow vb.) ekleyin.",
 	[Key.feedOpenXml]: "Ham XML'i Görüntüle",
 	[Key.feedRecentPosts]: "Akıştaki Son Yazılar",
+	[Key.wechat]: "WeChat Resmi Hesabı",
+	[Key.wechatSubtitle]: "Takip etmek için QR kodunu WeChat ile tarayın",
+	[Key.wechatScanHint]: "WeChat'i açıp kodu tarayın veya telefonda uzun basarak tanıtın",
+	[Key.wechatQrAlt]: "WeChat Resmi Hesabı QR kodu",
 };

@@ -333,6 +333,12 @@ enum I18nKey {
 	feedHowToUseDesc = "feedHowToUseDesc",
 	feedOpenXml = "feedOpenXml",
 	feedRecentPosts = "feedRecentPosts",
+
+	// WeChat Official Account QR page (link-only)
+	wechat = "wechat",
+	wechatSubtitle = "wechatSubtitle",
+	wechatScanHint = "wechatScanHint",
+	wechatQrAlt = "wechatQrAlt",
 }
 
 export default I18nKey;

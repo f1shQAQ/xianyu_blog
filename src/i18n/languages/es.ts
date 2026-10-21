@@ -346,4 +346,8 @@ export const es: Translation = {
 		"Añade esta URL a tu lector RSS/Atom favorito (como NetNewsWire, Feedly, Inoreader o Follow) para recibir actualizaciones.",
 	[Key.feedOpenXml]: "Ver XML original",
 	[Key.feedRecentPosts]: "Artículos recientes del canal",
+	[Key.wechat]: "Cuenta oficial de WeChat",
+	[Key.wechatSubtitle]: "Escanea el código QR con WeChat para seguirnos",
+	[Key.wechatScanHint]: "Abre WeChat y escanea el código, o mantenlo pulsado en el móvil para reconocerlo",
+	[Key.wechatQrAlt]: "Código QR de la cuenta oficial de WeChat",
 };

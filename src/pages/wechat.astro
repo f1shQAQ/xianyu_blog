@@ -1,0 +1,34 @@
+---
+/**
+ * 微信公众号二维码页：只能凭链接访问。
+ * 不进导航与侧栏、被 sitemapFilter 排除、不写 data-pagefind-body，并输出 noindex。
+ */
+import WechatQrCard from "@components/organisms/WechatQrCard.astro";
+import I18nKey from "@i18n/i18nKey";
+import MainGridLayout from "@layouts/MainGridLayout.astro";
+import { resolveAsset } from "@utils/asset-utils";
+import { resolveI18nText } from "@utils/i18n-utils";
+import { url } from "@utils/url-utils";
+import { wechatConfig } from "@/config/wechatConfig";
+
+if (!wechatConfig.enable || !wechatConfig.qrCode) {
+	return Astro.redirect("/404/");
+}
+
+const pageTitle = resolveI18nText(wechatConfig.title, I18nKey.wechat);
+const pageDescription = resolveI18nText(wechatConfig.description, I18nKey.wechatSubtitle);
+// public 路径需补 base；本地相对路径交给 resolveAsset，其产物 URL 已含 base。
+const qrSrc = wechatConfig.qrCode.startsWith("/")
+	? url(wechatConfig.qrCode)
+	: await resolveAsset(wechatConfig.qrCode);
+---
+
+<MainGridLayout title={pageTitle} description={pageDescription} page="wechat">
+	<meta slot="head" name="robots" content="noindex, nofollow" />
+	<WechatQrCard
+		title={pageTitle}
+		subtitle={pageDescription}
+		qrSrc={qrSrc}
+		accountName={wechatConfig.accountName}
+	/>
+</MainGridLayout>

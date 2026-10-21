@@ -78,3 +78,4 @@ export {
 	resolveUmamiOptions,
 	umamiConfig,
 } from "./umamiConfig";
+export { wechatConfig } from "./wechatConfig";

@@ -331,4 +331,8 @@ export const zh_TW: Translation = {
 		"將上方訂閱網址新增至任意 RSS/Atom 閱讀器（如 NetNewsWire、Feedly、Inoreader、Follow 等），即可即時接收新文章推送。",
 	[Key.feedOpenXml]: "檢視原始 XML",
 	[Key.feedRecentPosts]: "最新推送文章",
+	[Key.wechat]: "微信公眾號",
+	[Key.wechatSubtitle]: "用微信掃描 QR 碼關注",
+	[Key.wechatScanHint]: "打開微信掃一掃，手機上也可以長按圖片辨識",
+	[Key.wechatQrAlt]: "微信公眾號 QR 碼",
 };

@@ -344,4 +344,8 @@ export const en: Translation = {
 		"Add this feed URL to your favorite RSS/Atom reader (e.g. NetNewsWire, Feedly, Inoreader, Follow) to get instant updates.",
 	[Key.feedOpenXml]: "View Raw XML",
 	[Key.feedRecentPosts]: "Recent Posts in Feed",
+	[Key.wechat]: "WeChat Official Account",
+	[Key.wechatSubtitle]: "Scan the QR code with WeChat to follow",
+	[Key.wechatScanHint]: "Open WeChat and scan the code, or long-press it on a phone to recognize",
+	[Key.wechatQrAlt]: "WeChat Official Account QR code",
 };

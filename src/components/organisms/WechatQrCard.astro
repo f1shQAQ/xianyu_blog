@@ -1,0 +1,64 @@
+---
+/**
+ * WechatQrCard.astro
+ * 微信公众号二维码有机体组件：标题卡 + 二维码卡，纯 SSR 输出，无客户端脚本。
+ */
+import AccentBar from "@components/atoms/display/AccentBar.svelte";
+import Card from "@components/atoms/display/Card.svelte";
+import Icon from "@components/atoms/display/Icon.svelte";
+import I18nKey from "@i18n/i18nKey";
+import { i18n } from "@i18n/translation";
+
+interface Props {
+	title: string;
+	subtitle?: string;
+	/** 已解析为最终 URL 的二维码图片地址 */
+	qrSrc: string;
+	accountName?: string;
+}
+
+const { title, subtitle, qrSrc, accountName } = Astro.props;
+---
+
+<div class="wechat-qr w-full">
+	<Card color="var(--card-bg)" radius="l" class="p-6 md:p-8 mb-4 onload-animation">
+		<div class="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+			<div class="flex items-center justify-center w-14 h-14 rounded-[var(--shape-corner-m)] bg-[var(--primary)] text-[var(--on-primary)] shrink-0 shadow-[var(--m3e-elevation-1)]">
+				<Icon icon="material-symbols:qr-code-2-rounded" class="text-3xl" />
+			</div>
+			<div class="flex-1 min-w-0">
+				<div class="flex items-center gap-2 mb-1">
+					<AccentBar size="medium" class="!hidden md:!inline-block" />
+					<h1 class="text-2xl md:text-3xl font-bold text-[var(--on-surface)]">{title}</h1>
+				</div>
+				{subtitle && <p class="text-sm md:text-base text-[var(--on-surface-variant)]">{subtitle}</p>}
+			</div>
+		</div>
+	</Card>
+
+	<Card color="var(--card-bg)" radius="l" class="p-6 md:p-8 onload-animation">
+		<figure class="flex flex-col items-center gap-4 m-0">
+			<img
+				src={qrSrc}
+				alt={i18n(I18nKey.wechatQrAlt)}
+				decoding="async"
+				class="wechat-qr__image"
+			/>
+			<figcaption class="flex flex-col items-center gap-1 text-center">
+				{accountName && <span class="text-lg font-bold text-[var(--on-surface)]">{accountName}</span>}
+				<span class="text-sm text-[var(--on-surface-variant)]">{i18n(I18nKey.wechatScanHint)}</span>
+			</figcaption>
+		</figure>
+	</Card>
+</div>
+
+<style lang="stylus">
+// 二维码图片自带底色与留白（方形码或横幅名片均可），这里只约束尺寸与圆角，不加底色。
+.wechat-qr__image
+	display block
+	width 100%
+	max-width 40rem
+	height auto
+	border-radius var(--shape-corner-l)
+	box-shadow var(--m3e-elevation-1)
+</style>

@@ -29,13 +29,16 @@ export function getDisabledPages(): string[] {
 	return disabled;
 }
 
+/** 仅凭链接访问的页面：无论开关状态，始终不进 sitemap */
+const LINK_ONLY_PAGES = ["wechat"];
+
 /**
  * 校验页面路径是否应当被收录进 sitemap。
- * 排除被关闭页面（例如 /skills/, /skills/index.html 等）以及 404 跳转存根。
+ * 排除被关闭页面（例如 /skills/, /skills/index.html 等）、仅凭链接访问的页面以及 404 跳转存根。
  */
 export function isSitemapPageAllowed(pageUrl: string): boolean {
-	const disabled = getDisabledPages();
-	for (const p of disabled) {
+	const excluded = [...getDisabledPages(), ...LINK_ONLY_PAGES];
+	for (const p of excluded) {
 		if (
 			pageUrl.endsWith(`/${p}/`) ||
 			pageUrl.endsWith(`/${p}`) ||

@@ -195,6 +195,12 @@ export const CONFIG_DOMAINS = Object.freeze([
 		module: "@/types/compassConfig",
 	},
 	{
+		key: "wechat",
+		file: "wechat",
+		type: "WechatConfig",
+		module: "@/types/wechatConfig",
+	},
+	{
 		key: "i18n",
 		file: "i18n",
 		type: "I18nConfig",
