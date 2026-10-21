@@ -6,8 +6,10 @@ import UmamiRuntime from "@components/system/UmamiRuntime.astro";
 import { resolveAsset } from "@utils/asset-utils";
 import { pathsEqual, toAbsoluteUrl, url } from "@utils/url-utils";
 import {
+	articleConfig,
 	expressiveCodeConfig,
 	profileConfig,
+	resolveAiSummaryOptions,
 	resolvedFontOptions,
 	resolveTextureOptions,
 	resolveUmamiOptions,
@@ -90,6 +92,9 @@ const defaultTexturePreset = textureOptions.defaultPreset;
 const defaultTextureOpacity = textureOptions.defaultOpacity;
 const textureEnabled = textureOptions.enable;
 const umamiOptions = resolveUmamiOptions(umamiConfig);
+// 打字机启用时才输出首帧门控；关闭时 head 内联脚本不含这段逻辑
+const aiSummaryTypewriter =
+	resolveAiSummaryOptions(articleConfig)?.typewriter === true;
 
 const hasDesktopBanner = hasBannerImages(siteConfig.banner.src.desktop);
 const hasMobileBanner = hasBannerImages(siteConfig.banner.src.mobile);
@@ -161,7 +166,17 @@ const configuredFontRoles = getConfiguredFontRoles(resolvedFontOptions);
 			/>
 		))}
 
-		<script is:inline define:vars={{DEFAULT_THEME, LIGHT_MODE, DARK_MODE, AUTO_MODE, BANNER_HEIGHT_EXTEND, configHue, lightTheme, darkTheme, defaultWallpaperMode, defaultTexturePreset, defaultTextureOpacity, textureEnabled}}>
+		<script is:inline define:vars={{DEFAULT_THEME, LIGHT_MODE, DARK_MODE, AUTO_MODE, BANNER_HEIGHT_EXTEND, configHue, lightTheme, darkTheme, defaultWallpaperMode, defaultTexturePreset, defaultTextureOpacity, textureEnabled, aiSummaryTypewriter}}>
+			// AI 摘要打字机首帧门控：服务端输出的全文在打字机接管（data-ai-summary-armed）前保持透明，
+			// 避免模块加载期间先露出全文再跳回逐字；3 秒仍未接管时撤掉门控，显示全文
+			if (aiSummaryTypewriter && 'IntersectionObserver' in window) {
+				document.documentElement.dataset.aiSummaryGate = '';
+				setTimeout(() => {
+					if (document.querySelector('[data-ai-summary-typewriter]:not([data-ai-summary-armed])')) {
+						delete document.documentElement.dataset.aiSummaryGate;
+					}
+				}, 3000);
+			}
 			const theme = localStorage.getItem('theme') || DEFAULT_THEME;
 			let isDark = false;
 			switch (theme) {

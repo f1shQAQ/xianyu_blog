@@ -11,7 +11,12 @@ let typewriterModule: Promise<TypewriterModule> | undefined;
 function runAiSummaryTypewriters(): void {
 	if (!typewriterModule && !document.querySelector(CARD_SELECTOR)) return;
 	typewriterModule ??= import("./ai-summary-typewriter");
-	void typewriterModule.then((module) => module.initAiSummaryTypewriters());
+	typewriterModule
+		.then((module) => module.initAiSummaryTypewriters())
+		.catch(() => {
+			// 模块加载失败：立即撤掉首帧门控（见 Layout.astro），显示全文
+			delete document.documentElement.dataset.aiSummaryGate;
+		});
 }
 
 export function initAiSummaries(): void {

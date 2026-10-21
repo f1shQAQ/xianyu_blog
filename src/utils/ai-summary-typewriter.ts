@@ -50,6 +50,8 @@ function setupCard(card: HTMLElement): (() => void) | null {
 	pending.dataset.aiSummaryPending = "";
 	pending.textContent = fullText;
 	textEl.replaceChildren(shown, cursor, pending);
+	// 解除 AiSummary 的首帧预隐藏：此后由 pending 段负责透明占位
+	card.dataset.aiSummaryArmed = "";
 
 	let frame = 0;
 	let observer: IntersectionObserver | null = null;

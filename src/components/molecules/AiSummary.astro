@@ -120,4 +120,10 @@ const text = summary.trim();
 
 		&__text
 			font: var(--m3e-type-body-medium)
+
+// 首帧预隐藏：门控由 Layout.astro 的 head 内联脚本在绘制前设置，
+// 打字机接管后写入 data-ai-summary-armed 解除；减少动效时打字机不播放，因此不隐藏
+@media (prefers-reduced-motion: no-preference)
+	:global(html[data-ai-summary-gate]:not(.motion-reduced)) .ai-summary[data-ai-summary-typewriter]:not([data-ai-summary-armed]) .ai-summary__text
+		color: transparent
 </style>
