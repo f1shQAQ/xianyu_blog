@@ -2,7 +2,7 @@
 title: 小米 10S 免解锁保姆级降级 MIUI12.5.7 教学
 published: 2025-12-02
 description: '⚠️ 本文仅适用于小米 10S，不适用于其他任何机型！'
-image: './692e9ead2a8a2.jpg'
+image: ''
 tags: [小米, 降级]
 category: '折腾'
 draft: false

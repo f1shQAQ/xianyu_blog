@@ -2,15 +2,12 @@
 title: 把 GitHub 当作图床使用
 published: 2023-12-07
 description: '把 GitHub 当作图床使用'
-image: './6571c2242fb0d.webp'
+image: ''
 tags: [GitHub, 图床]
 category: '分享'
 draft: false
 aiSummary: 本文介绍使用 PicX 将 GitHub 作为图床，说明其可在浏览器内操作并默认压缩为 WebP、生成 CDN 链接。文章还列出创建 Token 和公开仓库、配置 PicX 及个性化图片链接规则并测试上传的步骤。
 ---
-
-> 封面图片来源于网络
-
 介绍一个我一直都在使用的工具：PicX
 
 [PicX 图床神器](https://picx.xpoet.cn/#/)

@@ -2,7 +2,7 @@
 title: 近乎于白嫖的华为云 2H1G 香港小鸡只测不评
 published: 2024-11-26
 description: '不到六块钱搞了 14 个月，要啥自行车'
-image: './6745c6fbcf59c.png'
+image: ''
 tags: [测试, 华为云]
 category: '存档'
 outdatedNotice: false
