@@ -11,6 +11,8 @@ enum I18nKey {
 	archiveGroupCategory = "archiveGroupCategory",
 	archiveGroupTag = "archiveGroupTag",
 	search = "search",
+	/** 顶栏「开往」友链接力按钮 */
+	travellings = "travellings",
 	clear = "clear",
 
 	friends = "friends",

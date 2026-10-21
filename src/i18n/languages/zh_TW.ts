@@ -10,6 +10,7 @@ export const zh_TW: Translation = {
 	[Key.archiveGroupCategory]: "依分類",
 	[Key.archiveGroupTag]: "依標籤",
 	[Key.search]: "搜尋",
+	[Key.travellings]: "開往",
 	[Key.clear]: "清除",
 
 	[Key.friends]: "友鏈",

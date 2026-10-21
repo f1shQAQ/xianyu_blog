@@ -17,6 +17,11 @@ export const siteConfig: SiteConfig = withUserConfig("site", {
 	// 电脑端顶栏标题与导航内容区域："left" 左对齐，"center" 居中。
 	topAppBar: {
 		contentAlign: "center",
+		// 顶栏最右侧的「开往」按钮（https://www.travellings.cn）
+		travellings: {
+			enable: true,
+			url: "https://www.travellings.cn/go.html",
+		},
 	},
 	// 显示设置面板控制：配置各项前端切换项的可见性（默认全部开启）。
 	displaySettings: {

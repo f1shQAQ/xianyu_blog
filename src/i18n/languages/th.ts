@@ -10,6 +10,7 @@ export const th: Translation = {
 	[Key.archiveGroupCategory]: "ตามหมวดหมู่",
 	[Key.archiveGroupTag]: "ตามแท็ก",
 	[Key.search]: "ค้นหา",
+	[Key.travellings]: "Travellings",
 	[Key.clear]: "ล้าง",
 
 	[Key.friends]: "เพื่อน",

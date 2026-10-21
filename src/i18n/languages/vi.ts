@@ -10,6 +10,7 @@ export const vi: Translation = {
 	[Key.archiveGroupCategory]: "Theo danh mục",
 	[Key.archiveGroupTag]: "Theo thẻ",
 	[Key.search]: "Tìm kiếm",
+	[Key.travellings]: "Travellings",
 	[Key.clear]: "Xóa",
 
 	[Key.friends]: "Bạn bè",

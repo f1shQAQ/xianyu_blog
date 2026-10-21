@@ -85,6 +85,12 @@ export type SiteConfig = {
 	topAppBar: {
 		/** 桌面端标题与导航内容组的对齐方式。 */
 		contentAlign: TopAppBarContentAlign;
+		/** 顶栏最右侧的「开往」友链接力按钮；省略或 enable: false 时不渲染。 */
+		travellings?: {
+			enable: boolean;
+			/** 跳转地址，默认 https://www.travellings.cn/go.html */
+			url?: string;
+		};
 	};
 
 	/** 显示设置浮层各切换项的前端可见性控制 */

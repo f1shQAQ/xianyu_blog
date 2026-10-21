@@ -7,6 +7,8 @@
  */
 import IconButton from "@components/atoms/action/IconButton.svelte";
 import Icon from "@iconify/svelte";
+import I18nKey from "@i18n/i18nKey";
+import { i18n } from "@i18n/translation";
 import { resolveNavBarLinks, resolvePageKey } from "@utils/nav-utils";
 import { url } from "@utils/url-utils";
 import { siteConfig } from "@/config";
@@ -18,6 +20,8 @@ import Search from "./Search.svelte";
 const className = Astro.props.class;
 const links = resolveNavBarLinks(navBarConfig.links);
 const currentPageKey = resolvePageKey(Astro.url);
+const travellings = siteConfig.topAppBar.travellings;
+const travellingsLabel = i18n(I18nKey.travellings);
 
 function hrefFor(path?: string) {
 	return path ? url(path) : undefined;
@@ -92,6 +96,17 @@ function isActive(link: (typeof links)[number]): boolean {
 			</IconButton>
 		)}
 		<LightDarkSwitch client:only="svelte"></LightDarkSwitch>
+		{travellings?.enable && (
+			<IconButton
+				href={travellings.url ?? "https://www.travellings.cn/go.html"}
+				target="_blank"
+				rel="noopener"
+				label={travellingsLabel}
+				class="shrink-0"
+			>
+				<Icon icon="fa7-solid:train-subway" class="text-[1.125rem]"></Icon>
+			</IconButton>
+		)}
 		<DisplaySettings client:only="svelte" class="top-full right-4 max-w-[calc(100vw-2rem)] md:right-0"></DisplaySettings>
 	</div>
 </div>
@@ -301,7 +316,6 @@ document.addEventListener('swup:content:replace', bindSearchTriggers);
 	.top-app-bar__nav-group {
 		position: relative;
 	}
-
 	.top-app-bar__submenu {
 		position: absolute;
 		top: calc(100% - 0.25rem);
