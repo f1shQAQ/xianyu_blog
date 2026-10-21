@@ -18,7 +18,7 @@ export const profileConfig: ProfileConfig = withUserConfig("profile", {
 		{
 			name: "WeChat",
 			icon: "fa7-brands:weixin",
-			url: "https://fishqaq.com/wechat",
+			url: "https://blog.fishqaq.com/wechat",
 		},
 		{
 			name: "Steam",

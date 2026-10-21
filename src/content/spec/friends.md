@@ -8,9 +8,9 @@
 
 - 名称: 咸鱼小窝
 - 描述: Think Different
-- 链接: <https://fishqaq.com/>
-- 头像: <https://fishqaq.com/images/avatar.webp>
-- RSS: <https://fishqaq.com/rss.xml>
+- 链接: <https://blog.fishqaq.com/>
+- 头像: <https://blog.fishqaq.com/images/avatar.webp>
+- RSS: <https://blog.fishqaq.com/rss.xml>
 
 ### 如何申请
 
