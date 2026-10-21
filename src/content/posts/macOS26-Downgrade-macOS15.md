@@ -1,0 +1,68 @@
+---
+title: 手把手教你如何从 macOS26 降级回到 macOS15
+published: 2026-01-13
+description: '出厂为 macOS26 的 M1-M4 机型也可降级'
+image: 'https://img.fishqaq.com/posts/macos26-downgrade-macos15/69661bc54d67b.webp'
+tags: [macOS, 降级]
+category: '折腾'
+draft: false
+aiSummary: 本文介绍如何将预装 macOS 26 的 M4 Mac mini 降级到 macOS 15，需准备 32GB 以上 U 盘并备份数据，因为降级会清除本机和 U 盘数据。文章说明该过程仅支持 M1 至 M4 及 Intel 设备，M5 不支持，并给出下载安装包、制作启动盘、抹盘和重装系统的步骤。
+---
+
+# 前言
+
+昨天把自己的主力电脑换成了 Mac mini，但是出厂自带的系统就是 macOS 26，虽然说我还挺喜欢 Liquid Glass 的，但是没有启动台加上各个界面不一致的圆角，还有时不时透出点咖喱味的系统实在有点难绷
+
+苹果客服跟我说无法降级，但是我不死心，用了一天，研究了一下怎么降级，成功下车，顺便把过程分享给有需要的各位
+
+![](https://img.fishqaq.com/posts/macos26-downgrade-macos15/6965d43f7d4bb.webp)
+
+# 需要准备的工具
+
+- 一个 32GB 以上的 U 盘
+
+# 重要提示
+
+1. **降级会清除本机磁盘以及降级所使用 U 盘的所有数据，请自行备份所有重要数据！！！**
+2. **降级仅支持 M1-M4 以及 Intel 设备，M5 设备不支持。本文演示设备为M4 Mac mini，Intel 设备操作方式有略微差别，请自行上网搜寻对应的方法，本文不再赘述**
+3. **刷机有风险，操作需谨慎。操作所产生的所有风险自行承担**
+
+# 操作步骤
+
+1. 先在 Mac App Store 内下载 macOS 15 的安装包
+   ![](https://img.fishqaq.com/posts/macos26-downgrade-macos15/6965d2aa21f26.webp)
+
+   ![](https://img.fishqaq.com/posts/macos26-downgrade-macos15/6965d3d121750.webp)
+
+2. 将 U 盘插入电脑，然后打开磁盘工具，按一下 Command+2，切换到显示所有设备模式
+
+3. 在磁盘工具中找到你的 U 盘，如下图所示
+   ![](https://img.fishqaq.com/posts/macos26-downgrade-macos15/6965d7754c5f5.webp)
+
+4. 抹掉 U 盘，方案选 GUID 分区图，格式选择 MacOS 日志式，名称输入`MyVolume`
+   ![](https://img.fishqaq.com/posts/macos26-downgrade-macos15/6965d810dea17.webp)
+
+5. 待下载完成后，打开终端，输入命令
+
+   ```bash
+   sudo /Applications/Install\ macOS\ Sequoia.app/Contents/Resources/createinstallmedia --volume /Volumes/MyVolume
+   ```
+
+   制作的过程比较久，耐心等待
+   ![](https://img.fishqaq.com/posts/macos26-downgrade-macos15/6965e2f001ca1.webp)
+
+6. 把电脑关机，然后按住电源键，直到出现启动菜单时松手，然后选择”选项“进入
+   ![](https://img.fishqaq.com/posts/macos26-downgrade-macos15/6966098dd5a6d.webp)
+
+7. 进入磁盘工具，然后把系统盘抹掉
+   ![](https://img.fishqaq.com/posts/macos26-downgrade-macos15/6966098dd5204.webp)
+   ![](https://img.fishqaq.com/posts/macos26-downgrade-macos15/6966098defb9d.webp)抹掉之后电脑会重启一次，然后会出现激活页面，提示需要激活 Mac，这里正常联网激活就行。提示激活完成之后，直接关机
+
+8. 电脑关机后插上制作好的恢复 U 盘，然后长按开机键，启动菜单出现后选择 Install macOS Sequoia 进入，然后根据工具提示安装即可
+
+   ![](https://img.fishqaq.com/posts/macos26-downgrade-macos15/6966098de286a.webp)
+
+   ![](https://img.fishqaq.com/posts/macos26-downgrade-macos15/6966098ded64c.webp)
+
+9. 完成
+   ![](https://img.fishqaq.com/posts/macos26-downgrade-macos15/69660b5a6a937.webp)
