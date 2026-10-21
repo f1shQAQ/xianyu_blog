@@ -289,6 +289,7 @@ import { initLastUpdatedNotices } from "../utils/last-updated-notice";
 import {getHue, getStoredTheme, setHue, setTheme} from "../utils/setting-utils";
 import { WALLPAPER_MODE_CHANGE_EVENT, BANNER_HEIGHT, BANNER_HEIGHT_EXTEND } from "../constants/constants";
 import { copyPageLink } from "../utils/copy-page-link";
+import { bindContentAlignedScroll } from "../utils/navigation-scroll";
 
 function setClickOutsideToClose(panel: string, ignores: string[]) {
 	document.addEventListener('click', event => {
@@ -326,6 +327,7 @@ document.addEventListener("click", async (event) => {
 const setup = () => {
 	if (!window.swup || window.__shironeNavigationBound) return;
 	window.__shironeNavigationBound = true;
+	bindContentAlignedScroll(window.swup);
 	let scrollStarted = false;
 	let visitActive = false;
 	let finishTimer: number | undefined;

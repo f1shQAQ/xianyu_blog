@@ -12,13 +12,21 @@ import { i18n } from "@i18n/translation";
 import Icon from "@iconify/svelte";
 import { getCategoryList } from "@utils/content-utils";
 import { pathsEqual, url } from "@utils/url-utils";
+import type { SidebarPage } from "@/types/sidebarConfig";
 
 interface Props {
 	/** 文章页所属分类名：非首页/归档时对该分类做弱高亮 */
 	currentPostCategory?: string;
+	/** 当前页面标识符：只有白名单内的页面显示分类栏 */
+	page?: SidebarPage;
 }
 
-const { currentPostCategory } = Astro.props;
+const { currentPostCategory, page } = Astro.props;
+
+// 分类栏只服务于文章流：首页、文章页，以及分类 chip 的落点归档页。
+// 白名单经 data-pages 输出给客户端脚本，Swup 导航后按同一份列表切换显隐。
+const CATEGORY_BAR_PAGES: SidebarPage[] = ["home", "post", "archive"];
+const visible = page !== undefined && CATEGORY_BAR_PAGES.includes(page);
 
 const categories = await getCategoryList();
 const homeUrl = url("/");
@@ -42,7 +50,8 @@ const softCategory = !isHome && !isArchive && postCategory ? postCategory : "";
 <nav
 	id="category-bar-region"
 	aria-label={i18n(I18nKey.categories)}
-	class:list={{ hidden: Astro.url.pathname.startsWith("/categories") || Astro.url.pathname.startsWith("/tags") }}
+	data-pages={CATEGORY_BAR_PAGES.join(" ")}
+	class:list={{ hidden: !visible }}
 >
 	<Card color="var(--card-bg)" radius="l" class="category-bar onload-animation mb-4 p-2" id="category-bar">
 		<div class="category-bar-inner flex gap-2 items-center">
@@ -111,10 +120,10 @@ const softCategory = !isHome && !isArchive && postCategory ? postCategory : "";
 		if (!bar) return;
 
 		const swupContainer = document.getElementById("swup-container");
-		const currentPage = swupContainer?.dataset.currentPage;
-		document
-			.getElementById("category-bar-region")
-			?.classList.toggle("hidden", currentPage === "categories" || currentPage === "tags");
+		const currentPage = swupContainer?.dataset.currentPage || "";
+		const region = document.getElementById("category-bar-region");
+		const pages = (region?.dataset.pages || "").split(" ");
+		region?.classList.toggle("hidden", !pages.includes(currentPage));
 		const postCategory = (swupContainer?.dataset.currentPostCategory || "").trim();
 
 		const pathname = window.location.pathname.replace(/\/+$/, "") || "/";
