@@ -41,7 +41,7 @@ export const devicesData: DeviceItem[] = [
 		brand: "Xiaomi",
 		category: "手机",
 		status: "active",
-		specs: "砂岩灰 / 12 + 256G",
+		specs: "砂岩灰 / 12GB + 256GB",
 		description: "工作机/热点机/主力机没电了拿来刷视频的手机，除了影像其他配置都拉满了，王腾发布的最后一台神机",
 		icon: "material-symbols:phone-iphone",
 		link: "https://www.mi.com/prod/redmi-k80-ultra",
