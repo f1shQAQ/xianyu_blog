@@ -11,14 +11,14 @@ export const profileConfig: ProfileConfig = withUserConfig("profile", {
 	bio: "我们终将会在没有黑暗的地方相遇",
 	links: [
 		{
-			name: "REDnote",
-			icon: "simple-icons:xiaohongshu", // Visit https://icones.js.org/ for icon codes
-			url: "https://www.xiaohongshu.com/user/profile/65eda52f000000000500e7b9",
+			name: "Bilibili",
+			icon: "fa7-brands:bilibili",
+			url: "https://space.bilibili.com/98661069",
 		},
 		{
 			name: "WeChat",
 			icon: "fa7-brands:weixin",
-			url: "https://empty-navy-952.notion.site/10223da0d568805f8898d2f655531d57?pvs=4",
+			url: "https://fishqaq.com/wechat",
 		},
 		{
 			name: "Steam",
@@ -27,7 +27,7 @@ export const profileConfig: ProfileConfig = withUserConfig("profile", {
 		},
 		{
 			name: "Email",
-			icon: "material-symbols:mail",
+			icon: "material-symbols:mail-outline-rounded",
 			url: "mailto:npm@vip.qq.com",
 		},
 	],
