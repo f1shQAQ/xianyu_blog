@@ -24,6 +24,14 @@ export const friendsData: FriendItem[] = [
 		tags: [],
 		desc: "さあ、出発進行！",
 	},
+	{
+		id: 2,
+		title: "jsishsjsj的生活随笔",
+		imgurl: "https://cdn.nodeimage.com/i/KQRBXuv26AANiJtGd6hyo4LDyw31tN9h.webp",
+		siteurl: "https://xiao.nanniang.de",
+		tags: [],
+		desc: "雷霆域名拥有者；雷霆邮箱拥有者：nanniang@nodeseek.org",
+	},
 ];
 
 // 获取所有友情链接数据（稳定顺序，测试可复现）
