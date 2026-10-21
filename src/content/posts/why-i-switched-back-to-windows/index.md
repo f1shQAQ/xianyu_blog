@@ -6,7 +6,7 @@ image: ""
 tags: [闲聊, 使用体验]
 category: 日常
 draft: false
-aiSummary: 本文讲述作者今年从 Windows 台式机换到 Mac mini M4，因无头随航不便、16G 内存不足、M1 Pro 发热及 Windows 专用软件需求，先后换用 MacBook Pro，最终换回 Windows 台式机并添置 M1 MacBook Air；其间转卖 Mac 还小赚。
+aiSummary: 本文讲述作者年初将 Windows 台式机换成 Mac mini M4，因无头随航和便携方案不便，转用 M1 Pro MacBook Pro；后因 16G 内存、发热及需要 Windows 软件，又换回 Windows 台式机，并添置 M1 MacBook Air 应付轻度外出使用。作者称两次转卖 Mac 均未亏还小赚。
 ---
 今年一月突发奇想，决定把自己的 Windows 台式机换成 Mac mini M4
 
