@@ -3,7 +3,7 @@
 	"name": "Shirone Writer",
 	"version": "0.1.0",
 	"minAppVersion": "1.4.0",
-	"description": "新建 Shirone 文章（AI 生成 slug）、AI 生成摘要、检查后推送。AI 请求走 Kurone 的 /api/ai。",
+	"description": "新建 Shirone 文章（AI 生成 slug）、发动态、AI 生成摘要、检查后推送。AI 请求走 Kurone 的 /api/ai。",
 	"author": "f1shQAQ",
 	"isDesktopOnly": false
 }
