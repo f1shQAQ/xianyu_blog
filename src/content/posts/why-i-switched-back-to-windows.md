@@ -1,6 +1,7 @@
 ---
 title: 我为什么在用了半年 Mac 主力机之后又换回了 Windows
 published: 2026-10-22
+publishedAt: 2026-10-22T04:30:00+08:00
 description: "标题就是文案"
 image: ""
 tags: [闲聊, 使用体验]

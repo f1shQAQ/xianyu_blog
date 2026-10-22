@@ -1,6 +1,7 @@
 ---
 title: 给 giscus 评论添加一个优雅的飞书评论通知
 published: 2026-10-22
+publishedAt: 2026-10-22T23:20:00+08:00
 description: 用飞书自定义机器人和 GitHub Actions 配置 Webhook，把 giscus 评论、楼中楼回复及 Issues 友链申请实时推送到飞书群
 image: ""
 tags:
