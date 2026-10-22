@@ -14,11 +14,8 @@
 
 ### 如何申请
 
-在下方按照如下格式评论
+点击下方按钮，填写在线申请表单
 
-```
-名称:
-描述:
-链接:
-头像:
-```
+如果填写出错 / 需要修改，请在下方评论区评论
+
+<a class="friends-apply-button m3-state-layer no-styling" href="https://kcnyvaj540jn.feishu.cn/share/base/form/shrcn1x2hlXS4k8MhHCeKBTyn7e" target="_blank" rel="noopener noreferrer">填写友链申请</a>

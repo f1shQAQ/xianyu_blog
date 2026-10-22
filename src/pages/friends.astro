@@ -43,6 +43,34 @@ const hasComments = Boolean(resolveCommentOptions(commentConfig));
         </div>
     )}
 
+    {FriendsContent && (
+        <style is:global>
+            /* friends.md 正文里的申请表单按钮（raw HTML <a class="friends-apply-button">），对齐 M3E filled small 按钮 */
+            .friends-apply-button {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                height: 2.5rem;
+                padding: 0 1.5rem;
+                border-radius: var(--shape-corner-m);
+                background: var(--primary);
+                color: var(--on-primary);
+                font: var(--m3e-type-label-large);
+                text-decoration: none;
+                --m3e-state-color: var(--on-primary);
+                box-shadow: var(--m3e-elevation-0);
+                transition: box-shadow var(--m3e-duration-short) var(--m3e-easing-standard);
+            }
+            .friends-apply-button:hover {
+                box-shadow: var(--m3e-elevation-1);
+            }
+            .friends-apply-button:focus-visible {
+                outline: 2px solid var(--primary);
+                outline-offset: 2px;
+            }
+        </style>
+    )}
+
     <CommentSection
         context={{
             key: "page:friends",
