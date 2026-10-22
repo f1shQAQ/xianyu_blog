@@ -10,7 +10,7 @@
  *   上传失败时原图存到 _attachments/<文章名>/ 并插入相对链接，之后用「上传本篇本地图片」补传。
  *   设置里关掉「用 Kurone 传图」后，图片交给 Obsidian 处理，推送前也不上传。
  * - 检查并推送：先上传所有文章里的本地图片（有失败就停下），再列出已发布但缺 aiSummary 的文章，
- *   确认后调用 Obsidian Git 的推送命令。
+ *   确认后在 Obsidian Git 队列中准备首次发布时间，审阅后写入、提交，再推送。
  *
  * AI 请求走 Kurone 的 POST /api/ai（kurone/functions/api/ai.ts），图片走 POST /api/upload
  * （kurone/functions/api/upload.ts）；模型、API Key 和 R2 凭据都留在服务端。
@@ -19,7 +19,15 @@
  *
  * 不需要构建：Obsidian 直接加载这个 CommonJS 文件。
  */
-const { Modal, Notice, Plugin, PluginSettingTab, Setting, TFile, moment, normalizePath, requestUrl } = require("obsidian");
+const { Modal, Notice, Plugin, PluginSettingTab, Setting, TFile, moment, normalizePath, requestUrl, parseYaml } = require("obsidian");
+
+function parsePost(text) {
+	const match = /^---[ \t]*\r?\n([\s\S]*?)\r?\n---/.exec(text);
+	if (!match) throw new Error("文章缺少 YAML frontmatter");
+	const data = parseYaml(match[1]);
+	if (!data || typeof data !== "object" || Array.isArray(data)) throw new Error("frontmatter 必须是对象");
+	return data;
+}
 
 const DEFAULT_SETTINGS = {
 	/** Kurone 部署地址，例如 https://kurone.example.com */
@@ -32,6 +40,8 @@ const DEFAULT_SETTINGS = {
 	momentTemplatePath: "_templates/moment.md",
 	/** Obsidian Git 的“Commit-and-sync”命令 */
 	gitCommandId: "obsidian-git:push",
+	/** Empty detects the literal site timeZone in this repository. */
+	publicationTimeZone: "",
 	/** 用 Kurone 传图：粘贴、拖入、推送前补传都走 /api/upload；关掉后图片交给 Obsidian 自己处理 */
 	uploadImages: true,
 };
@@ -400,10 +410,11 @@ class AiChoiceModal extends Modal {
 }
 
 class ConfirmPushModal extends Modal {
-	constructor(app, files, onConfirm) {
+	constructor(app, files, onConfirm, onCancel = () => {}) {
 		super(app);
 		this.files = files;
 		this.onConfirm = onConfirm;
+		this.onCancel = onCancel;
 	}
 
 	onOpen() {
@@ -418,6 +429,7 @@ class ConfirmPushModal extends Modal {
 					.setButtonText("仍然推送")
 					.setWarning()
 					.onClick(() => {
+						this.confirmed = true;
 						this.close();
 						this.onConfirm();
 					}),
@@ -426,6 +438,35 @@ class ConfirmPushModal extends Modal {
 
 	onClose() {
 		this.contentEl.empty();
+		if (!this.confirmed) this.onCancel();
+	}
+}
+
+/** No files are changed while this review is open, including on Escape/close. */
+class PublicationReviewModal extends Modal {
+	constructor(app, plans, timeZone, resolve) {
+		super(app);
+		Object.assign(this, { plans, timeZone, resolve });
+	}
+	onOpen() {
+		this.titleEl.setText("审阅首次发布时间");
+		this.contentEl.createEl("p", { text: `日历日期按 ${this.timeZone}；Z 表示 UTC。确认后先写入并提交，再推送。历史日期请取消后填写 publishedAt，或设置 preservePublishedDate: true。` });
+		for (const plan of this.plans) {
+			this.contentEl.createEl("p", { text: plan.file.path });
+			const dates = (text) => text.match(/^(?:published|publishedAt|preservePublishedDate):.*$/gm)?.join("\n") ?? "";
+			this.contentEl.createEl("pre", { text: `${dates(plan.text)}\n↓\n${dates(plan.after)}` });
+		}
+		new Setting(this.contentEl)
+			.addButton((button) => button.setButtonText("取消").onClick(() => this.close()))
+			.addButton((button) => button.setButtonText("写入、提交并推送").setCta().onClick(() => {
+				this.confirmed = true;
+				this.close();
+				this.resolve(true);
+			}));
+	}
+	onClose() {
+		this.contentEl.empty();
+		if (!this.confirmed) this.resolve(false);
 	}
 }
 
@@ -460,6 +501,7 @@ class ShironeWriterSettingTab extends PluginSettingTab {
 		field("动态文件夹", "相对仓库根目录", "momentsFolder");
 		field("动态模板", "相对仓库根目录", "momentTemplatePath");
 		field("推送命令 ID", "Obsidian Git 的 Commit-and-sync 命令", "gitCommandId");
+		field("发布时区", "留空读取仓库 siteConfig.ts 的 timeZone；表达式或外部内容仓请明确填写相同 IANA 时区，例如 Asia/Shanghai", "publicationTimeZone");
 		new Setting(containerEl)
 			.setName("用 Kurone 传图")
 			.setDesc("打开：粘贴、拖入的图片上传到 Kurone 图床，推送前补传本地图片。关闭：图片交给 Obsidian 按自己的附件设置处理，推送前也不上传")
@@ -885,20 +927,105 @@ class ShironeWriter extends Plugin {
 
 	/** 开了传图时先上传每篇文章里的本地图片，任何一张失败就不推送；再检查摘要。 */
 	async checkAndPush() {
-		if (this.pushing) return;
-		if (this.settings.uploadImages && !(await this.uploadAllLocalImages())) return;
-
-		const push = () => {
-			const commandId = this.settings.gitCommandId;
-			if (!this.app.commands.findCommand(commandId)) {
-				new Notice(`找不到命令 ${commandId}，请确认已启用 Obsidian Git`);
-				return;
+		if (this.workflowBusy || this.pushing) return;
+		this.workflowBusy = true;
+		try {
+			if (this.settings.uploadImages && !(await this.uploadAllLocalImages())) return;
+			const missing = this.postsMissingSummary();
+			if (missing.length && !(await new Promise((resolve) =>
+				new ConfirmPushModal(this.app, missing, () => resolve(true), () => resolve(false)).open()))) return;
+			const git = this.app.plugins.getPlugin("obsidian-git");
+			if (this.settings.gitCommandId !== "obsidian-git:push" || !git?.promiseQueue?.addTask || !git?.gitManager?.git?.raw || !git.gitActions) {
+				throw new Error("首次发布准备支持桌面 Obsidian Git 2.42.0 的 obsidian-git:push（Commit-and-sync）入口；请检查插件和设置");
 			}
-			this.app.commands.executeCommandById(commandId);
-		};
-		const missing = this.postsMissingSummary();
-		if (missing.length === 0) push();
-		else new ConfirmPushModal(this.app, missing, push).open();
+			await new Promise((resolve, reject) => git.promiseQueue.addTask(async () => {
+				try { await this.prepareCommitAndPush(git); resolve(); }
+				catch (error) { reject(error); }
+			}));
+		} catch (error) {
+			new Notice(`已停止推送：${error.message}`, 15_000);
+		} finally {
+			this.workflowBusy = false;
+		}
+	}
+
+	/** Queue ownership prevents automatic Git commits between preparation and commit. */
+	async prepareCommitAndPush(git) {
+		if (!(await git.isAllInitialized()) || git.settings.gitDir) throw new Error("Git 未就绪或使用了自定义 gitDir");
+		const raw = (args) => git.gitManager.git.raw(args);
+		// Refresh remote evidence, but do not pull/rebase user edits before reviewing metadata.
+		const fetched = await git.gitActions.fetch();
+		if (fetched.status !== "success" || fetched.value?.status !== "fetched") throw new Error("无法刷新上游基线，请检查网络和 upstream");
+		const root = (await raw(["rev-parse", "--show-toplevel"])).trim();
+		const vaultRoot = this.app.vault.adapter.getBasePath();
+		// Obsidian evaluates main.js with its own require; resolve local modules absolutely.
+		const pluginDir = require("node:path").resolve(vaultRoot, this.manifest.dir ?? `${this.app.vault.configDir}/plugins/${this.manifest.id}`);
+		const { planPublication, repoPathForVault } = require(require("node:path").join(pluginDir, "git-publication.cjs"));
+		let timeZone = this.settings.publicationTimeZone;
+		if (!timeZone) {
+			const fs = require("node:fs/promises");
+			const path = require("node:path");
+			for (const candidate of ["src/config/siteConfig.ts", "shirones/config/siteConfig.ts", "config/site.yaml"]) {
+				const text = await fs.readFile(path.join(root, candidate), "utf8").catch((error) => {
+					if (error.code === "ENOENT") return "";
+					throw error;
+				});
+				const match = /^\s*timeZone:\s*["']?([A-Za-z_]+\/[A-Za-z_+\-/0-9]+|UTC)["']?\s*[,#]?/m.exec(text);
+				if (match) { timeZone = match[1]; break; }
+			}
+		}
+		if (!timeZone) throw new Error("无法读取站点 IANA 时区，请在 Writer 设置中填写发布时区");
+		new Intl.DateTimeFormat("en", { timeZone }).format();
+		const files = [];
+		for (const file of this.app.vault.getMarkdownFiles().filter((f) => this.isPostEntry(f))) {
+			files.push({ file, path: repoPathForVault(root, vaultRoot, file.path), text: await this.app.vault.read(file) });
+		}
+		const plan = await planPublication({ raw, files, parse: parsePost, timeZone });
+		if (plan.plans.length && !(await new Promise((resolve) => new PublicationReviewModal(this.app, plan.plans, timeZone, resolve).open()))) return;
+		if ((await raw(["rev-parse", "HEAD"])).trim() !== plan.head) throw new Error("审阅期间 HEAD 已变化，请重新检查");
+		for (const file of files) {
+			if (await this.app.vault.read(file.file) !== file.text) throw new Error(`审阅期间 ${file.file.path} 已变化，请重新检查`);
+		}
+		const written = [];
+		const indexBefore = new Map();
+		for (const change of plan.plans) {
+			const entry = await raw(["ls-files", "--stage", "--", change.path]);
+			indexBefore.set(change.path, /^(\d+) ([a-f0-9]+) 0\t/.exec(entry));
+		}
+		let committed = false;
+		try {
+			for (const change of plan.plans) {
+				await this.app.vault.process(change.file, (current) => {
+					if (current !== change.text) throw new Error(`${change.file.path} 在写入前已变化，请重新检查`);
+					return change.after;
+				});
+				written.push(change);
+			}
+			const result = await git.gitActions.commit({ fromAuto: false, mode: "all", commitMessage: "content: publish via Shirone Writer" });
+			if (result.status !== "success" || !["committed", "nothing-to-commit"].includes(result.value?.status)) throw new Error("Git 提交取消或失败");
+			committed = true;
+			for (const change of written) {
+				if ((await raw(["show", `HEAD:${change.path}`])).trimEnd() !== change.after.trimEnd()) throw new Error(`${change.file.path} 的元数据未进入 commit，请检查 Git 配置`);
+			}
+			const pushed = await git.gitActions.push();
+			if (pushed.status !== "success" || !["pushed", "up-to-date"].includes(pushed.value?.status)) throw new Error("Git 推送未完成；已提交的首次时间会在重试时保留");
+		} catch (error) {
+			// Roll back only our uncommitted scalars; never replace edits or an existing commit.
+			if (!committed && (await raw(["rev-parse", "HEAD"])).trim() === plan.head) {
+				for (const change of written) {
+					await this.app.vault.process(change.file, (current) => current === change.after ? change.text : current);
+				}
+				// commitAll may stage before failing. Preserve each original index entry.
+				for (const change of written) {
+					const indexed = await raw(["show", `:${change.path}`]).catch(() => null);
+					if (indexed?.trimEnd() !== change.after.trimEnd()) continue;
+					const entry = indexBefore.get(change.path);
+					if (entry) await raw(["update-index", "--cacheinfo", `${entry[1]},${entry[2]},${change.path}`]);
+					else await raw(["update-index", "--force-remove", "--", change.path]);
+				}
+			}
+			throw error;
+		}
 	}
 
 	/** 上传所有文章入口文件里的本地图片；全部成功（或没有）时返回 true，正在运行时返回 false。 */
