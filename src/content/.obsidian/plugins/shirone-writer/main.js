@@ -4,6 +4,8 @@
  * - 新建文章：输入标题 → Kurone 生成 slug（可改）→ 建 posts/<slug>.md 并套用模板。
  * - 发动态：按当前时间建 moments/YYYY-MM-DD-HHmmss.md，套用动态模板后打开。
  * - AI 生成摘要：把当前文章正文发给 Kurone，结果写入 frontmatter 的 aiSummary。
+ * - AI 生成描述：同样发给 Kurone（带上已有的 aiSummary 作参考），一句 SEO 描述直接覆盖 description。
+ *   加密文章（encrypted: true）两者都不发送。侧边栏的 AI 按钮弹窗选择生成摘要、描述，或两个都生成。
  * - 图片：在文章里粘贴、拖入图片时先压缩成 WebP，再经 Kurone 存进 R2 图床，插入绝对地址；
  *   上传失败时原图存到 _attachments/<文章名>/ 并插入相对链接，之后用「上传本篇本地图片」补传。
  *   设置里关掉「用 Kurone 传图」后，图片交给 Obsidian 处理，推送前也不上传。
@@ -111,18 +113,26 @@ async function requestKurone(settings, path, init) {
 	return { status: response.status, data };
 }
 
-/** 标题、正文 → Kurone /api/ai 的结果字符串。 */
-async function callKurone(settings, task, title, body) {
+/** 标题、正文 → Kurone /api/ai 的结果字符串。summary 是已有的 AI 摘要，只给 description 任务作参考。 */
+async function callKurone(settings, task, title, body, summary) {
 	const { status, data } = await requestKurone(settings, "/api/ai", {
 		headers: { "Content-Type": "application/json" },
-		body: JSON.stringify({ task, title, body }),
+		body: JSON.stringify({ task, title, body, summary: summary?.trim() || undefined }),
 	});
 	const value = data?.[task];
 	if (status >= 400 || typeof value !== "string") {
+		// 旧版 Kurone 不认识 description 任务，会回 400。
+		if (status === 400 && task === "description") throw new Error("Kurone 版本太旧，不支持生成描述，请先更新部署");
 		throw new Error(typeof data?.error === "string" ? data.error : `HTTP ${status}`);
 	}
 	return value;
 }
+
+/** AI 生成的 frontmatter 字段：Kurone 的任务名 → 写入的键和提示里的叫法。 */
+const AI_FIELDS = {
+	summary: { key: "aiSummary", label: "摘要" },
+	description: { key: "description", label: "描述" },
+};
 
 /** 图片字节 → Kurone /api/upload 返回的绝对地址。post 是相对文章文件夹的路径，如 my-post.md。 */
 async function uploadImage(settings, post, bytes, type) {
@@ -353,6 +363,42 @@ class NewPostModal extends Modal {
 	}
 }
 
+/** 侧边栏 AI 按钮的弹窗：选择生成摘要、描述，还是两个都生成。 */
+class AiChoiceModal extends Modal {
+	constructor(plugin, file) {
+		super(plugin.app);
+		this.plugin = plugin;
+		this.file = file;
+	}
+
+	onOpen() {
+		const { contentEl } = this;
+		this.titleEl.setText("AI 生成");
+		contentEl.createEl("p", { text: this.file.path });
+		const choose = (run) => () => {
+			this.close();
+			run();
+		};
+		new Setting(contentEl)
+			.addButton((button) =>
+				button.setButtonText("生成摘要").onClick(choose(() => this.plugin.generateField(this.file, "summary"))),
+			)
+			.addButton((button) =>
+				button.setButtonText("生成描述").onClick(choose(() => this.plugin.generateField(this.file, "description"))),
+			)
+			.addButton((button) =>
+				button
+					.setButtonText("都生成")
+					.setCta()
+					.onClick(choose(() => this.plugin.generateBoth(this.file))),
+			);
+	}
+
+	onClose() {
+		this.contentEl.empty();
+	}
+}
+
 class ConfirmPushModal extends Modal {
 	constructor(app, files, onConfirm) {
 		super(app);
@@ -448,7 +494,18 @@ class ShironeWriter extends Plugin {
 			checkCallback: (checking) => {
 				const file = this.app.workspace.getActiveFile();
 				if (!file || !this.isPost(file)) return false;
-				if (!checking) this.generateSummary(file);
+				if (!checking) this.generateField(file, "summary");
+				return true;
+			},
+		});
+
+		this.addCommand({
+			id: "ai-description",
+			name: "AI 生成描述",
+			checkCallback: (checking) => {
+				const file = this.app.workspace.getActiveFile();
+				if (!file || !this.isPost(file)) return false;
+				if (!checking) this.generateField(file, "description");
 				return true;
 			},
 		});
@@ -479,13 +536,13 @@ class ShironeWriter extends Plugin {
 
 		this.addRibbonIcon("file-plus-2", "新建 Shirone 文章", () => new NewPostModal(this).open());
 		this.addRibbonIcon("message-square-plus", "发 Shirone 动态", () => this.openNewMoment());
-		this.addRibbonIcon("sparkles", "AI 生成摘要", () => {
+		this.addRibbonIcon("sparkles", "AI 生成摘要 / 描述", () => {
 			const file = this.app.workspace.getActiveFile();
 			if (!file || !this.isPost(file)) {
 				new Notice(`请先打开 ${this.postsRoot()}/ 下的文章`);
 				return;
 			}
-			this.generateSummary(file);
+			new AiChoiceModal(this, file).open();
 		});
 		this.addRibbonIcon("upload-cloud", "检查摘要并推送", () => this.checkAndPush());
 
@@ -497,7 +554,13 @@ class ShironeWriter extends Plugin {
 					item
 						.setTitle("AI 生成摘要")
 						.setIcon("sparkles")
-						.onClick(() => this.generateSummary(file)),
+						.onClick(() => this.generateField(file, "summary")),
+				);
+				menu.addItem((item) =>
+					item
+						.setTitle("AI 生成描述")
+						.setIcon("file-text")
+						.onClick(() => this.generateField(file, "description")),
 				);
 			}),
 		);
@@ -576,35 +639,59 @@ class ShironeWriter extends Plugin {
 		}
 	}
 
-	async generateSummary(file) {
-		// 命令、侧边栏按钮、右键菜单都能触发；同一篇正在生成时不重复请求。
-		this.summarizing ??= new Set();
-		if (this.summarizing.has(file.path)) {
-			new Notice("这篇文章的摘要正在生成");
-			return;
+	/**
+	 * 让 Kurone 生成 task（summary / description）并写进对应的 frontmatter 字段，已有内容直接覆盖。
+	 * hint 是给描述用的摘要，不传时读 frontmatter 里的 aiSummary。成功返回生成的文本，否则返回 null。
+	 */
+	async generateField(file, task, hint) {
+		const { key, label } = AI_FIELDS[task];
+		// 命令、侧边栏按钮、右键菜单都能触发；同一篇的同一个字段正在生成时不重复请求。
+		this.generating ??= new Set();
+		const busyKey = `${task}:${file.path}`;
+		if (this.generating.has(busyKey)) {
+			new Notice(`这篇文章的${label}正在生成`);
+			return null;
 		}
-		const text = await this.app.vault.read(file);
-		const body = stripFrontmatter(text);
+		const frontmatter = this.app.metadataCache.getFileCache(file)?.frontmatter;
+		// 和 Kurone 一样：加密文章的正文不发给 AI。
+		if (frontmatter?.encrypted === true) {
+			new Notice(`加密文章不会发送给 AI，无法自动生成${label}`);
+			return null;
+		}
+		const body = stripFrontmatter(await this.app.vault.read(file));
 		if (!body.trim()) {
 			new Notice("正文是空的，先写点内容");
-			return;
+			return null;
 		}
-		this.summarizing.add(file.path);
-		const title = this.app.metadataCache.getFileCache(file)?.frontmatter?.title ?? file.basename;
-		const notice = new Notice("正在生成摘要…", 0);
+		this.generating.add(busyKey);
+		const title = String(frontmatter?.title ?? file.basename);
+		const stored = typeof frontmatter?.aiSummary === "string" ? frontmatter.aiSummary : undefined;
+		const summary = task === "description" ? (hint ?? stored) : undefined;
+		const notice = new Notice(`正在生成${label}…`, 0);
 		try {
-			const summary = await callKurone(this.settings, "summary", String(title), body);
-			await this.app.fileManager.processFrontMatter(file, (frontmatter) => {
-				frontmatter.aiSummary = summary;
+			const value = await callKurone(this.settings, task, title, body, summary);
+			await this.app.fileManager.processFrontMatter(file, (data) => {
+				data[key] = value;
 			});
 			notice.hide();
-			new Notice("摘要已写入 aiSummary");
+			new Notice(`${label}已写入 ${key}`);
+			return value;
 		} catch (error) {
 			notice.hide();
-			new Notice(`生成摘要失败：${error.message}`);
+			new Notice(`生成${label}失败：${error.message}`);
+			return null;
 		} finally {
-			this.summarizing.delete(file.path);
+			this.generating.delete(busyKey);
 		}
+	}
+
+	/**
+	 * 先生成摘要，再拿新摘要作参考生成描述。metadataCache 不会马上读到刚写入的 aiSummary，
+	 * 所以直接把结果传过去。摘要失败时描述照样生成，参考已有的 aiSummary。
+	 */
+	async generateBoth(file) {
+		const summary = await this.generateField(file, "summary");
+		await this.generateField(file, "description", summary ?? undefined);
 	}
 
 	/** 不是草稿、但 aiSummary 为空的文章入口文件。 */
