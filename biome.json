@@ -12,6 +12,7 @@
 			"!**/src/**/*.css",
 			"!**/src/public/**/*",
 			"!**/src/generated/**/*",
+			"!**/src/content/.obsidian/**/*",
 			"!**/src/user/user-config.ts",
 			"!**/dist/**/*",
 			"!**/node_modules/**/*",

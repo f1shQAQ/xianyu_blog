@@ -77,3 +77,7 @@ artifacts/lighthouse/*
 
 # generated AI skills plugin packages
 artifacts/shirone-ai-*
+
+# Obsidian vault in src/content: per-device UI state and plugin settings (secrets)
+src/content/.obsidian/workspace*.json
+src/content/.obsidian/plugins/*/data.json
