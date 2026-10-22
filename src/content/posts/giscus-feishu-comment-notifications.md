@@ -6,7 +6,7 @@ image: ""
 tags:
   - Giscus
 category: 折腾
-draft: true
+draft: false
 aiSummary: 本文介绍用飞书自定义机器人接管 giscus 评论通知：在飞书群获取 Webhook，存入 GitHub 仓库 Secret，再通过 GitHub Actions 监听 Discussion 评论并推送飞书卡片；另提供一个同时通知 Issues 友链申请与回复的版本。
 ---
 # 前言
