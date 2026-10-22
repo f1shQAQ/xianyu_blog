@@ -120,6 +120,7 @@ export const siteConfig: SiteConfig = withUserConfig("site", {
 	},
 	favicon: [
 		// 浏览器标签页图标，路径相对于 public 目录。留空则使用 public/favicon/ 下的默认图标。
+		{ src: "/favicon.ico", sizes: "16x16 32x32 48x48" },
 	],
 });
 
