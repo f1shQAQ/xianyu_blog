@@ -8,8 +8,10 @@
  *   加密文章（encrypted: true）两者都不发送。侧边栏的 AI 按钮弹窗选择生成摘要、描述，或两个都生成。
  * - 图片：在文章里粘贴、拖入图片时先压缩成 WebP，再经 Kurone 存进 R2 图床，插入绝对地址；
  *   上传失败时原图存到 _attachments/<文章名>/ 并插入相对链接，之后用「上传本篇本地图片」补传。
+ *   动态同样压缩上传（按动态文件名归档），但不进正文，按粘贴顺序追加到 frontmatter 的 images[].src；
+ *   失败时把 _attachments/<动态名>/ 里原图的相对链接写进去，补传后换成绝对地址。
  *   设置里关掉「用 Kurone 传图」后，图片交给 Obsidian 处理，推送前也不上传。
- * - 检查并推送：先上传所有文章里的本地图片（有失败就停下），再列出已发布但缺 aiSummary 的文章，
+ * - 检查并推送：先上传所有文章和动态里的本地图片（有失败就停下），再列出已发布但缺 aiSummary 的文章，
  *   确认后在 Obsidian Git 队列中准备首次发布时间，审阅后写入、提交，再推送。
  *
  * AI 请求走 Kurone 的 POST /api/ai（kurone/functions/api/ai.ts），图片走 POST /api/upload
@@ -144,9 +146,25 @@ const AI_FIELDS = {
 	description: { key: "description", label: "描述" },
 };
 
-/** 图片字节 → Kurone /api/upload 返回的绝对地址。post 是相对文章文件夹的路径，如 my-post.md。 */
-async function uploadImage(settings, post, bytes, type) {
-	const { status, data } = await requestKurone(settings, `/api/upload?post=${encodeURIComponent(post)}`, {
+/** 和 Kurone 的 /api/upload 相同：动态 id（文件名去掉 .md）只能用这些字符。 */
+const MOMENT_ID_PATTERN = /^[A-Za-z0-9._-]+$/;
+
+/**
+ * 上传目标 → /api/upload 的查询串。{ post } 是相对文章文件夹的路径，如 my-post.md；
+ * { moment } 是动态文件名去掉 .md，如 2026-10-23-193015。Kurone 只接受其中一个。
+ */
+function uploadQuery(target) {
+	if (typeof target?.moment === "string") {
+		if (!MOMENT_ID_PATTERN.test(target.moment)) throw new Error("动态文件名只能用字母、数字、点、下划线和连字符");
+		return `moment=${encodeURIComponent(target.moment)}`;
+	}
+	if (typeof target?.post === "string") return `post=${encodeURIComponent(target.post)}`;
+	throw new Error("缺少上传目标");
+}
+
+/** 图片字节 → Kurone /api/upload 返回的绝对地址。target 见 uploadQuery。 */
+async function uploadImage(settings, target, bytes, type) {
+	const { status, data } = await requestKurone(settings, `/api/upload?${uploadQuery(target)}`, {
 		contentType: type,
 		body: bytes,
 	});
@@ -248,6 +266,35 @@ function localImageLinks(text) {
 		links.push({ source: match[0], alt, target, title: "" });
 	}
 	return links;
+}
+
+/**
+ * 动态 frontmatter images 里指向本地文件的条目，返回 { src, target }：src 是原值，target 是解码后的路径。
+ * 网址、站点根路径（旧的 /images/moments/…）和非图片都跳过。
+ */
+function momentImageLinks(images) {
+	if (!Array.isArray(images)) return [];
+	const links = [];
+	for (const image of images) {
+		if (typeof image?.src !== "string") continue;
+		// 用尖括号包住，路径里有空格也能解析。
+		const link = localImageLinks(`![](<${image.src.trim()}>)`)[0];
+		if (link) links.push({ src: image.src, target: link.target });
+	}
+	return links;
+}
+
+/** 把 images 里 src 在 replacements（原 src → 新地址）中的条目换成新地址，alt 等其他键不变。 */
+function rewriteMomentImages(images, replacements) {
+	if (!Array.isArray(images)) return images;
+	return images.map((image) =>
+		typeof image?.src === "string" && replacements.has(image.src) ? { ...image, src: replacements.get(image.src) } : image,
+	);
+}
+
+/** 按顺序把 srcs 追加到 images 末尾，每条写成 { src }。 */
+function appendMomentImages(images, srcs) {
+	return [...(Array.isArray(images) ? images : []), ...srcs.map((src) => ({ src }))];
 }
 
 /** 安全的附件文件名：保留原名里的字母数字，扩展名跟随实际类型。 */
@@ -563,7 +610,7 @@ class ShironeWriter extends Plugin {
 			name: "上传本篇本地图片",
 			checkCallback: (checking) => {
 				const file = this.app.workspace.getActiveFile();
-				if (!this.settings.uploadImages || !file || !this.isPostEntry(file)) return false;
+				if (!this.settings.uploadImages || !file || !(this.isPostEntry(file) || this.isMoment(file))) return false;
 				if (!checking) this.uploadLocalImagesWithNotice(file);
 				return true;
 			},
@@ -630,6 +677,16 @@ class ShironeWriter extends Plugin {
 	/** 文章入口文件：posts/ 下的单文件 <slug>.md，或旧的 <slug>/index.md。 */
 	isPostEntry(file) {
 		return this.isPost(file) && (file.parent?.path === this.postsRoot() || file.name === "index.md");
+	}
+
+	/** 动态：直接放在 moments/ 下的 Markdown 文件。 */
+	isMoment(file) {
+		return file.extension === "md" && file.parent?.path === normalizePath(this.settings.momentsFolder);
+	}
+
+	/** 笔记的 /api/upload 目标：动态按文件名，文章按相对文章文件夹的路径。 */
+	uploadTarget(note) {
+		return this.isMoment(note) ? { moment: note.basename } : { post: postUploadPath(note.path, this.postsRoot()) };
 	}
 
 	async createPost(title, slug) {
@@ -759,18 +816,20 @@ class ShironeWriter extends Plugin {
 	}
 
 	/**
-	 * 粘贴或拖入的全是图片、且当前是文章入口文件时接管；否则（文字、其他文件、别的笔记）交给 Obsidian。
-	 * 先在光标处插入占位文本，每张图上传完再换成链接，期间可以继续写。
+	 * 粘贴或拖入的全是图片、且当前是文章入口文件或动态时接管；否则（文字、其他文件、别的笔记）交给 Obsidian。
+	 * 文章先在光标处插入占位文本，每张图上传完再换成链接，期间可以继续写；
+	 * 动态的图片不进正文，传完按粘贴顺序追加到 frontmatter 的 images。
 	 */
 	onEditorFiles(evt, transfer, editor, info) {
 		if (evt.defaultPrevented || !this.settings.uploadImages) return;
 		const note = info?.file;
 		const files = [...(transfer?.files ?? [])];
-		if (!note || !this.isPostEntry(note) || files.length === 0) return;
+		if (!note || !(this.isPostEntry(note) || this.isMoment(note)) || files.length === 0) return;
 		const known = new Set(Object.values(IMAGE_TYPES));
 		const images = files.map((file) => ({ file, type: known.has(file.type) ? file.type : imageTypeOf(file.name) }));
 		if (images.some((image) => !image.type)) return;
 		evt.preventDefault();
+		if (this.isMoment(note)) return this.pasteMomentImages(note, images);
 		// 拖入时插在松手的位置；拿不到位置（或是粘贴）就插在光标处。
 		const dropOffset = evt.type === "drop" ? editor.cm?.posAtCoords?.({ x: evt.clientX, y: evt.clientY }) : null;
 		if (typeof dropOffset === "number") editor.setCursor(editor.offsetToPos(dropOffset));
@@ -781,31 +840,54 @@ class ShironeWriter extends Plugin {
 		);
 	}
 
-	/** 压缩并上传一张图，把占位换成链接；失败时原图存进 _attachments 并换成相对链接。 */
+	/** 压缩并上传一张图，把占位换成链接。 */
 	async pasteImage(note, editor, placeholder, file, type) {
+		const src = await this.uploadPastedImage(note, file, type);
+		await this.replacePlaceholder(note, editor, placeholder, src ? `![](${src})` : "");
+	}
+
+	/** 动态：上传期间显示提示，全部完成后按粘贴顺序一次追加到 frontmatter 的 images。 */
+	async pasteMomentImages(note, images) {
+		const notice = new Notice(`正在上传 ${images.length} 张图片…`, 0);
+		try {
+			const srcs = await Promise.all(images.map((image) => this.uploadPastedImage(note, image.file, image.type)));
+			const added = srcs.filter(Boolean);
+			if (!added.length) return;
+			await this.app.fileManager.processFrontMatter(note, (frontmatter) => {
+				frontmatter.images = appendMomentImages(frontmatter.images, added);
+			});
+		} catch (error) {
+			new Notice(`写入动态图片失败：${error.message}`, 10_000);
+		} finally {
+			notice.hide();
+		}
+	}
+
+	/**
+	 * 压缩并上传一张粘贴的图，返回绝对地址；上传失败时原图存进 _attachments 并返回相对笔记的链接，
+	 * 都不成时返回空串。
+	 */
+	async uploadPastedImage(note, file, type) {
 		let bytes;
 		try {
 			bytes = await file.arrayBuffer();
 		} catch (error) {
 			new Notice(`读取图片失败：${error.message}`, 10_000);
-			await this.replacePlaceholder(note, editor, placeholder, "");
-			return;
+			return "";
 		}
-		let link = "";
 		try {
 			const compressed = await compressImage(bytes, type);
-			const url = await uploadImage(this.settings, postUploadPath(note.path, this.postsRoot()), compressed.bytes, compressed.type);
-			link = `![](${url})`;
+			return await uploadImage(this.settings, this.uploadTarget(note), compressed.bytes, compressed.type);
 		} catch (error) {
 			try {
 				const saved = await this.saveAttachment(note, file.name || "image", bytes, type);
-				link = `![](${relativeLink(this.noteDir(note), saved.path)})`;
 				new Notice(`图片上传失败：${error.message}\n原图已存到 ${saved.path}，之后可用「上传本篇本地图片」补传`, 10_000);
+				return relativeLink(this.noteDir(note), saved.path);
 			} catch (saveError) {
 				new Notice(`图片上传失败：${error.message}；保存原图也失败：${saveError.message}`, 10_000);
+				return "";
 			}
 		}
-		await this.replacePlaceholder(note, editor, placeholder, link);
 	}
 
 	/** 编辑器里还有占位就就地替换（保留撤销历史和光标）；编辑器已经切走时直接改文件。 */
@@ -852,21 +934,24 @@ class ShironeWriter extends Plugin {
 	}
 
 	/**
-	 * 上传文章正文和封面（frontmatter image）里的本地图片并改写成绝对地址。
-	 * 本篇 _attachments 里传完的原图移到回收站，免得被推送进仓库；找不到文件的链接不动。
+	 * 上传正文、文章封面（frontmatter image）和动态图片（frontmatter images[].src）里的本地图片，
+	 * 改写成绝对地址。本篇 _attachments 里传完的原图移到回收站，免得被推送进仓库；找不到文件的链接不动。
 	 * 返回 { uploaded, failed, error }。
 	 */
 	async uploadLocalImages(note) {
 		const text = await this.app.vault.read(note);
 		const links = localImageLinks(stripFrontmatter(text));
-		const cover = this.app.metadataCache.getFileCache(note)?.frontmatter?.image;
+		const isMoment = this.isMoment(note);
+		const frontmatter = this.app.metadataCache.getFileCache(note)?.frontmatter;
+		const cover = isMoment ? undefined : frontmatter?.image;
 		const coverLink = typeof cover === "string" ? localImageLinks(`![](${cover})`)[0] : undefined;
-		const post = postUploadPath(note.path, this.postsRoot());
+		const momentLinks = isMoment ? momentImageLinks(frontmatter?.images) : [];
+		const target = this.uploadTarget(note);
 		const urls = new Map();
 		const upload = async (file) => {
 			if (!urls.has(file.path)) {
 				const compressed = await compressImage(await this.app.vault.readBinary(file), imageTypeOf(file.name));
-				urls.set(file.path, await uploadImage(this.settings, post, compressed.bytes, compressed.type));
+				urls.set(file.path, await uploadImage(this.settings, target, compressed.bytes, compressed.type));
 			}
 			return urls.get(file.path);
 		};
@@ -894,6 +979,17 @@ class ShironeWriter extends Plugin {
 				error = e.message;
 			}
 		}
+		const momentUrls = new Map();
+		for (const link of momentLinks) {
+			const file = this.resolveLink(link.target, note);
+			if (!file) continue;
+			try {
+				momentUrls.set(link.src, await upload(file));
+			} catch (e) {
+				failed++;
+				error = e.message;
+			}
+		}
 
 		if (replacements.size) {
 			await this.app.vault.process(note, (current) => {
@@ -905,6 +1001,11 @@ class ShironeWriter extends Plugin {
 		if (coverUrl) {
 			await this.app.fileManager.processFrontMatter(note, (frontmatter) => {
 				frontmatter.image = coverUrl;
+			});
+		}
+		if (momentUrls.size) {
+			await this.app.fileManager.processFrontMatter(note, (frontmatter) => {
+				frontmatter.images = rewriteMomentImages(frontmatter.images, momentUrls);
 			});
 		}
 		const own = `${ATTACHMENTS_DIR}/${this.noteName(note)}/`;
@@ -920,7 +1021,7 @@ class ShironeWriter extends Plugin {
 		const result = await this.uploadLocalImages(note).catch((e) => ({ uploaded: 0, failed: 1, error: e.message }));
 		notice.hide();
 		if (result.failed) new Notice(`${result.failed} 张图片上传失败：${result.error}`, 10_000);
-		else new Notice(result.uploaded ? `已上传 ${result.uploaded} 张图片` : "这篇文章没有本地图片");
+		else new Notice(result.uploaded ? `已上传 ${result.uploaded} 张图片` : "这篇没有本地图片");
 	}
 
 	/* ---------------------------------- 推送 ---------------------------------- */
@@ -1028,14 +1129,14 @@ class ShironeWriter extends Plugin {
 		}
 	}
 
-	/** 上传所有文章入口文件里的本地图片；全部成功（或没有）时返回 true，正在运行时返回 false。 */
+	/** 上传所有文章入口文件和动态里的本地图片；全部成功（或没有）时返回 true，正在运行时返回 false。 */
 	async uploadAllLocalImages() {
 		if (this.pushing) return false;
 		this.pushing = true;
 		try {
-			const notice = new Notice("正在检查文章里的本地图片…", 0);
+			const notice = new Notice("正在检查文章和动态里的本地图片…", 0);
 			const failures = [];
-			for (const file of this.app.vault.getMarkdownFiles().filter((file) => this.isPostEntry(file))) {
+			for (const file of this.app.vault.getMarkdownFiles().filter((file) => this.isPostEntry(file) || this.isMoment(file))) {
 				const result = await this.uploadLocalImages(file).catch((e) => ({ failed: 1, error: e.message }));
 				if (result.failed) failures.push(`${file.path}：${result.error}`);
 			}
@@ -1064,5 +1165,9 @@ module.exports.helpers = {
 	localImageLinks,
 	attachmentName,
 	compressImage,
+	uploadQuery,
 	uploadImage,
+	momentImageLinks,
+	rewriteMomentImages,
+	appendMomentImages,
 };

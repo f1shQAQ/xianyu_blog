@@ -18,4 +18,8 @@
 
 直接运行 Obsidian Git、命令行 Git、其他插件的自动提交/推送会绕过 Writer。不要依赖这些入口为首次发布自动补时间；若使用它们，先手动填写准确字段，或先通过 Writer 完成发布。Writer 不全局接管其他插件。模板继续使用 `draft: true`，不会把创建草稿的时刻当首次发布时刻。
 
-测试：在博客根目录运行 `node --test tests/writer-publication.test.mjs tests/writer-publish-flow.test.mjs`。测试使用临时 Git 仓库和本地测试远端，不接触真实文章或远端。
+## 动态图片
+
+开启「用 Kurone 传图」时，在动态（`moments/` 下直接放的 `.md`）里粘贴或拖入图片，和文章一样先压缩成 WebP（最长边 2560，质量 0.85），再以 `POST /api/upload?moment=<动态文件名>` 存进 R2。图片不插入正文，而是按粘贴顺序追加到 frontmatter 的 `images: [{ src }]`，`src` 是绝对地址，与 Kurone 网页端、Telegram 机器人写入的格式一致。上传失败时原图存到 `_attachments/<动态文件名>/`，`src` 先写相对链接；之后用「上传本篇本地图片」或「检查摘要并推送」补传，`src` 换成绝对地址（保留 `alt`），本篇 `_attachments` 里的原图移到回收站。旧的 `/images/moments/…` 路径不受影响。
+
+测试：在博客根目录运行 `node --test tests/writer-publication.test.mjs tests/writer-publish-flow.test.mjs tests/writer-moment-images.test.mjs`。测试使用临时 Git 仓库和本地测试远端，不接触真实文章或远端。
