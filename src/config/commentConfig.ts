@@ -32,15 +32,15 @@ export const commentConfig: CommentConfig = withUserConfig("comment", {
 	/** 全局评论总开关：false 时完全不加载评论脚本与 DOM */
 	enable: true,
 	/** 评论提供商类型："none" | "twikoo" | "giscus" */
-	provider: "giscus",
+	provider: "twikoo",
 	/** 是否开启视口懒加载：滚动进入视口才动态加载评论组件（推荐 true） */
 	lazy: true,
 	/** Twikoo 专有配置 */
 	twikoo: {
 		/** Twikoo 环境 ID（如 "https://your-twikoo.vercel.app" 或腾讯云环境 ID） */
-		envId: "https://comments.qqquq.com",
+		envId: "https://comments.fishqaq.com",
 		/** Twikoo 前端 JS 脚本 CDN 地址 */
-		scriptUrl: "https://cdn.jsdelivr.net/npm/twikoo@1.7.20/dist/twikoo.min.js",
+		scriptUrl: "https://registry.npmmirror.com/twikoo/2.0.17/files/dist/twikoo.min.js",
 		/** 评论语言："auto"（跟随站点）| "zh-CN" | "zh-TW" | "en" | "ja" 等 */
 		lang: "auto",
 		/** 评论输入框占位提示文本 */
