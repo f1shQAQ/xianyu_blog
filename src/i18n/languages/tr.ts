@@ -120,6 +120,7 @@ export const tr: Translation = {
 	[Key.albumsNoResults]: "Filtrelerle eşleşen albüm yok",
 	[Key.albumsCounts]: "albüm",
 	[Key.albumsBack]: "Albümlere dön",
+	[Key.momentsBack]: "Anlara dön",
 	[Key.albumsPhotos]: "fotoğraf",
 	[Key.albumPasswordTitle]: "Bu albüm korumalı",
 	[Key.albumPasswordDescription]: "Fotoğrafları görmek için parolayı girin.",

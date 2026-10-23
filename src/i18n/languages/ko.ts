@@ -117,6 +117,7 @@ export const ko: Translation = {
 	[Key.albumsNoResults]: "조건에 맞는 앨범이 없습니다",
 	[Key.albumsCounts]: "개 앨범",
 	[Key.albumsBack]: "앨범으로 돌아가기",
+	[Key.momentsBack]: "모먼트로 돌아가기",
 	[Key.albumsPhotos]: "개 사진",
 	[Key.albumPasswordTitle]: "보호된 앨범입니다",
 	[Key.albumPasswordDescription]: "사진을 보려면 비밀번호를 입력하세요.",

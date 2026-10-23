@@ -121,6 +121,7 @@ export const vi: Translation = {
 	[Key.albumsNoResults]: "Không có album nào khớp bộ lọc",
 	[Key.albumsCounts]: "album",
 	[Key.albumsBack]: "Quay lại album",
+	[Key.momentsBack]: "Quay lại khoảnh khắc",
 	[Key.albumsPhotos]: "ảnh",
 	[Key.albumPasswordTitle]: "Album này được bảo vệ",
 	[Key.albumPasswordDescription]: "Nhập mật khẩu để xem ảnh.",

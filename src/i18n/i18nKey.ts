@@ -113,6 +113,7 @@ enum I18nKey {
 	albumsNoResults = "albumsNoResults",
 	albumsCounts = "albumsCounts",
 	albumsBack = "albumsBack",
+	momentsBack = "momentsBack",
 	albumsPhotos = "albumsPhotos",
 	albumPasswordTitle = "albumPasswordTitle",
 	albumPasswordDescription = "albumPasswordDescription",

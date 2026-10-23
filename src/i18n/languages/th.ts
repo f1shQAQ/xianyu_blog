@@ -111,6 +111,7 @@ export const th: Translation = {
 	[Key.albumsNoResults]: "ไม่พบอัลบั้มที่ตรงกับตัวกรอง",
 	[Key.albumsCounts]: "อัลบั้ม",
 	[Key.albumsBack]: "กลับไปที่อัลบั้ม",
+	[Key.momentsBack]: "กลับไปที่โมเมนต์",
 	[Key.albumsPhotos]: "รูปภาพ",
 	[Key.albumPasswordTitle]: "อัลบั้มนี้ได้รับการป้องกัน",
 	[Key.albumPasswordDescription]: "ป้อนรหัสผ่านเพื่อดูรูปภาพ",

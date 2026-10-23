@@ -91,6 +91,8 @@ const momentsCollection = defineCollection({
 			.optional()
 			.default([]),
 		draft: z.boolean().optional().default(false),
+		/** 单条动态评论开关（默认 true，继承全局评论配置） */
+		comment: z.boolean().optional().default(true),
 	}),
 });
 

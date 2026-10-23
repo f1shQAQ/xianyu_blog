@@ -28,11 +28,14 @@ let {
 	author,
 	/** stagger 入场延迟 ms（由列表传入：第 i 项 i × step） */
 	delay = 0,
+	/** 评论入口链接（详情页评论区）；缺省不渲染入口 */
+	commentHref,
 	class: className = "",
 }: {
 	moment: MomentItem;
 	author: MomentAuthor;
 	delay?: number;
+	commentHref?: string;
 	class?: string;
 } = $props();
 
@@ -85,7 +88,7 @@ const timeText = $derived(formatDateToYYYYMMDDHHmm(publishedAt));
 		<MomentGallery images={moment.images} />
 	{/if}
 
-	{#if moment.location || moment.tags.length > 0}
+	{#if moment.location || moment.tags.length > 0 || commentHref}
 		<footer class="moment-card__footer">
 			{#if moment.location}
 				<span class="moment-card__location">
@@ -99,6 +102,12 @@ const timeText = $derived(formatDateToYYYYMMDDHHmm(publishedAt));
 						<span class="moment-card__tag">#{tag}</span>
 					{/each}
 				</div>
+			{/if}
+			{#if commentHref}
+				<a class="moment-card__comment m3-state-layer" href={commentHref}>
+					<Icon icon="material-symbols:chat-bubble-outline-rounded" aria-hidden="true" />
+					{i18n(I18nKey.comments)}
+				</a>
 			{/if}
 		</footer>
 	{/if}
@@ -211,6 +220,25 @@ const timeText = $derived(formatDateToYYYYMMDDHHmm(publishedAt));
 	&__tag
 		color: var(--on-surface-variant)
 		font: var(--m3e-type-label-small)
+
+	&__comment
+		display: inline-flex
+		align-items: center
+		gap: 0.25rem
+		margin-left: auto
+		padding: 0.25rem 0.625rem
+		border-radius: var(--shape-corner-full)
+		color: var(--on-surface-variant)
+		font: var(--m3e-type-label-medium)
+		text-decoration: none
+		> :global(svg)
+			width: 1rem
+			height: 1rem
+		&:hover
+			color: var(--primary)
+		&:focus-visible
+			outline: 2px solid var(--primary)
+			outline-offset: 2px
 
 	@media (max-width: bp-sm - 1px)
 		padding: 0.875rem 1rem

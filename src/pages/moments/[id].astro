@@ -1,0 +1,58 @@
+---
+import CommentSection from "@components/organisms/comment/CommentSection.astro";
+import MomentDetail from "@components/organisms/MomentDetail.svelte";
+import I18nKey from "@i18n/i18nKey";
+import MainGridLayout from "@layouts/MainGridLayout.astro";
+import { getSortedMoments, type MomentItem } from "@utils/content-utils";
+import { resolveI18nText } from "@utils/i18n-utils";
+import { resolveMomentAuthor } from "@utils/moment-author";
+import { url } from "@utils/url-utils";
+import {
+	commentConfig,
+	momentsConfig,
+	resolveCommentOptions,
+	siteConfig,
+} from "@/config";
+
+export async function getStaticPaths() {
+	if (!momentsConfig.enable) return [];
+	const moments = await getSortedMoments();
+	return moments.map((moment) => ({
+		params: { id: moment.id },
+		props: { moment },
+	}));
+}
+
+interface Props {
+	moment: MomentItem;
+}
+
+const { moment } = Astro.props as Props;
+const pageTitle = resolveI18nText(momentsConfig.title, I18nKey.moments);
+// 纯图片动态没有正文摘要，回退到动态页标题；标签页标题截短，完整摘要留给 description
+const TITLE_MAX = 30;
+const title = !moment.excerpt
+	? pageTitle
+	: moment.excerpt.length > TITLE_MAX
+		? `${moment.excerpt.slice(0, TITLE_MAX).trimEnd()}…`
+		: moment.excerpt;
+const description = moment.excerpt || pageTitle;
+const author = await resolveMomentAuthor();
+const hasComments =
+	moment.comment && Boolean(resolveCommentOptions(commentConfig));
+---
+
+<MainGridLayout title={title} description={description} page="moments" hasComments={hasComments}>
+    <MomentDetail {moment} {author} backHref={url("/moments/")} client:visible />
+
+    <CommentSection
+        context={{
+            key: `moment:${moment.id}`,
+            path: `/moments/${moment.id}/`,
+            title,
+            language: siteConfig.lang,
+        }}
+        postCommentEnabled={moment.comment}
+        class="mt-4"
+    />
+</MainGridLayout>

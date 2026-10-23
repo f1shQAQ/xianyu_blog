@@ -116,6 +116,7 @@ export const ja: Translation = {
 	[Key.albumsNoResults]: "条件に合うアルバムがありません",
 	[Key.albumsCounts]: "個のアルバム",
 	[Key.albumsBack]: "アルバムに戻る",
+	[Key.momentsBack]: "モーメントに戻る",
 	[Key.albumsPhotos]: "枚",
 	[Key.albumPasswordTitle]: "このアルバムは保護されています",
 	[Key.albumPasswordDescription]:

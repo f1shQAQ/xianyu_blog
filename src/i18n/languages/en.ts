@@ -119,6 +119,7 @@ export const en: Translation = {
 	[Key.albumsNoResults]: "No albums matched your filters",
 	[Key.albumsCounts]: "albums",
 	[Key.albumsBack]: "Back to albums",
+	[Key.momentsBack]: "Back to moments",
 	[Key.albumsPhotos]: "photos",
 	[Key.albumPasswordTitle]: "This album is protected",
 	[Key.albumPasswordDescription]: "Enter the password to view its photos.",

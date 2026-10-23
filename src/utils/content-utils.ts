@@ -8,6 +8,7 @@ import {
 import { siteMarkdownProcessor } from "@utils/markdown-processor";
 import { initPostIdMap } from "@utils/permalink-utils";
 import {
+	excerptFromMarkdown,
 	findUnknownSeriesSlugs,
 	normaliseSeriesSlug,
 	resolveSeriesPostCategory,
@@ -206,6 +207,10 @@ export type MomentItem = {
 	mood: string;
 	tags: string[];
 	images: MomentImage[];
+	/** 单条动态评论开关（frontmatter `comment`，默认 true） */
+	comment: boolean;
+	/** 正文纯文本摘要（详情页标题/描述；纯图片动态为空串） */
+	excerpt: string;
 };
 
 /** 渲染器按需创建并缓存（插件加载较重，全构建期只跑一次） */
@@ -268,6 +273,8 @@ export async function getSortedMoments(): Promise<MomentItem[]> {
 				mood: entry.data.mood,
 				tags: entry.data.tags,
 				images: entry.data.images.map(withMomentThumbnails),
+				comment: entry.data.comment,
+				excerpt: excerptFromMarkdown(entry.body ?? "", 120),
 			} satisfies MomentItem;
 		}),
 	);

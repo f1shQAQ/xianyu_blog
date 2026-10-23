@@ -111,6 +111,7 @@ export const zh_TW: Translation = {
 	[Key.albumsNoResults]: "沒有符合條件的相簿",
 	[Key.albumsCounts]: "個相簿",
 	[Key.albumsBack]: "返回相簿",
+	[Key.momentsBack]: "返回動態",
 	[Key.albumsPhotos]: "張照片",
 	[Key.albumPasswordTitle]: "這是一個受保護相簿",
 	[Key.albumPasswordDescription]: "輸入密碼後查看相簿照片。",

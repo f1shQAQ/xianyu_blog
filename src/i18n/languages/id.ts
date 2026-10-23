@@ -122,6 +122,7 @@ export const id: Translation = {
 	[Key.albumsNoResults]: "Tidak ada album yang cocok dengan filter",
 	[Key.albumsCounts]: "album",
 	[Key.albumsBack]: "Kembali ke album",
+	[Key.momentsBack]: "Kembali ke momen",
 	[Key.albumsPhotos]: "foto",
 	[Key.albumPasswordTitle]: "Album ini dilindungi",
 	[Key.albumPasswordDescription]: "Masukkan kata sandi untuk melihat fotonya.",

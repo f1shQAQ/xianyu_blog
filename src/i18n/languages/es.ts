@@ -120,6 +120,7 @@ export const es: Translation = {
 	[Key.albumsNoResults]: "Ningún álbum coincide con tus filtros",
 	[Key.albumsCounts]: "álbumes",
 	[Key.albumsBack]: "Volver a álbumes",
+	[Key.momentsBack]: "Volver a momentos",
 	[Key.albumsPhotos]: "fotos",
 	[Key.albumPasswordTitle]: "Este álbum está protegido",
 	[Key.albumPasswordDescription]: "Introduce la contraseña para ver sus fotos.",

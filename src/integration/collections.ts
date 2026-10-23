@@ -69,6 +69,8 @@ export const momentSchema: z.ZodType = z.object({
 		.optional()
 		.default([]),
 	draft: z.boolean().optional().default(false),
+	/** Per-moment comment switch (default true, follows the global comment config). */
+	comment: z.boolean().optional().default(true),
 });
 
 /** Schema for free-form spec pages (currently just `about.md`). */

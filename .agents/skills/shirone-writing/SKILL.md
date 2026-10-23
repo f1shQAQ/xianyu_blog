@@ -55,7 +55,9 @@ hideHomeContent: true   # 加密内容在首页隐藏(默认 true)
 
 ## 动态(moments)frontmatter
 
-`published`(必填)、`pinned`、`location`、`mood`(Iconify 图标名,如 `material-symbols:sentiment-excited-outline-rounded`)、`tags: []`、`images: [{src, alt}]`、`draft`。
+`published`(必填)、`pinned`、`location`、`mood`(Iconify 图标名,如 `material-symbols:sentiment-excited-outline-rounded`)、`tags: []`、`images: [{src, alt}]`、`draft`、`comment`(单条动态评论开关,默认 true,继承全局评论配置)。
+
+每条动态有独立详情页 `/moments/<文件名>/`,评论区挂在详情页上(giscus 按路径映射 Discussion),所以已发布动态不要改文件名,否则旧评论会断开。
 
 ## 工作流
 

@@ -111,6 +111,7 @@ export const zh_CN: Translation = {
 	[Key.albumsNoResults]: "没有符合条件的相册",
 	[Key.albumsCounts]: "个相册",
 	[Key.albumsBack]: "返回相册",
+	[Key.momentsBack]: "返回动态",
 	[Key.albumsPhotos]: "张照片",
 	[Key.albumPasswordTitle]: "这是一个受保护相册",
 	[Key.albumPasswordDescription]: "输入密码后查看相册照片。",

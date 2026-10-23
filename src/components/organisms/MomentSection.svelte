@@ -18,6 +18,7 @@ import I18nKey from "@i18n/i18nKey";
 import { i18n } from "@i18n/translation";
 import type { MomentItem } from "@utils/content-utils";
 import { initFancybox } from "@utils/fancybox-handler";
+import { url } from "@utils/url-utils";
 import { onMount } from "svelte";
 
 let {
@@ -25,9 +26,12 @@ let {
 	author = { name: "", avatar: "", url: "/about/" } as MomentAuthor,
 	title = i18n(I18nKey.moments),
 	subtitle = i18n(I18nKey.momentsBanner),
+	/** 全局评论可用时，卡片渲染指向详情页评论区的入口 */
+	commentsEnabled = false,
 }: {
 	moments?: MomentItem[];
 	author?: MomentAuthor;
+	commentsEnabled?: boolean;
 	title?: string;
 	subtitle?: string;
 } = $props();
@@ -187,7 +191,14 @@ onMount(() => {
 		{#key `${query}|${selectedTag}`}
 			<div class="moment-section__list">
 				{#each visibleMoments as moment, i (moment.id)}
-					<MomentCard {moment} {author} delay={Math.min(i, 7) * 45} />
+					<MomentCard
+						{moment}
+						{author}
+						delay={Math.min(i, 7) * 45}
+						commentHref={commentsEnabled && moment.comment
+							? url(`/moments/${moment.id}/#comments`)
+							: undefined}
+					/>
 				{/each}
 			</div>
 		{/key}
