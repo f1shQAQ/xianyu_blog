@@ -40,7 +40,7 @@ export const commentConfig: CommentConfig = withUserConfig("comment", {
 		/** Twikoo 环境 ID（如 "https://your-twikoo.vercel.app" 或腾讯云环境 ID） */
 		envId: "https://comments.fishqaq.com",
 		/** Twikoo 前端 JS 脚本 CDN 地址 */
-		scriptUrl: "https://registry.npmmirror.com/twikoo/2.0.17/files/dist/twikoo.min.js",
+		scriptUrl: "https://registry.npmmirror.com/twikoo/1.7.20/files/dist/twikoo.min.js",
 		/** 评论语言："auto"（跟随站点）| "zh-CN" | "zh-TW" | "en" | "ja" 等 */
 		lang: "auto",
 		/** 评论输入框占位提示文本 */
