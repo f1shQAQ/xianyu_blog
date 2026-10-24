@@ -13,7 +13,7 @@ export const siteConfig: SiteConfig = withUserConfig("site", {
 	site: "https://blog.fishqaq.com/",
 	base: "/",
 	title: "咸鱼小窝",
-	subtitle: "只是一条没有梦想的咸鱼",
+	subtitle: "Think Different",
 	// 电脑端顶栏标题与导航内容区域："left" 左对齐，"center" 居中。
 	topAppBar: {
 		contentAlign: "center",
@@ -76,7 +76,7 @@ export const siteConfig: SiteConfig = withUserConfig("site", {
 			// 仅在首页 Banner 中显示，标题与副标题会上下居中排列。
 			enable: true,
 			title: "咸鱼小窝",
-			subtitle: ["只是一条没有梦想的咸鱼", "我们终将会在没有黑暗的地方相遇", "Think Different"],
+			subtitle: ["Think Different"],
 			typewriter: {
 				// 副标题逐字显示；关闭后直接显示完整副标题。
 				enable: true,
