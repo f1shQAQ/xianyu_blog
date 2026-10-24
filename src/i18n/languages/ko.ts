@@ -19,6 +19,39 @@ export const ko: Translation = {
 		"링크 교환을 환영합니다. 신청 방법은 소개 페이지를 참고하세요.",
 	[Key.friendsCount]: "개의 친구 링크",
 	[Key.friendsCounts]: "개의 친구 링크",
+	[Key.friendApplyTitle]: "친구 링크 신청",
+	[Key.friendApplySubmit]: "신청하기",
+	[Key.friendApplySubmitting]: "사이트를 확인하는 중…",
+	[Key.friendApplySubmitted]: "신청을 보냈습니다. 확인 메일을 보냈습니다.",
+	[Key.friendApplyStatusLink]: "신청 상태 보기",
+	[Key.friendApplyLoadFailed]:
+		"신청 양식을 불러오지 못했습니다. 페이지를 새로 고치세요.",
+	[Key.friendApplyRequired]: "필수",
+	[Key.friendApplyInvalidUrl]: "http(s) URL을 입력하세요",
+	[Key.friendApplyInvalidEmail]: "올바른 이메일을 입력하세요",
+	[Key.friendApplyErrorInvalid]:
+		"입력 내용을 확인하세요. URL은 공개 http(s) 주소여야 하고 이메일 형식이 맞아야 합니다.",
+	[Key.friendApplyErrorCaptcha]: "사람 확인에 실패했습니다. 다시 시도하세요.",
+	[Key.friendApplyErrorRate]:
+		"오늘 신청 횟수를 모두 썼습니다. 내일 다시 시도하세요.",
+	[Key.friendApplyErrorDuplicate]:
+		"이 사이트는 이미 심사 중인 신청이 있습니다.",
+	[Key.friendApplyErrorListed]: "이 사이트는 이미 친구 링크에 있습니다.",
+	[Key.friendApplyErrorUnreachable]:
+		"사이트를 열 수 없습니다. URL이 맞고 공개되어 있는지 확인하세요.",
+	[Key.friendApplyErrorBacklink]:
+		"사이트에서 이 사이트 링크를 찾지 못했습니다. 추가한 뒤 다시 신청하세요.",
+	[Key.friendApplyErrorFailed]: "제출하지 못했습니다. 잠시 후 다시 시도하세요.",
+	[Key.friendApplyInfoTitle]: "이 사이트 정보",
+	[Key.friendApplyInfoName]: "이름",
+	[Key.friendApplyInfoUrl]: "URL",
+	[Key.friendApplyInfoAvatar]: "아바타",
+	[Key.friendApplyInfoDesc]: "소개",
+	[Key.friendApplyCopy]: "복사",
+	[Key.friendApplyCopied]: "복사됨",
+	[Key.friendApplyErrorConfirm]: "모든 확인 항목을 체크하세요.",
+	[Key.friendApplyErrorStale]:
+		"신청 양식이 방금 바뀌었습니다. 페이지를 새로 고친 뒤 다시 작성하세요.",
 
 	[Key.moments]: "모먼트",
 	[Key.momentsNoResults]: "조건에 맞는 모먼트가 없습니다",

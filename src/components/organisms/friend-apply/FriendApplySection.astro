@@ -1,0 +1,25 @@
+---
+import Card from "@components/atoms/display/Card.svelte";
+import FriendApplyForm from "@components/organisms/friend-apply/FriendApplyForm.svelte";
+import { siteConfig } from "@/config";
+import type { FriendApplyConfig } from "@/types/friendsConfig";
+
+/**
+ * 友链页的申请区：占据评论区的位置，卡片外壳与 CommentSection 一致。
+ * 标题、说明与字段都由 Kurone 后台编辑，FriendApplyForm 在客户端取回后渲染。
+ * 只在 resolveFriendApplyOptions 返回有效配置时由页面动态导入并渲染。
+ */
+interface Props {
+	options: FriendApplyConfig;
+	class?: string;
+}
+
+const { options, class: className } = Astro.props;
+const lang = siteConfig.lang.toLowerCase().startsWith("en") ? "en" : "zh";
+---
+
+<section id="friend-apply" aria-labelledby="friend-apply-title" class:list={["w-full mb-4", className]}>
+	<Card color="var(--card-bg)" radius="l" class="p-6 md:p-8 w-full relative">
+		<FriendApplyForm endpoint={options.endpoint} lang={lang} client:visible />
+	</Card>
+</section>

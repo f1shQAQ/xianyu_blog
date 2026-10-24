@@ -19,6 +19,42 @@ export const ja: Translation = {
 		"リンクの交換を歓迎します。申請方法は About ページをご覧ください。",
 	[Key.friendsCount]: "件の友達リンク",
 	[Key.friendsCounts]: "件の友達リンク",
+	[Key.friendApplyTitle]: "相互リンクを申請",
+	[Key.friendApplySubmit]: "申請する",
+	[Key.friendApplySubmitting]: "サイトを確認しています…",
+	[Key.friendApplySubmitted]:
+		"申請を送信しました。確認メールをお送りしました。",
+	[Key.friendApplyStatusLink]: "申請状況を見る",
+	[Key.friendApplyLoadFailed]:
+		"申請フォームを読み込めませんでした。ページを再読み込みしてください。",
+	[Key.friendApplyRequired]: "必須",
+	[Key.friendApplyInvalidUrl]: "http(s) の URL を入力してください",
+	[Key.friendApplyInvalidEmail]: "メールアドレスの形式が正しくありません",
+	[Key.friendApplyErrorInvalid]:
+		"入力内容を確認してください。URL は公開された http(s) アドレス、メールアドレスは正しい形式が必要です。",
+	[Key.friendApplyErrorCaptcha]:
+		"人間確認に失敗しました。もう一度お試しください。",
+	[Key.friendApplyErrorRate]:
+		"本日の申請回数の上限に達しました。明日もう一度お試しください。",
+	[Key.friendApplyErrorDuplicate]: "このサイトの申請はすでに審査中です。",
+	[Key.friendApplyErrorListed]:
+		"このサイトはすでに相互リンクに掲載されています。",
+	[Key.friendApplyErrorUnreachable]:
+		"サイトを開けませんでした。URL が正しく公開されているか確認してください。",
+	[Key.friendApplyErrorBacklink]:
+		"あなたのサイトに当サイトへのリンクが見つかりませんでした。追加してから申請してください。",
+	[Key.friendApplyErrorFailed]:
+		"送信に失敗しました。しばらくしてからお試しください。",
+	[Key.friendApplyInfoTitle]: "当サイトの情報",
+	[Key.friendApplyInfoName]: "名前",
+	[Key.friendApplyInfoUrl]: "URL",
+	[Key.friendApplyInfoAvatar]: "アイコン",
+	[Key.friendApplyInfoDesc]: "紹介",
+	[Key.friendApplyCopy]: "コピー",
+	[Key.friendApplyCopied]: "コピーしました",
+	[Key.friendApplyErrorConfirm]: "すべての確認項目にチェックしてください。",
+	[Key.friendApplyErrorStale]:
+		"申請フォームが更新されました。ページを再読み込みして入力し直してください。",
 
 	[Key.moments]: "モーメンツ",
 	[Key.momentsNoResults]: "条件に一致するモーメンツはありません",

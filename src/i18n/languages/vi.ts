@@ -19,6 +19,39 @@ export const vi: Translation = {
 		"Chào đón trao đổi liên kết — xem trang Giới thiệu để biết cách đăng ký.",
 	[Key.friendsCount]: "liên kết bạn bè",
 	[Key.friendsCounts]: "liên kết bạn bè",
+	[Key.friendApplyTitle]: "Đăng ký liên kết bạn bè",
+	[Key.friendApplySubmit]: "Gửi",
+	[Key.friendApplySubmitting]: "Đang kiểm tra trang của bạn…",
+	[Key.friendApplySubmitted]: "Đã gửi đơn. Email xác nhận đã được gửi.",
+	[Key.friendApplyStatusLink]: "Xem trạng thái",
+	[Key.friendApplyLoadFailed]:
+		"Không tải được biểu mẫu. Hãy tải lại trang rồi thử lại.",
+	[Key.friendApplyRequired]: "Bắt buộc",
+	[Key.friendApplyInvalidUrl]: "Nhập URL http(s)",
+	[Key.friendApplyInvalidEmail]: "Nhập email hợp lệ",
+	[Key.friendApplyErrorInvalid]:
+		"Kiểm tra biểu mẫu: URL phải là địa chỉ http(s) công khai và email phải hợp lệ.",
+	[Key.friendApplyErrorCaptcha]: "Xác minh con người thất bại. Hãy thử lại.",
+	[Key.friendApplyErrorRate]:
+		"Bạn đã dùng hết lượt đăng ký hôm nay. Hãy thử lại vào ngày mai.",
+	[Key.friendApplyErrorDuplicate]:
+		"Trang này đã có một đơn đang được xét duyệt.",
+	[Key.friendApplyErrorListed]: "Trang này đã có trong danh sách liên kết.",
+	[Key.friendApplyErrorUnreachable]:
+		"Không mở được trang của bạn. Hãy kiểm tra URL đúng và công khai.",
+	[Key.friendApplyErrorBacklink]:
+		"Không tìm thấy liên kết đến trang này trên trang của bạn. Hãy thêm rồi thử lại.",
+	[Key.friendApplyErrorFailed]: "Đã xảy ra lỗi. Hãy thử lại sau.",
+	[Key.friendApplyInfoTitle]: "Thông tin trang này",
+	[Key.friendApplyInfoName]: "Tên",
+	[Key.friendApplyInfoUrl]: "URL",
+	[Key.friendApplyInfoAvatar]: "Ảnh đại diện",
+	[Key.friendApplyInfoDesc]: "Mô tả",
+	[Key.friendApplyCopy]: "Sao chép",
+	[Key.friendApplyCopied]: "Đã sao chép",
+	[Key.friendApplyErrorConfirm]: "Hãy đánh dấu tất cả mục xác nhận trước.",
+	[Key.friendApplyErrorStale]:
+		"Biểu mẫu vừa được cập nhật. Hãy tải lại trang rồi điền lại.",
 
 	[Key.moments]: "Khoảnh khắc",
 	[Key.momentsNoResults]: "Không có khoảnh khắc nào khớp bộ lọc",

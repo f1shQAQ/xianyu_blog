@@ -19,6 +19,41 @@ export const es: Translation = {
 		"Se aceptan intercambios de enlaces; consulta la página Acerca de.",
 	[Key.friendsCount]: "amigo",
 	[Key.friendsCounts]: "amigos",
+	[Key.friendApplyTitle]: "Solicitar enlace de amistad",
+	[Key.friendApplySubmit]: "Enviar",
+	[Key.friendApplySubmitting]: "Comprobando tu sitio…",
+	[Key.friendApplySubmitted]:
+		"Solicitud enviada. Te hemos mandado un correo de confirmación.",
+	[Key.friendApplyStatusLink]: "Ver estado",
+	[Key.friendApplyLoadFailed]:
+		"No se pudo cargar el formulario. Recarga la página e inténtalo de nuevo.",
+	[Key.friendApplyRequired]: "Obligatorio",
+	[Key.friendApplyInvalidUrl]: "Introduce una URL http(s)",
+	[Key.friendApplyInvalidEmail]: "Introduce un correo válido",
+	[Key.friendApplyErrorInvalid]:
+		"Revisa el formulario: las URL deben ser direcciones http(s) públicas y el correo debe ser válido.",
+	[Key.friendApplyErrorCaptcha]:
+		"La verificación humana falló. Inténtalo de nuevo.",
+	[Key.friendApplyErrorRate]:
+		"Has usado las solicitudes de hoy. Inténtalo mañana.",
+	[Key.friendApplyErrorDuplicate]:
+		"Este sitio ya tiene una solicitud en revisión.",
+	[Key.friendApplyErrorListed]: "Este sitio ya es un enlace de amistad.",
+	[Key.friendApplyErrorUnreachable]:
+		"No se pudo abrir tu sitio. Comprueba que la URL es correcta y pública.",
+	[Key.friendApplyErrorBacklink]:
+		"No encontramos un enlace a este sitio en el tuyo. Añádelo e inténtalo de nuevo.",
+	[Key.friendApplyErrorFailed]: "Algo salió mal. Inténtalo más tarde.",
+	[Key.friendApplyInfoTitle]: "Sobre este sitio",
+	[Key.friendApplyInfoName]: "Nombre",
+	[Key.friendApplyInfoUrl]: "URL",
+	[Key.friendApplyInfoAvatar]: "Avatar",
+	[Key.friendApplyInfoDesc]: "Descripción",
+	[Key.friendApplyCopy]: "Copiar",
+	[Key.friendApplyCopied]: "Copiado",
+	[Key.friendApplyErrorConfirm]: "Marca primero todas las confirmaciones.",
+	[Key.friendApplyErrorStale]:
+		"El formulario acaba de cambiar. Recarga la página y vuelve a rellenarlo.",
 
 	[Key.moments]: "Momentos",
 	[Key.momentsNoResults]: "No hay momentos que coincidan con los filtros",

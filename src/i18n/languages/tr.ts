@@ -19,6 +19,40 @@ export const tr: Translation = {
 		"Bağlantı takası yapabilirsiniz — ayrıntılar için Hakkında sayfasına bakın.",
 	[Key.friendsCount]: "arkadaş",
 	[Key.friendsCounts]: "arkadaş",
+	[Key.friendApplyTitle]: "Arkadaş bağlantısı iste",
+	[Key.friendApplySubmit]: "Gönder",
+	[Key.friendApplySubmitting]: "Siten kontrol ediliyor…",
+	[Key.friendApplySubmitted]: "Başvuru gönderildi. Onay e-postası yolda.",
+	[Key.friendApplyStatusLink]: "Durumu gör",
+	[Key.friendApplyLoadFailed]:
+		"Başvuru formu yüklenemedi. Sayfayı yenileyip tekrar dene.",
+	[Key.friendApplyRequired]: "Zorunlu",
+	[Key.friendApplyInvalidUrl]: "Bir http(s) URL’si gir",
+	[Key.friendApplyInvalidEmail]: "Geçerli bir e-posta gir",
+	[Key.friendApplyErrorInvalid]:
+		"Formu kontrol et: URL’ler herkese açık http(s) adresleri olmalı ve e-posta geçerli olmalı.",
+	[Key.friendApplyErrorCaptcha]: "İnsan doğrulaması başarısız. Tekrar dene.",
+	[Key.friendApplyErrorRate]:
+		"Bugünkü başvuru hakkını kullandın. Yarın tekrar dene.",
+	[Key.friendApplyErrorDuplicate]:
+		"Bu sitenin incelenen bir başvurusu zaten var.",
+	[Key.friendApplyErrorListed]: "Bu site zaten arkadaş bağlantılarında.",
+	[Key.friendApplyErrorUnreachable]:
+		"Siten açılamadı. URL’nin doğru ve herkese açık olduğunu kontrol et.",
+	[Key.friendApplyErrorBacklink]:
+		"Sitende bu sitenin bağlantısı bulunamadı. Ekleyip tekrar dene.",
+	[Key.friendApplyErrorFailed]:
+		"Bir şeyler ters gitti. Daha sonra tekrar dene.",
+	[Key.friendApplyInfoTitle]: "Bu site hakkında",
+	[Key.friendApplyInfoName]: "Ad",
+	[Key.friendApplyInfoUrl]: "URL",
+	[Key.friendApplyInfoAvatar]: "Avatar",
+	[Key.friendApplyInfoDesc]: "Açıklama",
+	[Key.friendApplyCopy]: "Kopyala",
+	[Key.friendApplyCopied]: "Kopyalandı",
+	[Key.friendApplyErrorConfirm]: "Önce tüm onayları işaretle.",
+	[Key.friendApplyErrorStale]:
+		"Form az önce güncellendi. Sayfayı yenileyip yeniden doldur.",
 
 	[Key.moments]: "Anlar",
 	[Key.momentsNoResults]: "Filtrelerle eşleşen an yok",

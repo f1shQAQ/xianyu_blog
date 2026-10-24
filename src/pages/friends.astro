@@ -9,7 +9,10 @@ import MainGridLayout from "@layouts/MainGridLayout.astro";
 import { resolveI18nText } from "@utils/i18n-utils";
 import { getMarkdownStylesheetAssets } from "@utils/markdown-assets";
 import { commentConfig, resolveCommentOptions, siteConfig } from "@/config";
-import { friendsConfig } from "@/config/friendsConfig";
+import {
+	friendsConfig,
+	resolveFriendApplyOptions,
+} from "@/config/friendsConfig";
 import { getFriendsList } from "../data/friends";
 
 if (!friendsConfig.enable) {
@@ -17,16 +20,31 @@ if (!friendsConfig.enable) {
 }
 
 const pageTitle = resolveI18nText(friendsConfig.title, I18nKey.friends);
-const pageDescription = resolveI18nText(friendsConfig.description, I18nKey.friendsBanner);
+const pageDescription = resolveI18nText(
+	friendsConfig.description,
+	I18nKey.friendsBanner,
+);
 
 // Optional notes under the list (link requirements, site info): src/content/spec/friends.md
 const friendsPost = await getEntry("spec", "friends");
 const rendered = friendsPost ? await render(friendsPost) : null;
 const markdownStylesheetAssets = rendered
-	? await getMarkdownStylesheetAssets(rendered.remarkPluginFrontmatter.markdownSyntaxes)
+	? await getMarkdownStylesheetAssets(
+			rendered.remarkPluginFrontmatter.markdownSyntaxes,
+		)
 	: [];
 const FriendsContent = rendered?.Content;
-const hasComments = Boolean(resolveCommentOptions(commentConfig));
+// 开启友链申请时，申请表单占据评论区的位置：不渲染评论区，FAB 的「跳到评论」也随之隐藏
+const applyOptions = resolveFriendApplyOptions(friendsConfig);
+const FriendApplySection = applyOptions
+	? (
+			await import(
+				"@components/organisms/friend-apply/FriendApplySection.astro"
+			)
+		).default
+	: null;
+const hasComments =
+	!applyOptions && Boolean(resolveCommentOptions(commentConfig));
 ---
 
 <MainGridLayout title={pageTitle} description={pageDescription} page="friends" hasComments={hasComments}>
@@ -43,42 +61,18 @@ const hasComments = Boolean(resolveCommentOptions(commentConfig));
         </div>
     )}
 
-    {FriendsContent && (
-        <style is:global>
-            /* friends.md 正文里的申请表单按钮（raw HTML <a class="friends-apply-button">），对齐 M3E filled small 按钮 */
-            .friends-apply-button {
-                display: inline-flex;
-                align-items: center;
-                justify-content: center;
-                height: 2.5rem;
-                padding: 0 1.5rem;
-                border-radius: var(--shape-corner-m);
-                background: var(--primary);
-                color: var(--on-primary);
-                font: var(--m3e-type-label-large);
-                text-decoration: none;
-                --m3e-state-color: var(--on-primary);
-                box-shadow: var(--m3e-elevation-0);
-                transition: box-shadow var(--m3e-duration-short) var(--m3e-easing-standard);
-            }
-            .friends-apply-button:hover {
-                box-shadow: var(--m3e-elevation-1);
-            }
-            .friends-apply-button:focus-visible {
-                outline: 2px solid var(--primary);
-                outline-offset: 2px;
-            }
-        </style>
+    {applyOptions && FriendApplySection ? (
+        <FriendApplySection options={applyOptions} class="mt-4" />
+    ) : (
+        <CommentSection
+            context={{
+                key: "page:friends",
+                // Existing Twikoo comments are keyed by this exact path
+                path: "/friends/",
+                title: pageTitle,
+                language: siteConfig.lang,
+            }}
+            class="mt-4"
+        />
     )}
-
-    <CommentSection
-        context={{
-            key: "page:friends",
-            // Existing Twikoo comments are keyed by this exact path
-            path: "/friends/",
-            title: pageTitle,
-            language: siteConfig.lang,
-        }}
-        class="mt-4"
-    />
 </MainGridLayout>

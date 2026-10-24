@@ -19,6 +19,40 @@ export const en: Translation = {
 		"Link exchange is welcome — see the About page for how to apply.",
 	[Key.friendsCount]: "friend",
 	[Key.friendsCounts]: "friends",
+	[Key.friendApplyTitle]: "Apply for a friend link",
+	[Key.friendApplySubmit]: "Submit",
+	[Key.friendApplySubmitting]: "Checking your site…",
+	[Key.friendApplySubmitted]:
+		"Application sent. A confirmation is on its way to your email.",
+	[Key.friendApplyStatusLink]: "View status",
+	[Key.friendApplyLoadFailed]:
+		"The application form failed to load. Reload the page and try again.",
+	[Key.friendApplyRequired]: "Required",
+	[Key.friendApplyInvalidUrl]: "Enter an http(s) URL",
+	[Key.friendApplyInvalidEmail]: "Enter a valid email",
+	[Key.friendApplyErrorInvalid]:
+		"Check the form: URLs must be public http(s) addresses and the email must be valid.",
+	[Key.friendApplyErrorCaptcha]: "The human check failed. Try again.",
+	[Key.friendApplyErrorRate]:
+		"You have used today’s applications. Try again tomorrow.",
+	[Key.friendApplyErrorDuplicate]:
+		"This site already has an application under review.",
+	[Key.friendApplyErrorListed]: "This site is already a friend link.",
+	[Key.friendApplyErrorUnreachable]:
+		"Your site could not be opened. Check that the URL is right and public.",
+	[Key.friendApplyErrorBacklink]:
+		"No link to this site was found on yours. Add one and try again.",
+	[Key.friendApplyErrorFailed]: "Something went wrong. Try again later.",
+	[Key.friendApplyInfoTitle]: "About this site",
+	[Key.friendApplyInfoName]: "Name",
+	[Key.friendApplyInfoUrl]: "URL",
+	[Key.friendApplyInfoAvatar]: "Avatar",
+	[Key.friendApplyInfoDesc]: "Description",
+	[Key.friendApplyCopy]: "Copy",
+	[Key.friendApplyCopied]: "Copied",
+	[Key.friendApplyErrorConfirm]: "Tick every confirmation first.",
+	[Key.friendApplyErrorStale]:
+		"The form was just updated. Reload the page and fill it in again.",
 
 	[Key.moments]: "Moments",
 	[Key.momentsNoResults]: "No moments matched your filters",

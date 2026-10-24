@@ -19,6 +19,40 @@ export const id: Translation = {
 		"Tukar tautan dipersilakan — lihat halaman Tentang untuk cara mendaftar.",
 	[Key.friendsCount]: "teman",
 	[Key.friendsCounts]: "teman",
+	[Key.friendApplyTitle]: "Ajukan tautan teman",
+	[Key.friendApplySubmit]: "Kirim",
+	[Key.friendApplySubmitting]: "Memeriksa situs Anda…",
+	[Key.friendApplySubmitted]:
+		"Pengajuan terkirim. Email konfirmasi sudah dikirim.",
+	[Key.friendApplyStatusLink]: "Lihat status",
+	[Key.friendApplyLoadFailed]:
+		"Formulir gagal dimuat. Muat ulang halaman lalu coba lagi.",
+	[Key.friendApplyRequired]: "Wajib",
+	[Key.friendApplyInvalidUrl]: "Masukkan URL http(s)",
+	[Key.friendApplyInvalidEmail]: "Masukkan email yang valid",
+	[Key.friendApplyErrorInvalid]:
+		"Periksa formulir: URL harus alamat http(s) publik dan email harus valid.",
+	[Key.friendApplyErrorCaptcha]: "Verifikasi manusia gagal. Coba lagi.",
+	[Key.friendApplyErrorRate]:
+		"Jatah pengajuan hari ini sudah habis. Coba lagi besok.",
+	[Key.friendApplyErrorDuplicate]:
+		"Situs ini sudah punya pengajuan yang sedang ditinjau.",
+	[Key.friendApplyErrorListed]: "Situs ini sudah ada di tautan teman.",
+	[Key.friendApplyErrorUnreachable]:
+		"Situs Anda tidak bisa dibuka. Pastikan URL benar dan publik.",
+	[Key.friendApplyErrorBacklink]:
+		"Tautan ke situs ini tidak ditemukan di situs Anda. Tambahkan lalu coba lagi.",
+	[Key.friendApplyErrorFailed]: "Terjadi kesalahan. Coba lagi nanti.",
+	[Key.friendApplyInfoTitle]: "Tentang situs ini",
+	[Key.friendApplyInfoName]: "Nama",
+	[Key.friendApplyInfoUrl]: "URL",
+	[Key.friendApplyInfoAvatar]: "Avatar",
+	[Key.friendApplyInfoDesc]: "Deskripsi",
+	[Key.friendApplyCopy]: "Salin",
+	[Key.friendApplyCopied]: "Disalin",
+	[Key.friendApplyErrorConfirm]: "Centang semua konfirmasi terlebih dahulu.",
+	[Key.friendApplyErrorStale]:
+		"Formulir baru saja diperbarui. Muat ulang halaman lalu isi kembali.",
 
 	[Key.moments]: "Momen",
 	[Key.momentsNoResults]: "Tidak ada momen yang cocok dengan filter",
