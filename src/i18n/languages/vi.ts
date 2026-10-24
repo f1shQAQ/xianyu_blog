@@ -383,6 +383,39 @@ export const vi: Translation = {
 	[Key.feedRecentPosts]: "Bài viết mới nhất trong nguồn cấp",
 	[Key.wechat]: "Tài khoản chính thức WeChat",
 	[Key.wechatSubtitle]: "Quét mã QR bằng WeChat để theo dõi",
-	[Key.wechatScanHint]: "Mở WeChat và quét mã, hoặc nhấn giữ trên điện thoại để nhận diện",
+	[Key.wechatScanHint]:
+		"Mở WeChat và quét mã, hoặc nhấn giữ trên điện thoại để nhận diện",
 	[Key.wechatQrAlt]: "Mã QR tài khoản chính thức WeChat",
+	[Key.friendStatusEmail]: "Email đăng ký",
+	[Key.friendStatusQuery]: "Kiểm tra tiến độ",
+	[Key.friendStatusLoading]: "Đang kiểm tra…",
+	[Key.friendStatusEmpty]: "Không tìm thấy đơn đăng ký.",
+	[Key.friendStatusRate]:
+		"Đã đạt giới hạn tra cứu hôm nay. Vui lòng thử lại vào ngày mai.",
+	[Key.friendStatusFailed]: "Không thể kiểm tra tiến độ. Vui lòng thử lại sau.",
+	[Key.friendStatusPending]: "Đang xét duyệt",
+	[Key.friendStatusApproved]: "Đã chấp nhận",
+	[Key.friendStatusRejected]: "Đã từ chối",
+	[Key.friendStatusWithdrawn]: "Đã rút",
+	[Key.friendStatusReason]: "Lý do xét duyệt",
+	[Key.friendStatusWithdraw]: "Rút đơn đăng ký",
+	[Key.friendStatusConfirm]: "Rút đơn đăng ký này?",
+	[Key.friendStatusNotFound]:
+		"Không tìm thấy đơn. Thông tin xác thực trong email có thể đã hết hạn.",
+	[Key.friendStatusHint]:
+		"Gửi mã đến email đăng ký, rồi xác minh để xem tiến độ. Để rút đơn, hãy dùng email xác nhận.",
+	[Key.friendStatusCode]: "Mã xác minh email",
+	[Key.friendStatusSendCode]: "Gửi mã",
+	[Key.friendStatusSendingCode]: "Đang gửi…",
+	[Key.friendStatusResendCode]: "Gửi lại mã",
+	[Key.friendStatusCodeSent]: "Đã gửi mã. Mã có hiệu lực trong 10 phút.",
+	[Key.friendStatusCodeInvalid]:
+		"Mã không đúng hoặc không còn hiệu lực. Kiểm tra hoặc yêu cầu mã mới.",
+	[Key.friendStatusCodeCooldown]:
+		"Vui lòng đợi 60 giây trước khi yêu cầu mã mới.",
+	[Key.friendStatusEmailNotFound]:
+		"Chưa có đơn đăng ký nào được gửi bằng email này.",
+	[Key.friendStatusMailUnavailable]:
+		"Không thể gửi email xác minh. Thử lại sau hoặc liên hệ chủ trang.",
+	[Key.friendStatusLookupDisabled]: "Tra cứu qua email đã bị tắt. Hãy dùng liên kết tiến độ trong email xác nhận.",
 };

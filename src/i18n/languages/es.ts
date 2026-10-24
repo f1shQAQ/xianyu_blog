@@ -385,6 +385,40 @@ export const es: Translation = {
 	[Key.feedRecentPosts]: "Artículos recientes del canal",
 	[Key.wechat]: "Cuenta oficial de WeChat",
 	[Key.wechatSubtitle]: "Escanea el código QR con WeChat para seguirnos",
-	[Key.wechatScanHint]: "Abre WeChat y escanea el código, o mantenlo pulsado en el móvil para reconocerlo",
+	[Key.wechatScanHint]:
+		"Abre WeChat y escanea el código, o mantenlo pulsado en el móvil para reconocerlo",
 	[Key.wechatQrAlt]: "Código QR de la cuenta oficial de WeChat",
+	[Key.friendStatusEmail]: "Correo de la solicitud",
+	[Key.friendStatusQuery]: "Consultar estado",
+	[Key.friendStatusLoading]: "Consultando…",
+	[Key.friendStatusEmpty]: "No se encontraron solicitudes.",
+	[Key.friendStatusRate]:
+		"Has alcanzado el límite de consultas de hoy. Inténtalo mañana.",
+	[Key.friendStatusFailed]:
+		"No se pudo consultar el estado. Inténtalo más tarde.",
+	[Key.friendStatusPending]: "En revisión",
+	[Key.friendStatusApproved]: "Aprobada",
+	[Key.friendStatusRejected]: "Rechazada",
+	[Key.friendStatusWithdrawn]: "Retirada",
+	[Key.friendStatusReason]: "Motivo de la revisión",
+	[Key.friendStatusWithdraw]: "Retirar solicitud",
+	[Key.friendStatusConfirm]: "¿Retirar esta solicitud?",
+	[Key.friendStatusNotFound]:
+		"Solicitud no encontrada. El acceso del correo puede haber caducado.",
+	[Key.friendStatusHint]:
+		"Envía un código al correo de tu solicitud y verifícalo para consultar el estado. Para retirar la solicitud, usa el correo de confirmación.",
+	[Key.friendStatusCode]: "Código de verificación",
+	[Key.friendStatusSendCode]: "Enviar código",
+	[Key.friendStatusSendingCode]: "Enviando…",
+	[Key.friendStatusResendCode]: "Reenviar código",
+	[Key.friendStatusCodeSent]: "Código enviado. Caduca en 10 minutos.",
+	[Key.friendStatusCodeInvalid]:
+		"El código es incorrecto o ya no es válido. Revísalo o solicita otro.",
+	[Key.friendStatusCodeCooldown]:
+		"Espera 60 segundos antes de solicitar otro código.",
+	[Key.friendStatusEmailNotFound]:
+		"No se ha enviado ninguna solicitud con este correo.",
+	[Key.friendStatusMailUnavailable]:
+		"No se pudo enviar el correo de verificación. Inténtalo más tarde o contacta con el administrador.",
+	[Key.friendStatusLookupDisabled]: "La consulta por correo está desactivada. Usa el enlace de progreso de tu correo de confirmación.",
 };

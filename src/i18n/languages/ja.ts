@@ -383,6 +383,38 @@ export const ja: Translation = {
 	[Key.feedRecentPosts]: "最新の配信記事",
 	[Key.wechat]: "WeChat 公式アカウント",
 	[Key.wechatSubtitle]: "WeChat で QR コードをスキャンしてフォロー",
-	[Key.wechatScanHint]: "WeChat を開いてスキャンするか、スマートフォンでは長押しで認識できます",
+	[Key.wechatScanHint]:
+		"WeChat を開いてスキャンするか、スマートフォンでは長押しで認識できます",
 	[Key.wechatQrAlt]: "WeChat 公式アカウントの QR コード",
+	[Key.friendStatusEmail]: "申請時のメールアドレス",
+	[Key.friendStatusQuery]: "状況を確認",
+	[Key.friendStatusLoading]: "確認中…",
+	[Key.friendStatusEmpty]: "申請が見つかりません。",
+	[Key.friendStatusRate]:
+		"本日の照会回数の上限に達しました。明日お試しください。",
+	[Key.friendStatusFailed]:
+		"状況を確認できませんでした。後でもう一度お試しください。",
+	[Key.friendStatusPending]: "審査中",
+	[Key.friendStatusApproved]: "承認済み",
+	[Key.friendStatusRejected]: "不承認",
+	[Key.friendStatusWithdrawn]: "取り下げ済み",
+	[Key.friendStatusReason]: "審査理由",
+	[Key.friendStatusWithdraw]: "申請を取り下げる",
+	[Key.friendStatusConfirm]: "この申請を取り下げますか？",
+	[Key.friendStatusNotFound]:
+		"申請が見つかりません。メールの認証情報が無効になった可能性があります。",
+	[Key.friendStatusHint]:
+		"申請時のメールアドレスにコードを送信し、認証後に状況を確認できます。取り下げには確認メールを使用してください。",
+	[Key.friendStatusCode]: "メール認証コード",
+	[Key.friendStatusSendCode]: "コードを送信",
+	[Key.friendStatusSendingCode]: "送信中…",
+	[Key.friendStatusResendCode]: "コードを再送信",
+	[Key.friendStatusCodeSent]: "コードを送信しました。有効期限は10分です。",
+	[Key.friendStatusCodeInvalid]:
+		"コードが正しくないか無効です。確認するか、再送信してください。",
+	[Key.friendStatusCodeCooldown]: "再送信するには60秒お待ちください。",
+	[Key.friendStatusEmailNotFound]: "このメールアドレスでの申請はありません。",
+	[Key.friendStatusMailUnavailable]:
+		"認証メールを送信できませんでした。後で再試行するか、管理者に連絡してください。",
+	[Key.friendStatusLookupDisabled]: "メールでの照会は無効になっています。確認メールの進捗リンクをご利用ください。",
 };

@@ -382,6 +382,39 @@ export const en: Translation = {
 	[Key.feedRecentPosts]: "Recent Posts in Feed",
 	[Key.wechat]: "WeChat Official Account",
 	[Key.wechatSubtitle]: "Scan the QR code with WeChat to follow",
-	[Key.wechatScanHint]: "Open WeChat and scan the code, or long-press it on a phone to recognize",
+	[Key.wechatScanHint]:
+		"Open WeChat and scan the code, or long-press it on a phone to recognize",
 	[Key.wechatQrAlt]: "WeChat Official Account QR code",
+	[Key.friendStatusEmail]: "Application email",
+	[Key.friendStatusQuery]: "Check progress",
+	[Key.friendStatusLoading]: "Checking…",
+	[Key.friendStatusEmpty]: "No applications found.",
+	[Key.friendStatusRate]:
+		"Today's lookup limit has been reached. Try again tomorrow.",
+	[Key.friendStatusFailed]: "Could not check progress. Try again later.",
+	[Key.friendStatusPending]: "Under review",
+	[Key.friendStatusApproved]: "Approved",
+	[Key.friendStatusRejected]: "Declined",
+	[Key.friendStatusWithdrawn]: "Withdrawn",
+	[Key.friendStatusReason]: "Review reason",
+	[Key.friendStatusWithdraw]: "Withdraw application",
+	[Key.friendStatusConfirm]: "Withdraw this application?",
+	[Key.friendStatusNotFound]:
+		"Application not found. The email credential may have expired.",
+	[Key.friendStatusHint]:
+		"Send a code to your application email, then verify it to check progress. To withdraw, use your confirmation email.",
+	[Key.friendStatusCode]: "Email verification code",
+	[Key.friendStatusSendCode]: "Send code",
+	[Key.friendStatusSendingCode]: "Sending…",
+	[Key.friendStatusResendCode]: "Resend code",
+	[Key.friendStatusCodeSent]: "Code sent. It expires in 10 minutes.",
+	[Key.friendStatusCodeInvalid]:
+		"The code is incorrect or no longer valid. Try again or request a new code.",
+	[Key.friendStatusCodeCooldown]:
+		"Wait 60 seconds before requesting another code.",
+	[Key.friendStatusEmailNotFound]:
+		"No friend link application has been submitted with this email.",
+	[Key.friendStatusMailUnavailable]:
+		"The verification email could not be sent. Try later or contact the site owner.",
+	[Key.friendStatusLookupDisabled]: "Email lookups are turned off. Use the progress link in your confirmation email.",
 };

@@ -190,9 +190,8 @@ test.describe("友链申请表单", () => {
 		await form.locator('textarea[name="x_note"]').fill("你好");
 		await submit.click();
 
-		await expect(form.getByRole("status").getByRole("link")).toHaveAttribute(
-			"href",
-			"https://kurone.example.com/api/friends/status?token=abc",
+		await expect(form.getByRole("status").getByRole("button")).toHaveText(
+			"查看申请进度",
 		);
 		expect(body).toMatchObject({
 			fields: {
@@ -224,7 +223,7 @@ test.describe("友链申请表单", () => {
 			.fill("https://example.org/rss.xml");
 		await form.locator('button[type="submit"]').click();
 		await expect(form.getByRole("status")).not.toBeEmpty();
-		await expect(form.getByRole("status").getByRole("link")).toHaveCount(0);
+		await expect(form.getByRole("status").getByRole("button")).toHaveCount(0);
 	});
 	test("打开页面、滚动到表单和切换主题均不加载验证", async ({ page }) => {
 		await expect(page.locator('#friend-apply input[name="title"]')).toHaveCount(
@@ -284,7 +283,7 @@ test.describe("友链申请表单", () => {
 			api.options.callback("verified-token");
 			api.options.callback("duplicate-token");
 		});
-		await expect(form.getByRole("status").getByRole("link")).toHaveCount(1);
+		await expect(form.getByRole("status").getByRole("button")).toHaveCount(1);
 		expect(requests).toBe(1);
 		expect(await captchaCalls(page)).toEqual(["render", "execute", "remove"]);
 	});
@@ -318,7 +317,7 @@ test.describe("友链申请表单", () => {
 				Object.assign(window, { __friendCaptchaMode: "success" }),
 			);
 			await submit.click();
-			await expect(form.getByRole("status").getByRole("link")).toHaveCount(1);
+			await expect(form.getByRole("status").getByRole("button")).toHaveCount(1);
 			expect(requests).toBe(1);
 			expect(await captchaCalls(page)).toEqual([
 				"render",
@@ -357,7 +356,7 @@ test.describe("友链申请表单", () => {
 		);
 		expect(loads).toBe(1);
 		await submit.click();
-		await expect(form.getByRole("status").getByRole("link")).toHaveCount(1);
+		await expect(form.getByRole("status").getByRole("button")).toHaveCount(1);
 		expect(loads).toBe(2);
 	});
 

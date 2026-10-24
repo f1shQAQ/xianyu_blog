@@ -9,18 +9,19 @@ import { i18n } from "@i18n/translation";
 import { liteMarkdown } from "@utils/lite-markdown";
 import { loadScriptOnce } from "@utils/script-loader";
 import { onDestroy, onMount } from "svelte";
+import FriendStatusDialog from "./FriendStatusDialog.svelte";
 
 /**
  * 友链申请区：标题、说明、本站信息、字段与确认项都来自 Kurone 后台编辑的表单定义
- * （GET <endpoint>/api/friends/config），提交到 <endpoint>/api/friends/apply（跨域，Kurone 只放行本站 origin）。
- * 以 client:visible 挂载，进入视口后取表单定义；Turnstile 只在有效提交后加载并执行。
+ * （GET <endpoint>/api/friends/config），提交到 <endpoint>/api/friends/apply（默认通过博客同域代理）。
+ * 以 client:load 挂载，邮件的片段凭证可立即打开弹窗；Turnstile 只在有效提交后加载并执行。
  * 只用已在友链页出现的原子与 Tailwind 工具类，不引入独立样式。
  */
 let {
 	endpoint,
 	lang = "zh",
 }: {
-	/** Kurone 部署地址（已由 resolveFriendApplyOptions 校验、去掉尾部斜杠） */
+	/** API origin；空字符串使用博客同域代理 */
 	endpoint: string;
 	/** Kurone 邮件语言：只有 zh / en */
 	lang?: "zh" | "en";
@@ -93,14 +94,16 @@ let phase = $state<"loading" | "ready" | "failed">("loading");
 let submitting = $state(false);
 let attempted = $state(false);
 let copied = $state("");
-let result = $state<
-	{ ok: true; statusUrl: string } | { ok: false; message: string } | null
->(null);
+let result = $state<{ ok: true } | { ok: false; message: string } | null>(null);
 
 let captcha: HTMLDivElement | undefined = $state();
-let siteKey = "";
+let siteKey = $state("");
+let statusOpen = $state(false);
+/** Kurone 设置「允许前端查询进度」；null 表示配置尚未取回 */
+let statusLookup = $state<boolean | null>(null);
 let widgetId: string | null = null;
 let destroyed = false;
+const pageController = new AbortController();
 let cancelVerification: (() => void) | null = null;
 
 const fields = $derived(form?.fields.filter((field) => field.enabled) ?? []);
@@ -189,17 +192,24 @@ onMount(async () => {
 	try {
 		const response = await fetch(`${endpoint}/api/friends/config`, {
 			credentials: "omit",
+			signal: AbortSignal.any([
+				pageController.signal,
+				AbortSignal.timeout(8000),
+			]),
 		});
 		if (!response.ok) throw new Error(`HTTP ${response.status}`);
 		const config = (await response.json()) as {
 			turnstileSiteKey?: string;
 			form?: FormSchema;
+			statusLookup?: boolean;
 		};
 		if (!config.turnstileSiteKey || !config.form)
 			throw new Error("Incomplete config");
 		if (destroyed) return;
 		siteKey = config.turnstileSiteKey;
 		form = config.form;
+		// 旧版 Kurone 不返回该字段，那时查询总是开启
+		statusLookup = config.statusLookup !== false;
 		phase = "ready";
 	} catch {
 		if (!destroyed) phase = "failed";
@@ -209,6 +219,7 @@ onMount(async () => {
 // Swup unmounts the island: reject pending verification and remove its widget.
 onDestroy(() => {
 	destroyed = true;
+	pageController.abort();
 	if (typeof window === "undefined") return;
 	cancelVerification?.();
 	clearVerification();
@@ -252,16 +263,20 @@ async function submit(event: SubmitEvent) {
 		const response = await fetch(`${endpoint}/api/friends/apply`, {
 			method: "POST",
 			credentials: "omit",
+			signal: AbortSignal.any([
+				pageController.signal,
+				AbortSignal.timeout(8000),
+			]),
 			headers: { "Content-Type": "application/json" },
 			body: JSON.stringify({ ...payload, turnstile: token }),
 		});
 		const body = (await response.json().catch(() => ({}))) as {
-			statusUrl?: string;
+			ok?: boolean;
 			error?: string;
 		};
 		if (destroyed) return;
-		if (response.ok && body.statusUrl) {
-			result = { ok: true, statusUrl: body.statusUrl };
+		if (response.ok && body.ok) {
+			result = { ok: true };
 			values = {};
 			ticked = {};
 			attempted = false;
@@ -291,12 +306,16 @@ async function submit(event: SubmitEvent) {
 }
 </script>
 
-<div class="mb-2 flex items-center gap-3">
+<div class="mb-2 flex flex-wrap items-center gap-3">
 	<AccentBar size="small" class="!inline-block" />
 	<h2 id="friend-apply-title" class="m-0 text-xl font-bold text-[var(--on-surface)] md:text-2xl">
 		{form?.display.title ?? i18n(I18nKey.friendApplyTitle)}
 	</h2>
+	{#if statusLookup}
+		<Button variant="tonal" size="small" icon="material-symbols:search-rounded" label={i18n(I18nKey.friendApplyStatusLink)} class="ml-auto" onclick={() => { statusOpen = true; }} />
+	{/if}
 </div>
+<FriendStatusDialog bind:open={statusOpen} {endpoint} {siteKey} {lang} lookup={statusLookup !== false} />
 
 {#if phase === "failed"}
 	<p class="m-0 text-sm text-[var(--error)]" role="alert">{i18n(I18nKey.friendApplyLoadFailed)}</p>
@@ -412,9 +431,7 @@ async function submit(event: SubmitEvent) {
 				<p class={`m-0 text-sm ${result.ok ? "text-[var(--primary)]" : "text-[var(--error)]"}`} role="status" aria-live="polite">
 					{#if result.ok}
 						{i18n(I18nKey.friendApplySubmitted)}
-						<a class="ml-1 text-[var(--primary)] underline" href={result.statusUrl} target="_blank" rel="noopener noreferrer">
-							{i18n(I18nKey.friendApplyStatusLink)}
-						</a>
+						{#if statusLookup}<Button variant="text" label={i18n(I18nKey.friendApplyStatusLink)} onclick={() => { statusOpen = true; }} />{/if}
 					{:else}
 						{result.message}
 					{/if}

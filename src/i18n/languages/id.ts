@@ -387,6 +387,37 @@ export const id: Translation = {
 	[Key.feedRecentPosts]: "Artikel Terbaru di Umpan",
 	[Key.wechat]: "Akun Resmi WeChat",
 	[Key.wechatSubtitle]: "Pindai kode QR dengan WeChat untuk mengikuti",
-	[Key.wechatScanHint]: "Buka WeChat lalu pindai kode, atau tekan lama di ponsel untuk mengenalinya",
+	[Key.wechatScanHint]:
+		"Buka WeChat lalu pindai kode, atau tekan lama di ponsel untuk mengenalinya",
 	[Key.wechatQrAlt]: "Kode QR Akun Resmi WeChat",
+	[Key.friendStatusEmail]: "Email permohonan",
+	[Key.friendStatusQuery]: "Periksa status",
+	[Key.friendStatusLoading]: "Memeriksa…",
+	[Key.friendStatusEmpty]: "Tidak ada permohonan ditemukan.",
+	[Key.friendStatusRate]:
+		"Batas pemeriksaan hari ini tercapai. Coba lagi besok.",
+	[Key.friendStatusFailed]: "Status tidak dapat diperiksa. Coba lagi nanti.",
+	[Key.friendStatusPending]: "Sedang ditinjau",
+	[Key.friendStatusApproved]: "Disetujui",
+	[Key.friendStatusRejected]: "Ditolak",
+	[Key.friendStatusWithdrawn]: "Ditarik",
+	[Key.friendStatusReason]: "Alasan peninjauan",
+	[Key.friendStatusWithdraw]: "Tarik permohonan",
+	[Key.friendStatusConfirm]: "Tarik permohonan ini?",
+	[Key.friendStatusNotFound]:
+		"Permohonan tidak ditemukan. Akses dari email mungkin kedaluwarsa.",
+	[Key.friendStatusHint]:
+		"Kirim kode ke email permohonan, lalu verifikasi untuk melihat status. Untuk menarik permohonan, gunakan email konfirmasi.",
+	[Key.friendStatusCode]: "Kode verifikasi email",
+	[Key.friendStatusSendCode]: "Kirim kode",
+	[Key.friendStatusSendingCode]: "Mengirim…",
+	[Key.friendStatusResendCode]: "Kirim ulang kode",
+	[Key.friendStatusCodeSent]: "Kode terkirim. Berlaku selama 10 menit.",
+	[Key.friendStatusCodeInvalid]:
+		"Kode salah atau tidak berlaku lagi. Periksa atau minta kode baru.",
+	[Key.friendStatusCodeCooldown]: "Tunggu 60 detik sebelum meminta kode baru.",
+	[Key.friendStatusEmailNotFound]: "Belum ada permohonan dengan email ini.",
+	[Key.friendStatusMailUnavailable]:
+		"Email verifikasi tidak dapat dikirim. Coba lagi nanti atau hubungi pemilik situs.",
+	[Key.friendStatusLookupDisabled]: "Pencarian lewat email dinonaktifkan. Gunakan tautan progres di email konfirmasi Anda.",
 };

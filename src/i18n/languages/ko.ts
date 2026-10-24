@@ -380,6 +380,39 @@ export const ko: Translation = {
 	[Key.feedRecentPosts]: "피드 최신 글",
 	[Key.wechat]: "WeChat 공식 계정",
 	[Key.wechatSubtitle]: "WeChat으로 QR 코드를 스캔해 팔로우하세요",
-	[Key.wechatScanHint]: "WeChat을 열어 코드를 스캔하거나, 휴대폰에서는 길게 눌러 인식하세요",
+	[Key.wechatScanHint]:
+		"WeChat을 열어 코드를 스캔하거나, 휴대폰에서는 길게 눌러 인식하세요",
 	[Key.wechatQrAlt]: "WeChat 공식 계정 QR 코드",
+	[Key.friendStatusEmail]: "신청 이메일",
+	[Key.friendStatusQuery]: "진행 상황 조회",
+	[Key.friendStatusLoading]: "조회 중…",
+	[Key.friendStatusEmpty]: "신청 내역이 없습니다.",
+	[Key.friendStatusRate]:
+		"오늘의 조회 한도에 도달했습니다. 내일 다시 시도하세요.",
+	[Key.friendStatusFailed]:
+		"진행 상황을 조회하지 못했습니다. 나중에 다시 시도하세요.",
+	[Key.friendStatusPending]: "검토 중",
+	[Key.friendStatusApproved]: "승인됨",
+	[Key.friendStatusRejected]: "거절됨",
+	[Key.friendStatusWithdrawn]: "철회됨",
+	[Key.friendStatusReason]: "검토 사유",
+	[Key.friendStatusWithdraw]: "신청 철회",
+	[Key.friendStatusConfirm]: "이 신청을 철회할까요?",
+	[Key.friendStatusNotFound]:
+		"신청을 찾을 수 없습니다. 이메일 인증 정보가 만료되었을 수 있습니다.",
+	[Key.friendStatusHint]:
+		"신청 이메일로 코드를 전송하고 인증하면 진행 상황을 조회할 수 있습니다. 철회하려면 확인 이메일을 사용하세요.",
+	[Key.friendStatusCode]: "이메일 인증 코드",
+	[Key.friendStatusSendCode]: "코드 전송",
+	[Key.friendStatusSendingCode]: "전송 중…",
+	[Key.friendStatusResendCode]: "코드 재전송",
+	[Key.friendStatusCodeSent]: "코드를 전송했습니다. 10분 동안 유효합니다.",
+	[Key.friendStatusCodeInvalid]:
+		"코드가 올바르지 않거나 만료되었습니다. 확인하거나 새 코드를 요청하세요.",
+	[Key.friendStatusCodeCooldown]:
+		"새 코드를 요청하기 전에 60초를 기다려 주세요.",
+	[Key.friendStatusEmailNotFound]: "이 이메일로 제출한 신청이 없습니다.",
+	[Key.friendStatusMailUnavailable]:
+		"인증 이메일을 보내지 못했습니다. 나중에 다시 시도하거나 관리자에게 문의하세요.",
+	[Key.friendStatusLookupDisabled]: "이메일 조회가 꺼져 있습니다. 확인 메일의 진행 상황 링크를 이용해 주세요.",
 };

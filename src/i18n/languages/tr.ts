@@ -385,6 +385,37 @@ export const tr: Translation = {
 	[Key.feedRecentPosts]: "Akıştaki Son Yazılar",
 	[Key.wechat]: "WeChat Resmi Hesabı",
 	[Key.wechatSubtitle]: "Takip etmek için QR kodunu WeChat ile tarayın",
-	[Key.wechatScanHint]: "WeChat'i açıp kodu tarayın veya telefonda uzun basarak tanıtın",
+	[Key.wechatScanHint]:
+		"WeChat'i açıp kodu tarayın veya telefonda uzun basarak tanıtın",
 	[Key.wechatQrAlt]: "WeChat Resmi Hesabı QR kodu",
+	[Key.friendStatusEmail]: "Başvuru e-postası",
+	[Key.friendStatusQuery]: "Durumu sorgula",
+	[Key.friendStatusLoading]: "Sorgulanıyor…",
+	[Key.friendStatusEmpty]: "Başvuru bulunamadı.",
+	[Key.friendStatusRate]:
+		"Bugünkü sorgulama sınırına ulaştınız. Yarın tekrar deneyin.",
+	[Key.friendStatusFailed]: "Durum sorgulanamadı. Daha sonra tekrar deneyin.",
+	[Key.friendStatusPending]: "İnceleniyor",
+	[Key.friendStatusApproved]: "Onaylandı",
+	[Key.friendStatusRejected]: "Reddedildi",
+	[Key.friendStatusWithdrawn]: "Geri çekildi",
+	[Key.friendStatusReason]: "İnceleme nedeni",
+	[Key.friendStatusWithdraw]: "Başvuruyu geri çek",
+	[Key.friendStatusConfirm]: "Bu başvuru geri çekilsin mi?",
+	[Key.friendStatusNotFound]:
+		"Başvuru bulunamadı. E-postadaki erişim bilgisi geçersiz olabilir.",
+	[Key.friendStatusHint]:
+		"Başvuru e-postanıza kod gönderin ve durumu görmek için doğrulayın. Geri çekmek için onay e-postasını kullanın.",
+	[Key.friendStatusCode]: "E-posta doğrulama kodu",
+	[Key.friendStatusSendCode]: "Kod gönder",
+	[Key.friendStatusSendingCode]: "Gönderiliyor…",
+	[Key.friendStatusResendCode]: "Kodu yeniden gönder",
+	[Key.friendStatusCodeSent]: "Kod gönderildi. 10 dakika geçerlidir.",
+	[Key.friendStatusCodeInvalid]:
+		"Kod yanlış veya artık geçerli değil. Kontrol edin ya da yeni kod isteyin.",
+	[Key.friendStatusCodeCooldown]: "Yeni kod istemeden önce 60 saniye bekleyin.",
+	[Key.friendStatusEmailNotFound]: "Bu e-posta ile yapılmış bir başvuru yok.",
+	[Key.friendStatusMailUnavailable]:
+		"Doğrulama e-postası gönderilemedi. Daha sonra deneyin veya site sahibiyle iletişime geçin.",
+	[Key.friendStatusLookupDisabled]: "E-postayla sorgulama kapalı. Onay e-postanızdaki ilerleme bağlantısını kullanın.",
 };

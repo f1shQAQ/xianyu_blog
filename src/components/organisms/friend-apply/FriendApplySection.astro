@@ -20,6 +20,6 @@ const lang = siteConfig.lang.toLowerCase().startsWith("en") ? "en" : "zh";
 
 <section id="friend-apply" aria-labelledby="friend-apply-title" class:list={["w-full mb-4", className]}>
 	<Card color="var(--card-bg)" radius="l" class="p-6 md:p-8 w-full relative">
-		<FriendApplyForm endpoint={options.endpoint} lang={lang} client:visible />
+		<FriendApplyForm endpoint={options.endpoint} lang={lang} client:load />
 	</Card>
 </section>

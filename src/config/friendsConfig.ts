@@ -16,13 +16,13 @@ export const friendsConfig: FriendsConfig = withUserConfig("friends", {
 	 */
 	apply: {
 		enable: true,
-		/** Kurone 部署地址，表单提交到 <endpoint>/api/friends/apply */
-		endpoint: "https://admin.fishqaq.com",
+		/** 留空使用博客同域 /api/friends/*，管理地址只在代理 Worker 的服务端配置 */
+		endpoint: "",
 	},
 });
 
 /**
- * 友链申请表单的有效配置：未开启、或 endpoint 不是 http(s) 地址时返回 null，
+ * 友链申请表单的有效配置：未开启、或非空 endpoint 不是 http(s) 地址时返回 null，
  * 消费方据此短路（零请求、零 DOM），与评论区的 resolveCommentOptions 同一约定。
  */
 export function resolveFriendApplyOptions(
@@ -30,8 +30,8 @@ export function resolveFriendApplyOptions(
 ): FriendApplyConfig | null {
 	const apply = config.apply;
 	if (!apply?.enable) return null;
-	const endpoint = apply.endpoint.trim().replace(/\/+$/, "");
-	return /^https?:\/\/[^/\s]+$/.test(endpoint)
+	const endpoint = (apply.endpoint ?? "").trim().replace(/\/+$/, "");
+	return !endpoint || /^https?:\/\/[^/\s]+$/.test(endpoint)
 		? { enable: true, endpoint }
 		: null;
 }
