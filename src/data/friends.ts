@@ -56,6 +56,14 @@ export const friendsData: FriendItem[] = [
 		tags: [],
 		desc: "记录所学知识，缩短和大神的差距！",
 	},
+	{
+		id: 6,
+		title: "TaurusXin 的独立博客",
+		imgurl: "https://cdn.taurusxin.com/hugo/avatar.jpg",
+		siteurl: "https://www.taurusxin.com",
+		tags: [],
+		desc: "永远年轻 永远热泪盈眶",
+	},
 ];
 
 // 获取所有友情链接数据（稳定顺序，测试可复现）
