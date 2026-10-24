@@ -13,7 +13,7 @@ import { onDestroy, onMount } from "svelte";
 /**
  * 友链申请区：标题、说明、本站信息、字段与确认项都来自 Kurone 后台编辑的表单定义
  * （GET <endpoint>/api/friends/config），提交到 <endpoint>/api/friends/apply（跨域，Kurone 只放行本站 origin）。
- * 以 client:visible 挂载，进入视口后才取表单定义并加载 Turnstile；取到之前显示骨架占位。
+ * 以 client:visible 挂载，进入视口后取表单定义；Turnstile 只在有效提交后加载并执行。
  * 只用已在友链页出现的原子与 Tailwind 工具类，不引入独立样式。
  */
 let {
@@ -57,7 +57,7 @@ interface FormSchema {
 interface Turnstile {
 	render(container: HTMLElement, options: Record<string, unknown>): string;
 	remove(widgetId: string): void;
-	reset(widgetId: string): void;
+	execute(widgetId: string): void;
 }
 
 const TURNSTILE_URL =
@@ -88,9 +88,8 @@ let ticked = $state<Record<string, boolean>>({});
 /** 蜜罐：真人看不到也不会填写 */
 let website = $state("");
 
-/** loading：正在取表单定义 / 加载 Turnstile；failed：任一步失败 */
+/** loading：正在取表单定义；failed：配置加载失败 */
 let phase = $state<"loading" | "ready" | "failed">("loading");
-let token = $state("");
 let submitting = $state(false);
 let attempted = $state(false);
 let copied = $state("");
@@ -102,6 +101,7 @@ let captcha: HTMLDivElement | undefined = $state();
 let siteKey = "";
 let widgetId: string | null = null;
 let destroyed = false;
+let cancelVerification: (() => void) | null = null;
 
 const fields = $derived(form?.fields.filter((field) => field.enabled) ?? []);
 const allTicked = $derived(
@@ -149,28 +149,43 @@ const label = (field: FormField) =>
 	field.required ? `${field.label} *` : field.label;
 const isDark = () => document.documentElement.classList.contains("dark");
 
-/** Turnstile 渲染后不能换主题，切换明暗时整体重绘（旧 token 随之作废）。 */
-function renderWidget() {
+/** Verification belongs to one submission; theme changes never start another challenge. */
+async function verifySubmission(): Promise<string> {
+	await loadScriptOnce(TURNSTILE_URL);
 	const api = turnstileApi();
-	if (!api || !captcha || !siteKey || destroyed) return;
-	if (widgetId) api.remove(widgetId);
-	token = "";
-	widgetId = api.render(captcha, {
-		sitekey: siteKey,
-		theme: isDark() ? "dark" : "light",
-		language: "auto",
-		callback: (value: string) => (token = value),
-		"expired-callback": () => (token = ""),
-		"error-callback": () => {
-			token = "";
-		},
+	if (!api || !captcha || destroyed)
+		throw new Error("Verification unavailable");
+	const container = captcha;
+	return new Promise<string>((resolve, reject) => {
+		const fail = () => reject(new Error("Verification failed"));
+		cancelVerification = fail;
+		widgetId = api.render(container, {
+			sitekey: siteKey,
+			theme: isDark() ? "dark" : "light",
+			language: "auto",
+			execution: "execute",
+			appearance: "execute",
+			retry: "never",
+			"refresh-expired": "never",
+			"refresh-timeout": "never",
+			"response-field": false,
+			callback: (value: string) => (value ? resolve(value) : fail()),
+			"expired-callback": fail,
+			"error-callback": fail,
+			"timeout-callback": fail,
+			"unsupported-callback": fail,
+		});
+		api.execute(widgetId);
 	});
 }
 
-const onThemeChange = () => renderWidget();
+function clearVerification() {
+	cancelVerification = null;
+	if (widgetId !== null) turnstileApi()?.remove(widgetId);
+	widgetId = null;
+}
 
 onMount(async () => {
-	window.addEventListener("shirone:theme-change", onThemeChange);
 	try {
 		const response = await fetch(`${endpoint}/api/friends/config`, {
 			credentials: "omit",
@@ -182,24 +197,21 @@ onMount(async () => {
 		};
 		if (!config.turnstileSiteKey || !config.form)
 			throw new Error("Incomplete config");
+		if (destroyed) return;
 		siteKey = config.turnstileSiteKey;
 		form = config.form;
-		await loadScriptOnce(TURNSTILE_URL);
-		if (destroyed) return;
 		phase = "ready";
-		// 等 {#if} 把容器渲染出来再挂载组件
-		queueMicrotask(renderWidget);
 	} catch {
 		if (!destroyed) phase = "failed";
 	}
 });
 
-// Swup 换页会卸载组件：移除组件与监听，避免 Turnstile 残留在旧容器上
+// Swup unmounts the island: reject pending verification and remove its widget.
 onDestroy(() => {
 	destroyed = true;
 	if (typeof window === "undefined") return;
-	window.removeEventListener("shirone:theme-change", onThemeChange);
-	if (widgetId) turnstileApi()?.remove(widgetId);
+	cancelVerification?.();
+	clearVerification();
 });
 
 async function copy(key: string, value: string) {
@@ -219,30 +231,35 @@ async function submit(event: SubmitEvent) {
 	if (!form || submitting) return;
 	attempted = true;
 	result = null;
-	if (fields.some((field) => fieldError(field)) || !allTicked || !token) return;
+	if (fields.some((field) => fieldError(field)) || !allTicked) return;
+	const payload = {
+		fields: Object.fromEntries(
+			fields.map((field) => [field.key, (values[field.key] ?? "").trim()]),
+		),
+		confirmations: form.confirmations
+			.filter((item) => ticked[item.id])
+			.map((item) => item.id),
+		formVersion: form.version,
+		website,
+		lang,
+	};
 	submitting = true;
+	let verified = false;
 	try {
+		const token = await verifySubmission();
+		if (destroyed) return;
+		verified = true;
 		const response = await fetch(`${endpoint}/api/friends/apply`, {
 			method: "POST",
 			credentials: "omit",
 			headers: { "Content-Type": "application/json" },
-			body: JSON.stringify({
-				fields: Object.fromEntries(
-					fields.map((field) => [field.key, (values[field.key] ?? "").trim()]),
-				),
-				confirmations: form.confirmations
-					.filter((item) => ticked[item.id])
-					.map((item) => item.id),
-				formVersion: form.version,
-				website,
-				turnstile: token,
-				lang,
-			}),
+			body: JSON.stringify({ ...payload, turnstile: token }),
 		});
 		const body = (await response.json().catch(() => ({}))) as {
 			statusUrl?: string;
 			error?: string;
 		};
+		if (destroyed) return;
 		if (response.ok && body.statusUrl) {
 			result = { ok: true, statusUrl: body.statusUrl };
 			values = {};
@@ -257,12 +274,19 @@ async function submit(event: SubmitEvent) {
 			};
 		}
 	} catch {
-		result = { ok: false, message: i18n(I18nKey.friendApplyErrorFailed) };
+		if (!destroyed) {
+			result = {
+				ok: false,
+				message: i18n(
+					verified
+						? I18nKey.friendApplyErrorFailed
+						: I18nKey.friendApplyErrorCaptcha,
+				),
+			};
+		}
 	} finally {
+		clearVerification();
 		submitting = false;
-		// token 只能用一次
-		if (widgetId) turnstileApi()?.reset(widgetId);
-		token = "";
 	}
 }
 </script>
@@ -376,13 +400,13 @@ async function submit(event: SubmitEvent) {
 			</div>
 		{/if}
 
-		<div bind:this={captcha} class="min-h-[65px]"></div>
+		<div bind:this={captcha} hidden={!submitting}></div>
 
 		<div class="flex flex-wrap items-center gap-4">
 			<Button
 				type="submit"
 				label={submitting ? i18n(I18nKey.friendApplySubmitting) : i18n(I18nKey.friendApplySubmit)}
-				disabled={phase !== "ready" || submitting || !token || !allTicked}
+				disabled={phase !== "ready" || submitting || !allTicked}
 			/>
 			{#if result}
 				<p class={`m-0 text-sm ${result.ok ? "text-[var(--primary)]" : "text-[var(--error)]"}`} role="status" aria-live="polite">
