@@ -28,7 +28,7 @@ export const profileConfig: ProfileConfig = withUserConfig("profile", {
 		{
 			name: "Email",
 			icon: "material-symbols:mail-outline-rounded",
-			url: "mailto:npm@vip.qq.com",
+			url: "mailto:hi@fishqaq.com",
 		},
 	],
 });
