@@ -41,14 +41,6 @@ export const friendsData: FriendItem[] = [
 		desc: "人有悲欢离合 月有阴晴圆缺",
 	},
 	{
-		id: 4,
-		title: "ChenZhen的客栈",
-		imgurl: "https://www.chenzhen.space/images/me.jpg",
-		siteurl: "https://www.chenzhen.space/",
-		tags: [],
-		desc: "个人博客，分享技术文章、生活文章、自建ChatGPT提示库、AI应用大全",
-	},
-	{
 		id: 5,
 		title: "宇阳",
 		imgurl: "https://q1.qlogo.cn/g?b=qq&nk=3311118881&s=640",
