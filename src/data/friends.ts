@@ -56,6 +56,14 @@ export const friendsData: FriendItem[] = [
 		tags: [],
 		desc: "永远年轻 永远热泪盈眶",
 	},
+	{
+		id: 7,
+		title: "ChenZhen的客栈",
+		imgurl: "https://www.chenzhen.space/images/me.jpg",
+		siteurl: "https://www.chenzhen.space/",
+		tags: [],
+		desc: "个人博客，分享技术文章、生活文章、自建ChatGPT提示库、AI应用大全",
+	},
 ];
 
 // 获取所有友情链接数据（稳定顺序，测试可复现）
