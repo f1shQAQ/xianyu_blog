@@ -72,6 +72,14 @@ export const friendsData: FriendItem[] = [
 		tags: [],
 		desc: "前程似锦、未来可期、寻得良人、共赴白头，祝你也祝我。",
 	},
+	{
+		id: 9,
+		title: "喵二の小博客",
+		imgurl: "https://cdn.miaoer.net/logo/avatar.webp",
+		siteurl: "https://www.miaoer.net",
+		tags: [],
+		desc: "缘，妙不可言",
+	},
 ];
 
 // 获取所有友情链接数据（稳定顺序，测试可复现）
