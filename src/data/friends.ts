@@ -80,6 +80,22 @@ export const friendsData: FriendItem[] = [
 		tags: [],
 		desc: "缘，妙不可言",
 	},
+	{
+		id: 10,
+		title: "YuJing的记忆终端",
+		imgurl: "https://yujingblog.top/assets/home/avatar.webp",
+		siteurl: "https://yujingblog.top",
+		tags: [],
+		desc: "记一些无用的日常，和有光的时刻。",
+	},
+	{
+		id: 11,
+		title: "Elykia",
+		imgurl: "https://bu.dusays.com/2024/10/25/671b2438203a6.gif",
+		siteurl: "https://blog.elykia.cn/",
+		tags: [],
+		desc: "致以无瑕之人",
+	},
 ];
 
 // 获取所有友情链接数据（稳定顺序，测试可复现）
