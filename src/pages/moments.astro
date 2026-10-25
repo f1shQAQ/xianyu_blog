@@ -12,7 +12,10 @@ if (!momentsConfig.enable) {
 }
 
 const pageTitle = resolveI18nText(momentsConfig.title, I18nKey.moments);
-const pageDescription = resolveI18nText(momentsConfig.description, I18nKey.momentsBanner);
+const pageDescription = resolveI18nText(
+	momentsConfig.description,
+	I18nKey.momentsBanner,
+);
 
 const moments = await getSortedMoments();
 const author = await resolveMomentAuthor();
