@@ -29,12 +29,15 @@ minimumReleaseAge: 1440
 # recorded in the lockfile — a clean install is what surfaces it:
 #   esbuild          downloads its platform binary in postinstall
 #   @parcel/watcher  compiles a native binding
+#   sharp            supports Astro's image service and thumbnail generation
 #   swup             postinstall step of the scroll plugin's dependency
 allowBuilds:
   "@parcel/watcher": true
   esbuild: true
+  sharp: true
   swup: true
 onlyBuiltDependencies:
   - "@parcel/watcher"
   - esbuild
+  - sharp
   - swup
