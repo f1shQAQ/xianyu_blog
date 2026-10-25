@@ -1,11 +1,13 @@
 <script lang="ts">
 import Button from "@components/atoms/action/Button.svelte";
 import AccentBar from "@components/atoms/display/AccentBar.svelte";
+import Icon from "@components/atoms/display/Icon.svelte";
 import Skeleton from "@components/atoms/display/Skeleton.svelte";
 import TextField from "@components/atoms/input/TextField.svelte";
 import Checkbox from "@components/atoms/selection/Checkbox.svelte";
 import I18nKey from "@i18n/i18nKey";
 import { i18n } from "@i18n/translation";
+import { parseFriendPaste } from "@utils/friend-paste";
 import { liteMarkdown } from "@utils/lite-markdown";
 import { loadScriptOnce } from "@utils/script-loader";
 import { onDestroy, onMount } from "svelte";
@@ -106,6 +108,14 @@ let destroyed = false;
 const pageController = new AbortController();
 let cancelVerification: (() => void) | null = null;
 
+/** 粘贴自动填入：框里的原文、上次识别结果（"none" 为没认出）和被填入的字段 */
+let pasteText = $state("");
+let pasteResult = $state<
+	{ filled: string[]; missing: string[] } | "none" | null
+>(null);
+let pasted = $state<Record<string, boolean>>({});
+let pasteTimer: ReturnType<typeof setTimeout> | undefined;
+
 const fields = $derived(form?.fields.filter((field) => field.enabled) ?? []);
 const allTicked = $derived(
 	form?.confirmations.every((item) => ticked[item.id]) ?? false,
@@ -148,8 +158,46 @@ function fieldError(field: FormField): string {
 	return "";
 }
 
-const label = (field: FormField) =>
-	field.required ? `${field.label} *` : field.label;
+const label = (field: FormField) => {
+	const text = field.required ? `${field.label} *` : field.label;
+	return pasted[field.key]
+		? `${text} · ${i18n(I18nKey.friendApplyPasteTag)}`
+		: text;
+};
+const pasteNames = (list: string[]) =>
+	list.join(i18n(I18nKey.friendApplyPasteSeparator));
+
+/** 识别粘贴框里的站点信息，覆盖填入认出的字段 */
+function fillFromPaste() {
+	pasted = {};
+	const text = pasteText.trim();
+	if (!text) {
+		pasteResult = null;
+		return;
+	}
+	const found = parseFriendPaste(text, fields);
+	const filled = fields.filter((field) => found[field.key]);
+	if (!filled.length) {
+		pasteResult = "none";
+		return;
+	}
+	for (const field of filled) values[field.key] = found[field.key];
+	pasted = Object.fromEntries(filled.map((field) => [field.key, true]));
+	pasteResult = {
+		filled: filled.map((field) => field.label),
+		missing: fields
+			.filter((field) => field.required && !(values[field.key] ?? "").trim())
+			.map((field) => field.label),
+	};
+}
+
+/** 粘贴、拖入立即识别；手动输入等停顿后再识别，免得半行内容覆盖表单 */
+function onPasteInput(event: Event) {
+	clearTimeout(pasteTimer);
+	const type = (event as InputEvent).inputType;
+	if (type === "insertFromPaste" || type === "insertFromDrop") fillFromPaste();
+	else pasteTimer = setTimeout(fillFromPaste, 800);
+}
 const isDark = () => document.documentElement.classList.contains("dark");
 
 /** Verification belongs to one submission; theme changes never start another challenge. */
@@ -220,6 +268,7 @@ onMount(async () => {
 onDestroy(() => {
 	destroyed = true;
 	pageController.abort();
+	clearTimeout(pasteTimer);
 	if (typeof window === "undefined") return;
 	cancelVerification?.();
 	clearVerification();
@@ -280,6 +329,9 @@ async function submit(event: SubmitEvent) {
 			values = {};
 			ticked = {};
 			attempted = false;
+			pasteText = "";
+			pasteResult = null;
+			pasted = {};
 		} else {
 			result = {
 				ok: false,
@@ -360,6 +412,33 @@ async function submit(event: SubmitEvent) {
 	{/if}
 
 	<form class="flex flex-col gap-4" novalidate onsubmit={submit}>
+		<div class="flex flex-col gap-1">
+			<div class="relative">
+				<Icon icon="material-symbols:content-paste-rounded" aria-hidden="true" class="pointer-events-none absolute left-4 top-3.5 text-xl text-[var(--primary)]" />
+				<textarea
+					rows="4"
+					aria-label={i18n(I18nKey.friendApplyPastePlaceholder)}
+					placeholder={i18n(I18nKey.friendApplyPastePlaceholder)}
+					class="block min-h-32 w-full resize-y rounded-[var(--shape-corner-m)] border-[1.5px] border-dashed border-[color-mix(in_srgb,var(--primary)_45%,transparent)] bg-[color-mix(in_srgb,var(--primary-container)_30%,transparent)] py-3 pl-12 pr-4 text-base text-[var(--on-surface)] outline-none placeholder:text-[var(--on-surface-variant)] focus:border-solid focus:border-[var(--primary)] focus:bg-transparent"
+					bind:value={pasteText}
+					oninput={onPasteInput}
+				></textarea>
+			</div>
+			<!-- 只用 aria-live，不占用 role="status"：那是提交结果的位置 -->
+			<p class="m-0 text-xs text-[var(--on-surface-variant)]" aria-live="polite" data-paste-status>
+				{#if pasteResult === "none"}
+					<span class="text-[var(--error)]">{i18n(I18nKey.friendApplyPasteNone)}</span>
+				{:else if pasteResult}
+					<span class="text-[var(--primary)]">{i18n(I18nKey.friendApplyPasteFilled).replace("{fields}", pasteNames(pasteResult.filled))}</span>
+					{pasteResult.missing.length
+						? i18n(I18nKey.friendApplyPasteMissing).replace("{fields}", pasteNames(pasteResult.missing))
+						: i18n(I18nKey.friendApplyPasteCheck)}
+				{:else}
+					{i18n(I18nKey.friendApplyPasteIdle)}
+				{/if}
+			</p>
+		</div>
+
 		<div class="grid gap-4 md:grid-cols-2">
 			{#each fields as field (field.key)}
 				<div class={`flex flex-col gap-1 ${field.type === "textarea" ? "md:col-span-2" : ""}`}>
@@ -385,6 +464,7 @@ async function submit(event: SubmitEvent) {
 							label={label(field)}
 							placeholder={field.placeholder}
 							error={fieldError(field)}
+							class={pasted[field.key] ? "shadow-[inset_0_0_0_1.5px_var(--primary)]" : ""}
 							autocomplete={field.type === "email" ? "email" : field.key === "siteurl" ? "url" : ""}
 							bind:value={() => values[field.key] ?? "", (value) => (values[field.key] = value)}
 						/>

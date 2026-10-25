@@ -142,6 +142,45 @@ test.describe("友链申请表单", () => {
 		await expect(section.locator('input[name="imgurl"]')).toHaveCount(0);
 	});
 
+	test("粘贴整段站点信息后自动填入表单", async ({ page }) => {
+		const form = page.locator("#friend-apply form");
+		const box = form.locator("textarea:not([name])");
+		const status = form.locator("[data-paste-status]");
+		const paste = (text: string) =>
+			box.evaluate((element, value) => {
+				const area = element as HTMLTextAreaElement;
+				area.value = value;
+				area.dispatchEvent(
+					new InputEvent("input", {
+						inputType: "insertFromPaste",
+						bubbles: true,
+					}),
+				);
+			}, text);
+
+		// 一句留言不是站点信息，不动表单
+		await paste("你好，想交换友链");
+		await expect(status.locator("span")).toHaveCount(1);
+		await expect(form.locator('input[name="title"]')).toHaveValue("");
+
+		await paste(
+			"名称：Example Site\n地址：example.org\nRSS 地址：https://example.org/rss.xml",
+		);
+		await expect(form.locator('input[name="title"]')).toHaveValue(
+			"Example Site",
+		);
+		await expect(form.locator('input[name="siteurl"]')).toHaveValue(
+			"https://example.org",
+		);
+		await expect(form.locator('input[name="x_rss"]')).toHaveValue(
+			"https://example.org/rss.xml",
+		);
+		await expect(status).toContainText("站点名称");
+		await expect(status).toContainText("RSS 地址");
+		// 必填但没认出的字段提示继续填写
+		await expect(status).toContainText("联系邮箱");
+	});
+
 	test("渲染完成的申请区没有无障碍问题", async ({ page }) => {
 		const section = page.locator("#friend-apply");
 		await expect(section.locator('input[name="x_rss"]')).toHaveCount(1);
