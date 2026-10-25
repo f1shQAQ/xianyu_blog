@@ -64,6 +64,14 @@ export const friendsData: FriendItem[] = [
 		tags: [],
 		desc: "个人博客，分享技术文章、生活文章、自建ChatGPT提示库、AI应用大全",
 	},
+	{
+		id: 8,
+		title: "目的地-Destination",
+		imgurl: "https://chrison.cn/logo.webp",
+		siteurl: "https://chrison.cn/",
+		tags: [],
+		desc: "前程似锦、未来可期、寻得良人、共赴白头，祝你也祝我。",
+	},
 ];
 
 // 获取所有友情链接数据（稳定顺序，测试可复现）
