@@ -24,7 +24,11 @@ const formats = {
 	"a friends.ts entry": '\t{\n\t\ttitle: "白音的小站",\n\t\tsiteurl: "https://shirone.example.com",\n\t\timgurl: "https://shirone.example.com/avatar.webp",\n\t\tdesc: "记录代码、相机和生活",\n\t},',
 	YAML: "- name: 白音的小站\n  link: https://shirone.example.com\n  avatar: https://shirone.example.com/avatar.webp\n  descr: 记录代码、相机和生活",
 	"Markdown list": "- **名称**：白音的小站\n- **地址**：https://shirone.example.com\n- **头像**：https://shirone.example.com/avatar.webp\n- **简介**：记录代码、相机和生活",
-	"bare lines": "白音的小站\nhttps://shirone.example.com\nhttps://shirone.example.com/avatar.webp\n记录代码、相机和生活",
+	"labels with other wording":
+		"博客标题：白音的小站\n网站链接：https://shirone.example.com\n博客头像地址：https://shirone.example.com/avatar.webp\n网站描述：记录代码、相机和生活",
+	"labels on their own line":
+		"博客标题:\n白音的小站\n博客地址:\nhttps://shirone.example.com\n头像：\nhttps://shirone.example.com/avatar.webp\n简介：\n记录代码、相机和生活",
+	"bare lines":"白音的小站\nhttps://shirone.example.com\nhttps://shirone.example.com/avatar.webp\n记录代码、相机和生活",
 };
 
 for (const [name, text] of Object.entries(formats)) {
@@ -57,4 +61,8 @@ test("parseFriendPaste does not guess from a message or unknown labels", () => {
 	assert.deepEqual(parseFriendPaste("你好，我想和你交换友链～", fields), {});
 	assert.deepEqual(parseFriendPaste("QQ: 12345\nhttps://shirone.example.com", fields), { siteurl: "https://shirone.example.com" });
 	assert.equal(parseFriendPaste(`名称：${"长".repeat(80)}`, fields).title.length, 60);
+	assert.deepEqual(
+		parseFriendPaste("QQ:\n12345\n博客标题:\n白音的小站\nhttps://shirone.example.com", fields),
+		{ title: "白音的小站", siteurl: "https://shirone.example.com" },
+	);
 });

@@ -92,6 +92,21 @@ const DOMAIN_RE = /^[a-z0-9-]+(\.[a-z0-9-]+)+(\/\S*)?$/i;
 const IMAGE_RE =
 	/\.(png|jpe?g|gif|webp|avif|svg|ico|bmp)([?#]|$)|avatar|gravatar|favicon|\/logo/i;
 const BACKLINK_RE = /friend|link|友链|blogroll/i;
+const LABEL_PREFIX_RE =
+	/^(博客|站点|网站|个人|本站|你的|我的|blog|site|website|your|my)/;
+
+/**
+ * 别名表没有的写法（「博客标题」「网站链接」）按关键词归位，按顺序检查：
+ * 「头像地址」要先归到头像，不能被「地址」带去站点地址。
+ */
+const KEYWORDS: [string, RegExp][] = [
+	["imgurl", /头像|图标|avatar|icon|logo|favicon/],
+	["email", /邮箱|mail/],
+	["desc", /简介|描述|介绍|签名|desc|intro|bio/],
+	["backlinkUrl", /友链|friend/],
+	["title", /标题|名称|名字|站名|name|title/],
+	["siteurl", /地址|链接|网址|主页|url|link|site/],
+];
 
 const norm = (name: string) =>
 	name
@@ -121,6 +136,20 @@ export function parseFriendPaste(
 		}
 	}
 	const has = (key: string) => (byKey.has(key) ? key : "");
+	/** 字段名 → 字段 key：先查别名，再去掉「博客」「网站」等前缀，最后按关键词 */
+	const labelKey = (raw: string): string => {
+		const name = norm(raw);
+		if (!name || name.length > 16) return "";
+		const direct = byName.get(name);
+		if (direct) return direct;
+		const bare = name.replace(LABEL_PREFIX_RE, "");
+		const stripped = bare ? byName.get(bare) : undefined;
+		if (stripped) return stripped;
+		for (const [key, pattern] of KEYWORDS) {
+			if (pattern.test(name) && has(key)) return key;
+		}
+		return "";
+	};
 
 	const accept = (key: string, raw: string): string => {
 		const field = byKey.get(key);
@@ -154,7 +183,7 @@ export function parseFriendPaste(
 			if (Array.isArray(data)) data = data[0];
 			if (data && typeof data === "object") {
 				for (const [name, value] of Object.entries(data)) {
-					if (typeof value === "string") put(byName.get(norm(name)), value);
+					if (typeof value === "string") put(labelKey(name), value);
 				}
 				return out;
 			}
@@ -163,12 +192,28 @@ export function parseFriendPaste(
 		}
 	}
 	const rest: string[] = [];
+	// 单独一行的字段名（「博客标题:」）取下一行作值；null 表示没有等待中的字段名
+	let pending: string | null = null;
 	for (const line of source.split(/\r?\n/)) {
 		const trimmed = line.trim();
 		if (!trimmed || /^[\s{}[\],;]+$/.test(trimmed)) continue;
+		const labelOnly = /^(?:[-*+]\s+)?(.{1,24}?)\s*[:：]$/.exec(trimmed);
+		if (labelOnly && !/^https?$/i.test(labelOnly[1].trim())) {
+			pending = labelKey(labelOnly[1]);
+			continue;
+		}
 		const labelled = /^(?:[-*+]\s+)?(.{1,24}?)\s*[:：=]\s*(.+)$/.exec(trimmed);
+		if (pending !== null && !(labelled && labelKey(labelled[1]))) {
+			const waiting = pending;
+			pending = null;
+			if (waiting) put(waiting, trimmed.replace(/^[-*+]\s+/, ""));
+			// 不认识的字段名（「QQ:」下一行「12345」）的值也不当作名称
+			else if (trimmed.match(URL_RE)) rest.push(trimmed);
+			continue;
+		}
+		pending = null;
 		if (labelled && !/^https?$/i.test(labelled[1].trim())) {
-			const named = byName.get(norm(labelled[1]));
+			const named = labelKey(labelled[1]);
 			if (named) put(named, labelled[2]);
 			// 不认识的字段名（如「QQ: 123」）不当作名称，只保留其中的网址
 			else if (labelled[2].match(URL_RE)) rest.push(labelled[2]);
