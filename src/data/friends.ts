@@ -64,6 +64,38 @@ export const friendsData: FriendItem[] = [
 		tags: [],
 		desc: "个人博客，分享技术文章、生活文章、自建ChatGPT提示库、AI应用大全",
 	},
+	{
+		id: 8,
+		title: "目的地-Destination",
+		imgurl: "https://chrison.cn/logo.webp",
+		siteurl: "https://chrison.cn/",
+		tags: [],
+		desc: "前程似锦、未来可期、寻得良人、共赴白头，祝你也祝我。",
+	},
+	{
+		id: 9,
+		title: "喵二の小博客",
+		imgurl: "https://cdn.miaoer.net/logo/avatar.webp",
+		siteurl: "https://www.miaoer.net",
+		tags: [],
+		desc: "缘，妙不可言",
+	},
+	{
+		id: 10,
+		title: "YuJing的记忆终端",
+		imgurl: "https://yujingblog.top/assets/home/avatar.webp",
+		siteurl: "https://yujingblog.top",
+		tags: [],
+		desc: "记一些无用的日常，和有光的时刻。",
+	},
+	{
+		id: 11,
+		title: "Elykia",
+		imgurl: "https://bu.dusays.com/2024/10/25/671b2438203a6.gif",
+		siteurl: "https://blog.elykia.cn/",
+		tags: [],
+		desc: "致以无瑕之人",
+	},
 ];
 
 // 获取所有友情链接数据（稳定顺序，测试可复现）
