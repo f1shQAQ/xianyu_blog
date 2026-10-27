@@ -10,7 +10,7 @@ category: 折腾
 draft: false
 aiSummary: 本文介绍用飞书自定义机器人接管 giscus 评论通知：在飞书群获取 Webhook，存入 GitHub 仓库 Secret，再通过 GitHub Actions 监听 Discussion 评论并推送飞书卡片；另提供一个同时通知 Issues 友链申请与回复的版本。
 ---
-# 前言
+	# 前言
 不知道你是不是跟我一样觉得 giscus 的评论通知有点不太优雅，这玩意走的是 GitHub 的默认邮箱通知，如果你跟我一样 GitHub 绑的是 Gmail 那恭喜你享福了，Gmail 在墙内就是不太能及时看到的存在，哪怕我用的是 iPhone 只要不开梯子掉通知都是家常便饭的事
 
 如果你也有跟我一样的烦恼，那不妨用飞书机器人去接管评论通知，卡片式通知我是感觉比 GitHub 默认的通知直观多了，而且在墙内可以实现秒收，操作也是非常简单有手就行
