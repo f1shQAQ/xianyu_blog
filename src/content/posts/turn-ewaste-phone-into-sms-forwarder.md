@@ -1,14 +1,15 @@
 ---
 title: 把一台电子垃圾手机改造成 7x24 小时短信转发器
 published: 2026-10-27
-description: 用 52 元红米 6A 搭建7x24短信转发器，涵盖解 BL、刷 Magisk、双 VoLTE、AccA 充电限制，以及带 AI 垃圾短信拦截和网页/机器人管理的自建后台
+description: 用 52 元红米 6A 搭建短信转发器，涵盖解 BL、刷 Magisk、双 VoLTE、AccA 充电限制，以及带 AI 垃圾短信拦截和网页/机器人管理的自建后台
 image: ""
 tags:
   - 改造
   - 玩机
 category: 折腾
-draft: true
+draft: false
 aiSummary: 本文介绍作者因旧坚果 Pro 供电和双卡问题，改用约 52 元的红米 6A 搭建 7x24 短信转发器。过程包括解 BL、降级 MIUI 10 并刷 Magisk、开启双 VoLTE、冻结系统应用、用 AccA 限制充电，以及自建带 AI 垃圾短信拦截和网页/机器人管理的转发应用。
+publishedAt: 2026-10-27T07:45:43Z
 ---
 # 前言
 我有一张存续了很久的国内保号卡，这张卡基本只用来收短信，我之前一直把它插在一台被我爆改的面目全非的坚果 Pro 上面配合短信转发器使用
