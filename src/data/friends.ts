@@ -73,14 +73,6 @@ export const friendsData: FriendItem[] = [
 		desc: "前程似锦、未来可期、寻得良人、共赴白头，祝你也祝我。",
 	},
 	{
-		id: 9,
-		title: "喵二の小博客",
-		imgurl: "https://cdn.miaoer.net/logo/avatar.webp",
-		siteurl: "https://www.miaoer.net",
-		tags: [],
-		desc: "缘，妙不可言",
-	},
-	{
 		id: 10,
 		title: "YuJing的记忆终端",
 		imgurl: "https://yujingblog.top/assets/home/avatar.webp",
